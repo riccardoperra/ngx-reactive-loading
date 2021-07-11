@@ -4,14 +4,14 @@ import {
   OnInit,
   TrackByFunction,
 } from '@angular/core';
-import { createLoadingStore } from '../../../../../ngx-reactive-loading/src/lib/utils/create-loading-store';
+import { createLoadingStore } from 'ngx-reactive-loading';
 import { TodoApiService } from '../../services/todo-api.service';
 import { TodoStateService } from '../../services/todo.service';
 import { Subject } from 'rxjs';
 import { exhaustMap, mergeMap } from 'rxjs/operators';
 import { Todo } from '../../model/todo';
 import { FormControl, Validators } from '@angular/forms';
-import { someLoading } from '../../../../../ngx-reactive-loading/src/lib/operators/some-loading';
+import { someLoading } from 'ngx-reactive-loading';
 import { UIStore } from '../../store/ui-store';
 
 @Component({

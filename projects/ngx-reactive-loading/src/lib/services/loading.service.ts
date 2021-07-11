@@ -39,7 +39,7 @@ export const provideLoadingService = <T extends PropertyKey>(
   ];
 };
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class LoadingService<T extends PropertyKey = PropertyKey>
   implements OnDestroy
 {
@@ -62,6 +62,7 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
   );
 
   constructor(
+    @Optional()
     @Inject(INITIAL_LOADING_STORE)
     defaultValue: PropertyTuple<T>
   ) {

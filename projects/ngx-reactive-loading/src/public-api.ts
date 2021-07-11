@@ -2,6 +2,7 @@
  * Public API Surface of ngx-reactive-loading
  */
 
-export * from './lib/ngx-reactive-loading.service';
-export * from './lib/ngx-reactive-loading.component';
-export * from './lib/ngx-reactive-loading.module';
+export { LoadingEvent, LoadingStore } from './lib/model';
+export { createLoadingStore } from './lib/utils';
+export { someLoading, withLoading } from './lib/operators';
+export { LoadingService, provideLoadingService } from './lib/services';

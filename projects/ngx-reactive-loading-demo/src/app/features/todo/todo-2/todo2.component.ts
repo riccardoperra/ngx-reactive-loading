@@ -8,7 +8,7 @@ import {
   Output,
 } from '@angular/core';
 import { Todo } from '../../../model/todo';
-import { LoadingService } from '../../../../../../ngx-reactive-loading/src/lib/services/loading.service';
+import { LoadingService } from 'ngx-reactive-loading';
 
 @Component({
   selector: 'app-todo-2',

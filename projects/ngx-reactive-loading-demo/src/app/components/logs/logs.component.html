@@ -1,0 +1,8 @@
+<mat-list role="list">
+  <mat-list-item
+    role="listitem"
+    *ngFor="let eventLog of logs; trackBy: trackByLogs"
+  >
+    {{ eventLog | json }}
+  </mat-list-item>
+</mat-list>

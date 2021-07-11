@@ -2,23 +2,20 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnInit,
-  TemplateRef,
   TrackByFunction,
-  ViewChild,
 } from '@angular/core';
 import { TodoApiService } from '../../services/todo-api.service';
 import { TodoStateService } from '../../services/todo.service';
 import { Subject } from 'rxjs';
 import { exhaustMap, mergeMap, scan, shareReplay, skip } from 'rxjs/operators';
 import { Todo } from '../../model/todo';
-import { FormControl, Validators } from '@angular/forms';
 import {
+  LoadingEvent,
   LoadingService,
   provideLoadingService,
-} from '../../../../../ngx-reactive-loading/src/lib/services/loading.service';
+} from 'ngx-reactive-loading';
 import { UIStore } from '../../store/ui-store';
 import { CreateHotToastRef, HotToastService } from '@ngneat/hot-toast';
-import { LoadingEvent } from '../../../../../ngx-reactive-loading/src/lib/model/loading-event';
 
 type PageActions =
   | 'addTodo'

@@ -6,7 +6,7 @@ import {
   Output,
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { LoadingService } from '../../../../../../ngx-reactive-loading/src/lib/services/loading.service';
+import { LoadingService } from 'ngx-reactive-loading';
 
 @Component({
   selector: 'app-form-todo',

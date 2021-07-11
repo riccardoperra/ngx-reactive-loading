@@ -1,12 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  InjectionToken,
-  OnDestroy,
-  Optional,
-  TypeProvider,
-  ValueProvider,
-} from '@angular/core';
+import { Inject, Injectable, OnDestroy, Optional } from '@angular/core';
 import {
   defer,
   merge,
@@ -15,31 +7,14 @@ import {
   pipe,
   Subject,
 } from 'rxjs';
-import { LoadingStore, LoadingStoreState } from '../model/loading';
-import { createLoadingStore } from '../utils/create-loading-store';
+import { LoadingEvent, LoadingStore, LoadingStoreState } from '../model';
+import { createLoadingStore } from '../utils';
 import { map, shareReplay, skip, takeUntil } from 'rxjs/operators';
-import { someLoading } from '../operators/some-loading';
-import { LoadingEvent } from '../model/loading-event';
+import { someLoading } from '../operators';
+import { PropertyTuple } from '../model/property';
+import { INITIAL_LOADING_STORE } from './loading.provider';
 
-const INITIAL_LOADING_STORE = new InjectionToken<PropertyKey[]>(
-  'ngx-reactive-loading/loading-store/initial-value'
-);
-
-type PropertyTuple<T extends PropertyKey> = readonly [...T[]];
-
-export const provideLoadingService = <T extends PropertyKey>(
-  keys: PropertyTuple<T>
-): [initialLoading: ValueProvider, typeProvider: TypeProvider] => {
-  return [
-    {
-      provide: INITIAL_LOADING_STORE,
-      useValue: keys,
-    },
-    LoadingService,
-  ];
-};
-
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class LoadingService<T extends PropertyKey = PropertyKey>
   implements OnDestroy
 {

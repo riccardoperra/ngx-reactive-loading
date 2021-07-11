@@ -3,7 +3,7 @@ import {
   isLoadingStoreState,
   LoadingStore,
   LoadingStoreState,
-} from '../model/loading';
+} from '../model';
 import { combineLatest, isObservable, Observable } from 'rxjs';
 import { distinctUntilChanged, map, shareReplay } from 'rxjs/operators';
 

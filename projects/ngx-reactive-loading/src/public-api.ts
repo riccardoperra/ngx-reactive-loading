@@ -5,4 +5,8 @@
 export { LoadingEvent, LoadingStore } from './lib/model';
 export { createLoadingStore } from './lib/utils';
 export { someLoading, withLoading } from './lib/operators';
-export { LoadingService, provideLoadingService } from './lib/services';
+export {
+  LoadingService,
+  provideLoadingService,
+  INITIAL_LOADING_STORE,
+} from './lib/services';

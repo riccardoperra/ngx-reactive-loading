@@ -5,11 +5,7 @@
     {
       "files": ["*.ts"],
       "parserOptions": {
-        "project": [
-          "projects/ngx-reactive-loading/tsconfig.lib.json",
-          "projects/ngx-reactive-loading/tsconfig.spec.json"
-        ],
-        "createDefaultProgram": true
+        "project": ["./tsconfig.lib.json", "./tsconfig.spec.json"]
       },
       "rules": {
         "@angular-eslint/directive-selector": [

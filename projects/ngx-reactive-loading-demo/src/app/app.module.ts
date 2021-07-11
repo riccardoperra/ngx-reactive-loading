@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 @NgModule({
   declarations: [AppComponent, LoadingStoreExampleComponent],
   imports: [CommonModule, BrowserModule, AppRoutingModule, ReactiveFormsModule],
-  providers: [TodoApiService],
+  providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

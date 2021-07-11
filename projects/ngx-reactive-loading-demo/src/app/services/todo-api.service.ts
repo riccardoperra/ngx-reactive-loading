@@ -4,7 +4,7 @@ import { Todo } from '../model/todo';
 import { defer, Observable, of } from 'rxjs';
 import { delay, mapTo, tap } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class TodoApiService {
   readonly delay = 1000;
   id = 0;

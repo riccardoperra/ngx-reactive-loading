@@ -1,0 +1,26 @@
+<div>
+  <span>Actions</span>
+  <hr />
+  <button (click)="reload()">Reload</button>
+  <hr />
+  <input type="text" [formControl]="todoTitle" />
+  <button
+    [disabled]="todoTitle.invalid"
+    (click)="addEvent$.next(todoTitle.value)"
+  >
+    Add
+  </button>
+  <ul>
+    <li>Add: {{ loadingStore.addTodo.loading$ | async }}</li>
+    <li>Reload: {{ loadingStore.reloadTodo.loading$ | async }}</li>
+    <li>Remove: {{ loadingStore.removeTodo.loading$ | async }}</li>
+  </ul>
+</div>
+<ul>
+  <li *ngFor="let todo of todos$ | async; trackBy: trackByTodo">
+    <div class="todo-card">
+      <div>Id: {{ todo.id }}</div>
+      <div>Title: {{ todo.title }}</div>
+    </div>
+  </li>
+</ul>

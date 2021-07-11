@@ -13,7 +13,8 @@ export class TodoApiService {
 
   reload(): Observable<void> {
     return defer(() => {
-      const n = Math.floor(Math.random() * 10);
+      const n = this.getRandom(1, 20);
+      console.log(n);
       return of(
         new Array(n)
           .fill(undefined)
@@ -43,9 +44,11 @@ export class TodoApiService {
 
   remove(id: string): Observable<boolean> {
     return defer(() => {
-      this.todoService.removeTodo(id);
       return of(true);
-    }).pipe(delay(this.getDelay()));
+    }).pipe(
+      delay(this.getDelay()),
+      tap(() => this.todoService.removeTodo(id))
+    );
   }
 
   toggleCompleted(id: string): Observable<boolean> {
@@ -56,7 +59,11 @@ export class TodoApiService {
   }
 
   private getDelay(): number {
-    return Math.floor(Math.random() * 5) * 1000;
+    return this.getRandom(1, 5) * 1000;
+  }
+
+  private getRandom(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min) + min);
   }
 
   private buildTodo(title: string): Todo {

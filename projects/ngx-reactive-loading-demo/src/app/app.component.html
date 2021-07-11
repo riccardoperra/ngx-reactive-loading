@@ -1,1 +1,15 @@
-<router-outlet></router-outlet>
+<ng-container *ngIf="vm$ | async as vm">
+  <div [style.height.%]="100">
+    <app-header></app-header>
+    <mat-drawer-container autosize [style.height.%]="100">
+      <mat-drawer [style.width.px]="300" mode="side" [opened]="vm.openSidebar">
+        <app-sidebar></app-sidebar>
+      </mat-drawer>
+      <mat-drawer-content>
+        <div class="sidenav-content">
+          <router-outlet></router-outlet>
+        </div>
+      </mat-drawer-content>
+    </mat-drawer-container>
+  </div>
+</ng-container>

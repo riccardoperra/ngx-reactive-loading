@@ -1,0 +1,27 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>
+      <h2>Add To Do</h2>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form (ngSubmit)="submit()">
+      <mat-form-field appearance="fill" [style.width.%]="100">
+        <input matInput [formControl]="todoTitle" />
+      </mat-form-field>
+      <div fxLayout="row" fxLayoutAlign="end">
+        <button
+          mat-button
+          color="primary"
+          [disabled]="
+            todoTitle.invalid ||
+            ((loadingStore?.state?.addTodo?.loading$ | async) ?? false)
+          "
+          type="submit"
+        >
+          Add Todo
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

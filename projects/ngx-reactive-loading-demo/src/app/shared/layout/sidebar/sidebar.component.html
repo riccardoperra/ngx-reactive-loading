@@ -1,0 +1,5 @@
+<mat-nav-list>
+  <mat-list-item *ngFor="let route of routes$ | async; trackBy: trackBy">
+    <a matLine (click)="navigate(route)">{{ route.label }}</a>
+  </mat-list-item>
+</mat-nav-list>

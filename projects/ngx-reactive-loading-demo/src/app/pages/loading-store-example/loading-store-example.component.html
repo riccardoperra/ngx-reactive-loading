@@ -1,0 +1,81 @@
+<mat-toolbar>
+  <span>{{ pageTitle$ | async }}</span>
+  <span class="spacer"></span>
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="(isLoading$ | async) ?? false"
+    (click)="reloadEvent$.next()"
+  >
+    <mat-icon *ngIf="(isLoading$ | async) ?? false">
+      <mat-spinner diameter="20"></mat-spinner>
+    </mat-icon>
+    Refresh
+  </button>
+</mat-toolbar>
+
+<div [style.padding.rem]="1">
+  <div fxFill fxLayout="row wrap" fxLayoutGap="10px">
+    <div fxFlex.xs="100" fxFlex.gt-xs="75">
+      <app-form-todo (submitEvent)="addEvent$.next($event)"> </app-form-todo>
+
+      <mat-spinner
+        [style.margin]="'1rem auto'"
+        [diameter]="80"
+        *ngIf="isLoading$ | async"
+      >
+      </mat-spinner>
+
+      <mat-spinner
+        [style.margin]="'1rem auto'"
+        [diameter]="80"
+        *ngIf="(isReloading$ | async) === true; else contentTpl"
+      >
+      </mat-spinner>
+
+      <ng-template #contentTpl>
+        <mat-card
+          [style.marginTop.rem]="1"
+          *ngIf="(todos$ | async)!.length > 0 ?? false"
+        >
+          <mat-card-header>
+            <mat-card-title>
+              <h2>Todos</h2>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <mat-list role="list">
+              <app-todo
+                *ngFor="let todo of todos$ | async; trackBy: trackByTodo"
+                [todo]="todo"
+              ></app-todo>
+            </mat-list>
+          </mat-card-content>
+        </mat-card>
+      </ng-template>
+    </div>
+    <div fxFlex>
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            <h2>Events</h2>
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <mat-list role="list">
+            <mat-list-item role="listitem">
+              Add: {{ loadingStore.addTodo.loading$ | async }}
+            </mat-list-item>
+            <mat-list-item role="listitem">
+              Reload: {{ loadingStore.reloadTodo.loading$ | async }}
+            </mat-list-item>
+            <mat-list-item role="listitem">
+              Remove: {{ loadingStore.removeTodo.loading$ | async }}
+            </mat-list-item>
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

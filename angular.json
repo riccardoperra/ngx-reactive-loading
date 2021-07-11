@@ -74,7 +74,10 @@
               "projects/ngx-reactive-loading-demo/src/favicon.ico",
               "projects/ngx-reactive-loading-demo/src/assets"
             ],
-            "styles": ["projects/ngx-reactive-loading-demo/src/styles.scss"],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "projects/ngx-reactive-loading-demo/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -140,7 +143,10 @@
               "projects/ngx-reactive-loading-demo/src/favicon.ico",
               "projects/ngx-reactive-loading-demo/src/assets"
             ],
-            "styles": ["projects/ngx-reactive-loading-demo/src/styles.scss"],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "projects/ngx-reactive-loading-demo/src/styles.scss"
+            ],
             "scripts": []
           }
         },

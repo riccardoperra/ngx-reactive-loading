@@ -1,0 +1,12 @@
+<mat-list-item *ngIf="todo">
+  {{ todo.title }}
+  <div [style.marginLeft]="'auto'">
+    <button
+      [disabled]="isLoading$ | async"
+      mat-button
+      (click)="removeEvent.emit(todo.id)"
+    >
+      REMOVE
+    </button>
+  </div>
+</mat-list-item>

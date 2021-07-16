@@ -7,7 +7,7 @@ import {
 import { TodoApiService } from '../../services/todo-api.service';
 import { TodoStateService } from '../../services/todo.service';
 import { Subject } from 'rxjs';
-import { exhaustMap, mergeMap, scan, shareReplay, skip } from 'rxjs/operators';
+import { exhaustMap, mergeMap, scan, shareReplay } from 'rxjs/operators';
 import { Todo } from '../../model/todo';
 import {
   LoadingEvent,
@@ -15,13 +15,10 @@ import {
   provideLoadingService,
 } from 'ngx-reactive-loading';
 import { UIStore } from '../../store/ui-store';
-import { CreateHotToastRef, HotToastService } from '@ngneat/hot-toast';
+import { LoadingToastService } from '../../services/loading-toast.service';
+import { HotToastService } from '@ngneat/hot-toast';
 
-type PageActions =
-  | 'addTodo'
-  | 'removeTodo'
-  | 'reloadTodo'
-  | `removeTodo_${string}`;
+type PageActions = 'addTodo' | 'removeTodo' | 'reloadTodo';
 
 @Component({
   selector: 'app-loading-store-with-service-example',
@@ -55,13 +52,14 @@ export class LoadingStoreWithServiceExampleComponent implements OnInit {
     private readonly todoService: TodoApiService,
     private readonly todoState: TodoStateService,
     private readonly uiStore: UIStore,
-    public readonly loadingStore: LoadingService<PageActions>,
-    private toastService: HotToastService
-  ) {}
+    private readonly toastService: HotToastService,
+    private readonly loadingToastService: LoadingToastService<PageActions>,
+    public readonly loadingStore: LoadingService<PageActions>
+  ) {
+    this.loadingToastService.observeLoadingStatus(this.loadingStore);
+  }
 
   ngOnInit() {
-    this.observeLoadingStatus();
-
     // Using Load method
     this.reloadEvent$
       .pipe(
@@ -90,41 +88,5 @@ export class LoadingStoreWithServiceExampleComponent implements OnInit {
         )
       )
       .subscribe();
-  }
-
-  private observeLoadingStatus(): void {
-    const toast: Map<PropertyKey, CreateHotToastRef<unknown>> = new Map<
-      PropertyKey,
-      CreateHotToastRef<unknown>
-    >();
-
-    let loadingRef: CreateHotToastRef<unknown>;
-    this.loadingStore
-      .someLoading()
-      .pipe(skip(1))
-      .subscribe(evt => {
-        if (loadingRef) {
-          loadingRef.close();
-        }
-        if (evt) {
-          loadingRef = this.toastService.loading('LOADING');
-        } else {
-          loadingRef = this.toastService.success('COMPLETED');
-        }
-      });
-
-    this.loadingStore.events$.subscribe(evt => {
-      const ref = toast.get(evt.type);
-      if (ref) {
-        ref.close();
-      }
-      if (evt.loading) {
-        const ref = this.toastService.loading(String(evt.type));
-        toast.set(evt.type, ref);
-      } else {
-        const ref = this.toastService.success(String(evt.type));
-        toast.set(evt.type, ref);
-      }
-    });
   }
 }

@@ -1,11 +1,7 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  TrackByFunction,
-} from '@angular/core';
-import { UIStore } from './store/ui-store';
-import { filter, map } from 'rxjs/operators';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
+import { filter, map } from 'rxjs/operators';
+import { UIStore } from './store/ui-store';
 
 @Component({
   selector: 'app-root',

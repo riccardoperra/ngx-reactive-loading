@@ -5,7 +5,10 @@
     {
       "files": ["*.ts"],
       "parserOptions": {
-        "project": ["./tsconfig.app.json", "./tsconfig.spec.json"],
+        "project": [
+          "projects/ngx-reactive-loading-demo/tsconfig.app.json",
+          "projects/ngx-reactive-loading-demo/tsconfig.spec.json"
+        ],
         "createDefaultProgram": true
       },
       "rules": {

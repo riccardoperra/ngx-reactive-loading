@@ -4,15 +4,15 @@ import {
   OnInit,
   TrackByFunction,
 } from '@angular/core';
-import { createLoadingStore } from 'ngx-reactive-loading';
+import { createLoadingStore, someLoading } from 'ngx-reactive-loading';
 import { TodoApiService } from '../../services/todo-api.service';
 import { TodoStateService } from '../../services/todo.service';
 import { Subject } from 'rxjs';
 import { exhaustMap, mergeMap } from 'rxjs/operators';
 import { Todo } from '../../model/todo';
 import { FormControl, Validators } from '@angular/forms';
-import { someLoading } from 'ngx-reactive-loading';
 import { UIStore } from '../../store/ui-store';
+import { LoadingToastService } from '../../services/loading-toast.service';
 
 @Component({
   selector: 'app-loading-store-example',

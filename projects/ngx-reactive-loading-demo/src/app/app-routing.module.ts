@@ -1,12 +1,21 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { LoadingStoreExampleComponent } from './pages/loading-store-example/loading-store-example.component';
+import { RouterModule, Routes } from '@angular/router';
 import { LoadingStoreWithServiceExampleComponent } from './pages/loading-store-with-service-example/loading-store-with-service-example.component';
 
 const routes: Routes = [
-  { path: 'loading-store', component: LoadingStoreExampleComponent },
+  {
+    path: 'loading-store',
+    loadChildren: () =>
+      import('./pages/loading-store-example/loading-store-example.module').then(
+        m => m.LoadingStoreExampleModule
+      ),
+  },
   {
     path: 'loading-store-with-service',
+    loadChildren: () =>
+      import(
+        './pages/loading-store-with-service-example/loading-store-example-with-service.module'
+      ).then(m => m.LoadingStoreExampleWithServiceModule),
     component: LoadingStoreWithServiceExampleComponent,
   },
 ];

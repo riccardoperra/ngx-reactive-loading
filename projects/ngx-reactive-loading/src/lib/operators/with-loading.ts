@@ -1,8 +1,14 @@
-import { BehaviorSubject, defer, MonoTypeOperatorFunction, pipe } from 'rxjs';
+import {
+  BehaviorSubject,
+  defer,
+  MonoTypeOperatorFunction,
+  pipe,
+  Subject,
+} from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
 export const withLoading = <T>(
-  loadingSubject: BehaviorSubject<boolean>
+  loadingSubject: Subject<boolean>
 ): MonoTypeOperatorFunction<T> =>
   pipe(source =>
     defer(() => {

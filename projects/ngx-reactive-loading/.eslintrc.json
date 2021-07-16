@@ -5,7 +5,10 @@
     {
       "files": ["*.ts"],
       "parserOptions": {
-        "project": ["./tsconfig.lib.json", "./tsconfig.spec.json"]
+        "project": [
+          "projects/ngx-reactive-loading/tsconfig.lib.json",
+          "projects/ngx-reactive-loading/tsconfig.spec.json"
+        ]
       },
       "rules": {
         "@angular-eslint/directive-selector": [

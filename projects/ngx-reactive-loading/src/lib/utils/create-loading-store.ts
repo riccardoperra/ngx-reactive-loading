@@ -1,6 +1,7 @@
 import { BehaviorSubject } from 'rxjs';
 import { withLoading } from '../operators';
 import { LoadingStore, LoadingStoreState } from '../model';
+import { shareReplay } from 'rxjs/operators';
 
 /**
  * @description
@@ -24,7 +25,9 @@ export const createLoadingStore = <LoadingKeys extends readonly PropertyKey[]>(
 function buildLoadingState(): LoadingStoreState {
   const loadingSubject = new BehaviorSubject<boolean>(false);
   return {
-    loading$: loadingSubject.asObservable(),
+    loading$: loadingSubject
+      .asObservable()
+      .pipe(shareReplay({ refCount: true, bufferSize: 1 })),
     track: <T>() => withLoading(loadingSubject),
   };
 }

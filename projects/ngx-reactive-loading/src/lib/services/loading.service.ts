@@ -14,13 +14,13 @@ import { someLoading } from '../operators';
 import { PropertyTuple } from '../model/property';
 import { INITIAL_LOADING_STORE } from './loading.provider';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: 'any' })
 export class LoadingService<T extends PropertyKey = PropertyKey>
   implements OnDestroy
 {
-  private readonly destroy$: Subject<void> = new Subject<void>();
-  private readonly initializedErrorMessage = `[${this.constructor.name}] Loading state already initialized`;
-  private readonly notInitializedErrorMessage = `[${this.constructor.name}] Loading state is not initialized yet`;
+  readonly #destroy$: Subject<void> = new Subject<void>();
+  readonly #initializedErrorMessage = `[${this.constructor.name}] Loading state already initialized`;
+  readonly #notInitializedErrorMessage = `[${this.constructor.name}] Loading state is not initialized yet`;
   state: LoadingStore<PropertyTuple<T>>;
   isInitialized: boolean = false;
 
@@ -33,13 +33,13 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
     return merge(...events$).pipe(skip(entriesLength));
   }).pipe(
     shareReplay({ refCount: true, bufferSize: 1 }),
-    takeUntil(this.destroy$)
+    takeUntil(this.#destroy$)
   );
 
   constructor(
     @Optional()
     @Inject(INITIAL_LOADING_STORE)
-    defaultValue: PropertyTuple<T>
+    private readonly defaultValue: PropertyTuple<T>
   ) {
     this.state = createLoadingStore(defaultValue);
     this.isInitialized = true;
@@ -48,7 +48,7 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
   load<S>(source: () => Observable<S>, trackBy: T): Observable<S> {
     return defer(() => {
       if (!this.state) {
-        throw new Error(this.initializedErrorMessage);
+        throw new Error(this.#initializedErrorMessage);
       }
       return source().pipe(this.state[trackBy].track());
     });
@@ -56,7 +56,7 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
 
   track<O>(identifier: T): MonoTypeOperatorFunction<O> {
     if (!this.state) {
-      throw new Error(this.notInitializedErrorMessage);
+      throw new Error(this.#notInitializedErrorMessage);
     }
 
     const loadingStoreState = this.state[identifier];
@@ -70,7 +70,7 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
 
   someLoading(identifier: PropertyTuple<T> = []): Observable<boolean> {
     if (!this.state) {
-      throw new Error(this.notInitializedErrorMessage);
+      throw new Error(this.#notInitializedErrorMessage);
     }
 
     return defer(() => {
@@ -83,7 +83,7 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
       return someLoading(loadingStates);
     }).pipe(
       shareReplay({ refCount: true, bufferSize: 1 }),
-      takeUntil(this.destroy$)
+      takeUntil(this.#destroy$)
     );
   }
 
@@ -91,7 +91,7 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
     identifiers: PropertyTuple<T>
   ): LoadingStoreState[] {
     if (!this.state) {
-      throw new Error(this.notInitializedErrorMessage);
+      throw new Error(this.#notInitializedErrorMessage);
     }
 
     const stores: LoadingStoreState[] = [];
@@ -111,7 +111,7 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
   }
 
   private unsubscribe(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.#destroy$.next();
+    this.#destroy$.complete();
   }
 }

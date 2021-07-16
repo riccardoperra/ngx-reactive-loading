@@ -12,7 +12,6 @@ import { exhaustMap, mergeMap } from 'rxjs/operators';
 import { Todo } from '../../model/todo';
 import { FormControl, Validators } from '@angular/forms';
 import { UIStore } from '../../store/ui-store';
-import { LoadingToastService } from '../../services/loading-toast.service';
 
 @Component({
   selector: 'app-loading-store-example',
@@ -36,7 +35,7 @@ export class LoadingStoreExampleComponent implements OnInit {
     'reloadTodo',
   ]);
 
-  readonly isReloading$ = this.loadingStore.reloadTodo.loading$;
+  readonly isReloading$ = this.loadingStore.reloadTodo.$;
 
   readonly isLoading$ = someLoading([
     this.loadingStore.addTodo,

@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoadingStoreWithServiceExampleComponent } from './pages/loading-store-with-service-example/loading-store-with-service-example.component';
 
 const routes: Routes = [
   {
@@ -16,7 +15,6 @@ const routes: Routes = [
       import(
         './pages/loading-store-with-service-example/loading-store-example-with-service.module'
       ).then(m => m.LoadingStoreExampleWithServiceModule),
-    component: LoadingStoreWithServiceExampleComponent,
   },
 ];
 

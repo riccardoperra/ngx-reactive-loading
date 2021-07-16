@@ -9,10 +9,10 @@
   <button
     mat-raised-button
     color="primary"
-    [disabled]="(loadingStore.state.reloadTodo.loading$ | async) ?? false"
+    [disabled]="(loadingStore.state.reloadTodo.$ | async) ?? false"
     (click)="reloadEvent$.next()"
   >
-    <mat-icon *ngIf="(loadingStore.state.reloadTodo.loading$ | async) ?? false">
+    <mat-icon *ngIf="(loadingStore.state.reloadTodo.$ | async) ?? false">
       <mat-spinner diameter="20"></mat-spinner>
     </mat-icon>
     Refresh
@@ -28,7 +28,7 @@
         [style.margin]="'1rem auto'"
         [diameter]="80"
         *ngIf="
-          (loadingStore.state.reloadTodo.loading$ | async) === true;
+          (loadingStore.state.reloadTodo.$ | async) === true;
           else contentTpl
         "
       >
@@ -74,13 +74,13 @@
         <mat-card-content>
           <mat-list role="list">
             <mat-list-item role="listitem">
-              Add: {{ loadingStore.state.addTodo.loading$ | async }}
+              Add: {{ loadingStore.state.addTodo.$ | async }}
             </mat-list-item>
             <mat-list-item role="listitem">
-              Reload: {{ loadingStore.state.reloadTodo.loading$ | async }}
+              Reload: {{ loadingStore.state.reloadTodo.$ | async }}
             </mat-list-item>
             <mat-list-item role="listitem">
-              Remove: {{ loadingStore.state.removeTodo.loading$ | async }}
+              Remove: {{ loadingStore.state.removeTodo.$ | async }}
             </mat-list-item>
           </mat-list>
         </mat-card-content>

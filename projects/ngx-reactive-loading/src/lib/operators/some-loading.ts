@@ -24,10 +24,10 @@ export const someLoading = <
         return acc.concat(loader);
       }
       if (isLoadingStoreState(loader)) {
-        return acc.concat(loader.loading$);
+        return acc.concat(loader.$);
       }
       if (isLoadingStore(loader)) {
-        return acc.concat(Object.values(loader).map(state => state.loading$));
+        return acc.concat(Object.values(loader).map(state => state.$));
       }
       return acc;
     },

@@ -1,4 +1,10 @@
-import { Inject, Injectable, OnDestroy, Optional } from '@angular/core';
+import {
+  Inject,
+  Injectable,
+  OnDestroy,
+  Optional,
+  Provider,
+} from '@angular/core';
 import {
   defer,
   merge,
@@ -12,9 +18,12 @@ import { createLoadingStore } from '../utils';
 import { map, shareReplay, skip, takeUntil } from 'rxjs/operators';
 import { someLoading } from '../operators';
 import { PropertyTuple } from '../model/property';
-import { INITIAL_LOADING_STORE } from './loading.provider';
+import {
+  INITIAL_LOADING_STORE,
+  provideLoadingService,
+} from './loading.provider';
 
-@Injectable({ providedIn: 'any' })
+@Injectable()
 export class LoadingService<T extends PropertyKey = PropertyKey>
   implements OnDestroy
 {
@@ -27,7 +36,7 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
   readonly events$: Observable<LoadingEvent> = defer(() => {
     const entries = Object.entries<LoadingStoreState>(this.state);
     const events$ = entries.map(([type, state]) =>
-      state.loading$.pipe(map(isLoading => ({ type, loading: isLoading })))
+      state.$.pipe(map(isLoading => ({ type, loading: isLoading })))
     );
     const entriesLength = entries.length;
     return merge(...events$).pipe(skip(entriesLength));
@@ -35,6 +44,10 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
     shareReplay({ refCount: true, bufferSize: 1 }),
     takeUntil(this.#destroy$)
   );
+
+  static provide<T extends PropertyKey>(keys: PropertyTuple<T>): Provider[] {
+    return provideLoadingService(keys);
+  }
 
   constructor(
     @Optional()

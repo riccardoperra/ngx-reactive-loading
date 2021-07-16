@@ -65,13 +65,13 @@
         <mat-card-content>
           <mat-list role="list">
             <mat-list-item role="listitem">
-              Add: {{ loadingStore.addTodo.loading$ | async }}
+              Add: {{ loadingStore.addTodo.$ | async }}
             </mat-list-item>
             <mat-list-item role="listitem">
-              Reload: {{ loadingStore.reloadTodo.loading$ | async }}
+              Reload: {{ loadingStore.reloadTodo.$ | async }}
             </mat-list-item>
             <mat-list-item role="listitem">
-              Remove: {{ loadingStore.removeTodo.loading$ | async }}
+              Remove: {{ loadingStore.removeTodo.$ | async }}
             </mat-list-item>
           </mat-list>
         </mat-card-content>

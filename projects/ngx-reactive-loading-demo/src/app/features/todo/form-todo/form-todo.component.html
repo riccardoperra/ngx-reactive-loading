@@ -15,7 +15,7 @@
           color="primary"
           [disabled]="
             todoTitle.invalid ||
-            ((loadingStore?.state?.addTodo?.loading$ | async) ?? false)
+            ((loadingStore?.state?.addTodo?.$ | async) ?? false)
           "
           type="submit"
         >

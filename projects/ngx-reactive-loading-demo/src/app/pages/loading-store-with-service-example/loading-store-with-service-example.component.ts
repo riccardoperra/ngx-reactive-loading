@@ -9,11 +9,7 @@ import { TodoStateService } from '../../services/todo.service';
 import { Subject } from 'rxjs';
 import { exhaustMap, mergeMap, scan, shareReplay } from 'rxjs/operators';
 import { Todo } from '../../model/todo';
-import {
-  LoadingEvent,
-  LoadingService,
-  provideLoadingService,
-} from 'ngx-reactive-loading';
+import { LoadingEvent, LoadingService } from 'ngx-reactive-loading';
 import { UIStore } from '../../store/ui-store';
 import { LoadingToastService } from '../../services/loading-toast.service';
 import { HotToastService } from '@ngneat/hot-toast';
@@ -25,7 +21,11 @@ type PageActions = 'addTodo' | 'removeTodo' | 'reloadTodo';
   templateUrl: './loading-store-with-service-example.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
-    provideLoadingService<PageActions>(['addTodo', `removeTodo`, 'reloadTodo']),
+    LoadingService.provide<PageActions>([
+      'addTodo',
+      'removeTodo',
+      'reloadTodo',
+    ]),
   ],
 })
 export class LoadingStoreWithServiceExampleComponent implements OnInit {

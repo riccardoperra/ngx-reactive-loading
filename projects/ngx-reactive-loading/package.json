@@ -1,6 +1,23 @@
 {
   "name": "ngx-reactive-loading",
   "version": "0.0.1",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/riccardoperra/ngx-reactive-loading/issue"
+  },
+  "homepage": "https://github.com/riccardoperra/ngx-reactive-loading#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/riccardoperra/ngx-reactive-loading"
+  },
+  "keywords": [
+    "angular",
+    "loading",
+    "rxjs",
+    "component state"
+  ],
   "peerDependencies": {
     "@angular/common": "^12.1.1",
     "@angular/core": "^12.1.1"

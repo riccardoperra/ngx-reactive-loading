@@ -15,10 +15,6 @@ import {
 import { LoadingStoreOptions } from '../model/loading-store-options';
 import { LoadingService } from '../services';
 
-const defaultLoadingProviderOptions: LoadingStoreOptions = {
-  standalone: false,
-};
-
 /**
  * @internal
  * @param keys Loading store property keys
@@ -28,9 +24,10 @@ export const provideLoadingService = <T extends PropertyKey>(
   keys: PropertyTuple<T>,
   options?: LoadingStoreOptions
 ): Provider[] => {
+  const defaultComponentProvider: LoadingStoreOptions = { standalone: false };
   return [
     provideInitialLoadingState(keys),
-    provideLoadingStoreOptions(options),
+    provideLoadingStoreOptions(options || defaultComponentProvider),
     provideParentLoadingStore,
     LoadingService,
   ];
@@ -68,9 +65,9 @@ export const provideInitialLoadingState = <
  * @internal
  * @param options
  */
-export const provideLoadingStoreOptions = (options?: LoadingStoreOptions) => ({
+export const provideLoadingStoreOptions = (options: LoadingStoreOptions) => ({
   provide: LOADING_STORE_OPTIONS,
-  useValue: options || defaultLoadingProviderOptions,
+  useValue: options,
 });
 
 export const provideExistingLoadingStore = (

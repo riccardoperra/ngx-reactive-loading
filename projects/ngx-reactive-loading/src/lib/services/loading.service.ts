@@ -16,7 +16,13 @@ import {
 } from 'rxjs';
 import { LoadingEvent, LoadingStore, LoadingStoreState } from '../model';
 import { createLoadingStore } from '../utils';
-import { map, shareReplay, skip, takeUntil } from 'rxjs/operators';
+import {
+  distinctUntilChanged,
+  map,
+  shareReplay,
+  skip,
+  takeUntil,
+} from 'rxjs/operators';
 import { someLoading } from '../operators';
 import { PropertyTuple } from '../model/property';
 import { provideLoadingService } from '../providers/provider';
@@ -60,7 +66,7 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
   readonly state: LoadingStore<PropertyTuple<T>>;
 
   /**
-   * Track the changes of the current loading store state excluding the parent states.
+   * Track all changes of each current LoadingService loading state property.
    */
   readonly events$: Observable<LoadingEvent> = defer(() => {
     const entries = Object.entries<LoadingStoreState>(this.state);
@@ -75,11 +81,15 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
   );
 
   /**
-   * Static method to easily provide the LoadingService into the component providers
+   * Helper to provide a LoadingService into a component. His use is necessary
+   * to provide each constructor property to initialize the service in
+   * the right way.
+   *
+   * Options default value is {standalone: false}.
    */
   static componentProvider<T extends PropertyKey>(
     keys: PropertyTuple<T>,
-    options?: { standalone: boolean }
+    options?: LoadingStoreOptions
   ): Provider[] {
     return provideLoadingService(keys, options);
   }
@@ -109,15 +119,69 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
     this.isInitialized = true;
   }
 
-  load<S>(source$: Observable<S>, track: T): Observable<S> {
+  /**
+   * Returns the given observable with the loading operator attached.
+   * This allows to update the loading state of the given property
+   * automatically after each value emission.
+   *
+   * @example
+   * ```ts
+   * import {LoadingService} from 'ngx-reactive-loading';
+   *
+   * type ExampleActions = 'add' | 'delete';
+   *
+   * @Component({
+   *   template: ``,
+   *   providers: [
+   *     LoadingService.componentProvide<ExampleActions>(['add', 'delete'])
+   *   ]
+   * })
+   * export class ExampleComponent {
+   *   constructor(private readonly loadingService: LoadingService<ExampleActions>,
+   *               private readonly http: HttpClient) {
+   *     this.loadingService
+   *      .load(this.http.post('/', {}), 'add')
+   *      .subscribe();
+   *   }
+   * }
+   * ```
+   *
+   */
+  load<S>(source$: Observable<S>, property: T): Observable<S> {
     return defer(() => {
       if (!this.state) {
         throw new Error(this.initializedErrorMessage);
       }
-      return source$.pipe(this.state[track].track());
+      return source$.pipe(this.state[property].track());
     });
   }
 
+  /**
+   * Wrapper of state.key.track() pipe. This operator will update
+   * automatically the loading state property by the given key.
+   *
+   * @example
+   * ```ts
+   * import {LoadingService} from 'ngx-reactive-loading';
+   *
+   * type ExampleActions = 'add' | 'delete';
+   *
+   * @Component({
+   *   template: ``,
+   *   providers: [
+   *     LoadingService.componentProvide<ExampleActions>(['add', 'delete'])
+   *   ]
+   * })
+   * export class ExampleComponent {
+   *   constructor(private readonly loadingService: LoadingService<ExampleActions>,
+   *               private readonly http: HttpClient) {
+   *     this.http.post('/', {})
+   *      .pipe(this.loadingService.track('add'))
+   *      .subscribe();
+   *   }
+   * }
+   * ```
+   */
   track<O>(key: T): MonoTypeOperatorFunction<O> {
     if (!this.state) {
       throw new Error(this.notInitializedErrorMessage);
@@ -132,10 +196,62 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
     return loadingStoreState.track();
   }
 
+  /**
+   * Track the changes of the given loading state property.
+   * The returned observable has built-in memoization with
+   * default rxjs distinctUntilChange operator and the value
+   * is shared among all subscribers (shareReplay({refCount: true, bufferSize: 1}))
+   *
+   * @example
+   * ```ts
+   * import {LoadingService} from 'ngx-reactive-loading';
+   *
+   * type ExampleActions = 'add' | 'delete';
+   *
+   * @Component({
+   *   template: ``,
+   *   providers: [
+   *     LoadingService.componentProvide<ExampleActions>(['add', 'delete'])
+   *   ]
+   * })
+   * export class ExampleComponent {
+   *   readonly isAdd$: Observable<boolean> = this.loadingService.isLoading('add');
+   *
+   *   constructor(private readonly loadingService: LoadingService<ExampleActions>)
+   * }
+   * ```
+   *
+   */
   isLoading(key: T): Observable<boolean> {
     return this.someLoading([key]);
   }
 
+  /**
+   * Track the changes of one or more given loading state. If no properties are
+   * provided, all loading store property will be checked.
+   *
+   * @example
+   * ```ts
+   * import {LoadingService} from 'ngx-reactive-loading';
+   *
+   * type ExampleActions = 'add' | 'delete';
+   *
+   * @Component({
+   *   template: ``,
+   *   providers: [
+   *     LoadingService.componentProvide<ExampleActions>(['add', 'delete'])
+   *   ]
+   * })
+   * export class ExampleComponent {
+   *   readonly isAddingOrDeleting$ = this.loadingService.someLoading([
+   *    'add',
+   *    'delete'
+   *   ]);
+   *
+   *   constructor(private readonly loadingService: LoadingService<ExampleActions>)
+   * }
+   * ```
+   */
   someLoading(identifier: PropertyTuple<T> = []): Observable<boolean> {
     if (!this.state) {
       throw new Error(this.notInitializedErrorMessage);
@@ -150,6 +266,7 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
 
       return someLoading(loadingStates);
     }).pipe(
+      distinctUntilChanged(),
       shareReplay({ refCount: true, bufferSize: 1 }),
       takeUntil(this.destroy$)
     );
@@ -175,6 +292,10 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
     return stores;
   }
 
+  /**
+   * Used to automatically unsubscribe all
+   * subscribers (only if service is provided attached in a Component)
+   */
   ngOnDestroy(): void {
     this.unsubscribe();
   }

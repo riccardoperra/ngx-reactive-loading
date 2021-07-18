@@ -1,4 +1,4 @@
-> Better loading handling in Angular applications with RxJS
+> Better loading state in Angular applications with RxJS
 
 ## Table of contents
 
@@ -63,6 +63,10 @@ enum ExampleComponentActions {
   selector: 'app-example',
   template: `
     <div>
+      IsLoading: <span>{{ isLoading$ | async }}</span>
+    </div>
+    
+    <div>
       Add: <span>{{ isAdding$ | async }}</span>
     </div>
 
@@ -79,6 +83,7 @@ export class ExampleComponent implements OnInit {
 
   readonly isAdding$ = this.loadingStore[ExampleComponentActions.Add].$;
   readonly isReloading$ = this.loadingStore[ExampleComponentActions.Reload].$;
+  readonly isLoading$ = someLoading([this.loadingStore]);
 
   constructor(private readonly http: HttpClient) {
   }
@@ -101,8 +106,8 @@ export class ExampleComponent implements OnInit {
 
 ## Working with Loading Service
 
-If you need a more sophisticated loading handling, and for a better integration with Angular dependency injection, it's
-possible to initialize a loading service that will expose the loading store api's with some strict-typed helpers.
+If you need a more sophisticated way to handle loading, for a better integration with Angular dependency injection, you can
+initialize a loading service that expose the loading store api's with helpers.
 
 ### Loading service api
 
@@ -128,15 +133,12 @@ export interface LoadingService<T extends PropertyKey> {
    */
   readonly state: LoadingStore<PropertyTuple<T>>;
   /**
-   * Track all changes of each current LoadingService loading state property.
+   * Track all changes of the current LoadingService loading state properties.
    */
   readonly events$: Observable<LoadingEvent>;
 
   /**
-   * Helper to provide a LoadingService into a component. His use is necessary
-   * to provide each constructor property to initialize the service in
-   * the right way.
-   *
+   * Provide a LoadingService into the component with the property keys and the given options.   *
    * Options default value is {standalone: false}.
    */
   componentProvider<T extends PropertyKey>(
@@ -202,8 +204,8 @@ export interface LoadingService<T extends PropertyKey> {
   /**
    * Track the changes of the given loading state property.
    * The returned observable has built-in memoization with
-   * default rxjs distinctUntilChange operator and the value
-   * is shared among all subscribers (shareReplay({refCount: true, bufferSize: 1}))
+   * default rxjs distinctUntilChanged operator and it has
+   * subscription optimization with shareReplay
    *
    * @example
    * import {LoadingService} from 'ngx-reactive-loading';
@@ -261,15 +263,14 @@ export interface LoadingService<T extends PropertyKey> {
 ```
 
 ### Component based loading service
-The current only way to provide a new instance of loading service into an angular component is using 
-the static helper method `LoadingService.componentProvider` into the component provider.
-This allows to define the properties the service will track, and the options 
-to change the behaviour of the service.
+The way to instantiate a loading service into an angular component is calling the `LoadingService.componentProvider` method into 
+the component providers. This allows to define the properties the service will track, and the options 
+that customize the behavior of the service.
 
-Using this approach, thanks to angular DI it's possible to inject the same loadingService instance in
-nested components allowing better communication with service. This doesn't mean that you should always
-inject the loading service in nested component. Consider this approach if you want to avoid prop
-drilling or if you use want to use it in the same context.
+Using this approach, you can inject the same loadingService instance in
+sub-nested components allowing better communication with service, avoiding prop drilling. This doesn't mean that you 
+should always inject the loading service in nested component. Consider this approach if your components are
+always in the same scope/context.
 
 ```ts
 import {LoadingService} from 'ngx-reactive-loading';

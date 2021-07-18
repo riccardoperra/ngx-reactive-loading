@@ -4,6 +4,7 @@
   "publishConfig": {
     "access": "public"
   },
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/riccardoperra/ngx-reactive-loading/issue"
   },
@@ -16,6 +17,7 @@
     "angular",
     "loading",
     "rxjs",
+    "ngrx",
     "component state"
   ],
   "peerDependencies": {

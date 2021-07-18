@@ -1,6 +1,8 @@
 {
   "name": "ngx-reactive-loading",
   "version": "0.0.0",
+  "license": "MIT",
+  "author": "Riccardo Perra <riccardo.perra@icloud.com>",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

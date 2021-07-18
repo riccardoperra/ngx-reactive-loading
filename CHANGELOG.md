@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/riccardoperra/ngx-loading/compare/v1.0.1...v1.0.2) (2021-07-18)
+
+
+### Bug Fixes
+
+* add support for angular v10+ ([4b6d87a](https://github.com/riccardoperra/ngx-loading/commit/4b6d87a7b7aa2739f8de0bb6655944dd3675108b))
+
 ## [1.0.1](https://github.com/riccardoperra/ngx-loading/compare/v1.0.0...v1.0.1) (2021-07-18)
 
 

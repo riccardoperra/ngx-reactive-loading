@@ -7,7 +7,7 @@ import { shareReplay } from 'rxjs/operators';
  * @description
  * Creates a LoadingStore object with the given keys.
  *
- * Each loading store will store a loading subject which will be updated automatically
+ * Each loading state will store a loading subject which will be updated automatically
  * and a track function which must be attached in an observable stream.
  *
  * @param keys The keys of the loading store that will be tracked

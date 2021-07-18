@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Inject,
@@ -10,10 +11,13 @@ import { LoadingService } from 'ngx-reactive-loading';
 
 @Component({
   selector: 'app-form-todo',
-  templateUrl: 'form-todo.component.html',
+  templateUrl: './form-todo.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormTodoComponent {
-  readonly todoTitle = new FormControl('', Validators.required);
+  readonly todoTitle = new FormControl('', control =>
+    Validators.required(control)
+  );
   @Output() readonly submitEvent = new EventEmitter<string>();
 
   constructor(

@@ -10,7 +10,7 @@ import { UIStore } from './store/ui-store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  title = 'ngx-reactive-loading-demo';
+  title = 'NGX Reactive Loading';
   readonly vm$ = this.uiStore.vm$;
 
   constructor(

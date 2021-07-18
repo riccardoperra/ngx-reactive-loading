@@ -9,7 +9,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
-import { LoadingStoreWithServiceExampleComponent } from './loading-store-with-service-example.component';
+import { LoadingStoreServiceExampleComponent } from './loading-store-service-example.component';
 import { LayoutModule } from '../../shared/layout/layout.module';
 
 @NgModule({
@@ -18,7 +18,7 @@ import { LayoutModule } from '../../shared/layout/layout.module';
     RouterModule.forChild([
       {
         path: '',
-        component: LoadingStoreWithServiceExampleComponent,
+        component: LoadingStoreServiceExampleComponent,
       },
     ]),
     TodoModule,
@@ -32,7 +32,7 @@ import { LayoutModule } from '../../shared/layout/layout.module';
     LayoutModule,
   ],
   exports: [RouterModule],
-  declarations: [LoadingStoreWithServiceExampleComponent],
+  declarations: [LoadingStoreServiceExampleComponent],
   providers: [],
 })
-export class LoadingStoreExampleWithServiceModule {}
+export class LoadingStoreServiceExampleModule {}

@@ -1,0 +1,8 @@
+<mat-list role="list" *ngIf="todoTpl">
+  <ng-container
+    *ngFor="let todo of todos; trackBy: trackByTodo"
+    [ngTemplateOutlet]="todoTpl"
+    [ngTemplateOutletContext]="{ $implicit: todo }"
+  >
+  </ng-container>
+</mat-list>

@@ -12,13 +12,11 @@ import { LoadingEvent } from 'ngx-reactive-loading';
   templateUrl: './logs.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LogsComponent implements OnInit {
+export class LogsComponent {
   @Input() logs: LoadingEvent[] = [];
 
   readonly trackByLogs: TrackByFunction<LoadingEvent> = (_, log) =>
     `${_}_${log.type.toString()}`;
 
   constructor() {}
-
-  ngOnInit(): void {}
 }

@@ -1,12 +1,21 @@
 <mat-toolbar color="primary">
-  <button
-    (click)="toggleSidebar()"
-    mat-icon-button
-    class="example-icon"
-    aria-label="Example icon-button with menu icon"
-  >
-    <mat-icon>menu</mat-icon>
-  </button>
-  <span>{{ title$ | async }}</span>
-  <span class="example-spacer"></span>
+  <mat-toolbar-row class="mat-elevation-z2">
+    <button
+      (click)="toggleSidebar()"
+      mat-icon-button
+      class="example-icon"
+      aria-label="Example icon-button with menu icon"
+    >
+      <mat-icon>menu</mat-icon>
+    </button>
+    <div fxLayout="row wrap" fxLayoutGap="10px">
+      <span>{{ appTitle }}</span>
+      <span fxHide.lt-sm>- {{ title$ | async }}</span>
+    </div>
+    <span class="example-spacer"></span>
+  </mat-toolbar-row>
+
+  <mat-toolbar-row fxHide.gt-xs>
+    <span>{{ title$ | async }}</span>
+  </mat-toolbar-row>
 </mat-toolbar>

@@ -1,59 +1,43 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  TrackByFunction,
-} from '@angular/core';
-import { TodoApiService } from '../../services/todo-api.service';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { TodoStateService } from '../../services/todo.service';
 import { Subject } from 'rxjs';
-import { exhaustMap, mergeMap, scan, shareReplay } from 'rxjs/operators';
-import { Todo } from '../../model/todo';
-import { LoadingEvent, LoadingService } from 'ngx-reactive-loading';
+import { exhaustMap, mergeMap } from 'rxjs/operators';
+import { LoadingService } from 'ngx-reactive-loading';
 import { UIStore } from '../../store/ui-store';
-import { LoadingToastService } from '../../services/loading-toast.service';
+import { LoadingLogsService } from '../../services/loading-logs.service';
 import { HotToastService } from '@ngneat/hot-toast';
 
 type PageActions = 'addTodo' | 'removeTodo' | 'reloadTodo';
 
 @Component({
   selector: 'app-loading-store-with-service-example',
-  templateUrl: './loading-store-with-service-example.component.html',
+  templateUrl: './loading-store-service-example.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
-    LoadingService.provide<PageActions>([
+    LoadingService.componentProvider<PageActions>([
       'addTodo',
       'removeTodo',
       'reloadTodo',
     ]),
   ],
 })
-export class LoadingStoreWithServiceExampleComponent implements OnInit {
-  readonly pageTitle$ = this.uiStore.pageTitle$;
-
-  readonly todos$ = this.todoState.todos$;
-
+export class LoadingStoreServiceExampleComponent implements OnInit {
   // Events
   readonly addEvent$: Subject<string> = new Subject<string>();
   readonly removeEvent$: Subject<string> = new Subject<string>();
   readonly reloadEvent$: Subject<void> = new Subject<void>();
 
+  readonly pageTitle$ = this.uiStore.pageTitle$;
+  readonly todos$ = this.todoState.todos$;
   readonly isLoading$ = this.loadingStore.someLoading();
 
-  readonly logs$ = this.loadingStore.events$.pipe(
-    scan((acc, value) => acc.concat(value), [] as LoadingEvent[]),
-    shareReplay({ refCount: true, bufferSize: 1 })
-  );
-
-  // UI
-  readonly trackByTodo: TrackByFunction<Todo> = (_, todo) => todo.id;
+  readonly logs$ = this.loadingToastService.getLogs(this.loadingStore);
 
   constructor(
-    private readonly todoService: TodoApiService,
     private readonly todoState: TodoStateService,
     private readonly uiStore: UIStore,
     private readonly toastService: HotToastService,
-    private readonly loadingToastService: LoadingToastService<PageActions>,
+    private readonly loadingToastService: LoadingLogsService<PageActions>,
     public readonly loadingStore: LoadingService<PageActions>
   ) {
     this.loadingToastService.observeLoadingStatus(this.loadingStore);
@@ -64,7 +48,7 @@ export class LoadingStoreWithServiceExampleComponent implements OnInit {
     this.reloadEvent$
       .pipe(
         exhaustMap(() =>
-          this.loadingStore.load(() => this.todoService.reload(), 'reloadTodo')
+          this.loadingStore.load(this.todoState.reloadTodos(), 'reloadTodo')
         )
       )
       .subscribe();
@@ -73,7 +57,7 @@ export class LoadingStoreWithServiceExampleComponent implements OnInit {
     this.addEvent$
       .pipe(
         exhaustMap(title =>
-          this.todoService.add(title).pipe(this.loadingStore.track('addTodo'))
+          this.todoState.addTodo(title).pipe(this.loadingStore.track('addTodo'))
         )
       )
       .subscribe();
@@ -82,8 +66,8 @@ export class LoadingStoreWithServiceExampleComponent implements OnInit {
     this.removeEvent$
       .pipe(
         mergeMap(id =>
-          this.todoService
-            .remove(id)
+          this.todoState
+            .removeTodo(id)
             .pipe(this.loadingStore.state.removeTodo.track())
         )
       )

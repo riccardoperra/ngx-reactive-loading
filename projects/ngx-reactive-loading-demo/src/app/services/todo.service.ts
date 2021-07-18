@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Todo } from '../model/todo';
 import { BehaviorSubject } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { map, shareReplay, tap, withLatestFrom } from 'rxjs/operators';
+import { TodoApiService } from './todo-api.service';
+import { TodoUtils } from '../helpers/todo-utils';
 
 interface TodoState {
   ids: string[];
@@ -22,60 +24,25 @@ export class TodoStateService {
     shareReplay({ refCount: true, bufferSize: 1 })
   );
 
-  constructor() {}
+  constructor(private readonly todoApiService: TodoApiService) {}
 
-  set(todos: Todo[]): void {
-    this.todoState.next({
-      ids: todos.map(todo => todo.id),
-      todos: todos.reduce<Record<string, Todo>>((acc, todo) => {
-        acc[todo.id] = todo;
-        return acc;
-      }, {}),
-    });
-  }
+  addTodo = (title: string) =>
+    this.todoApiService.add(title).pipe(
+      withLatestFrom(this.todoState),
+      map(([todo, todoState]) => TodoUtils.addTodo(todoState, todo)),
+      tap(state => this.todoState.next(state))
+    );
 
-  addTodo(todo: Todo): void {
-    const value = this.todoState.getValue();
-    this.todoState.next({
-      ids: [...value.ids, todo.id],
-      todos: {
-        ...value.todos,
-        [todo.id]: todo,
-      },
-    });
-  }
+  reloadTodos = () =>
+    this.todoApiService.reload().pipe(
+      map(todos => TodoUtils.setTodos(todos)),
+      tap(state => this.todoState.next(state))
+    );
 
-  toggleCompleted(id: string): void {
-    const value = this.todoState.getValue();
-    const todo = value.todos[id];
-    if (todo) {
-      return this.todoState.next({
-        ...value,
-        todos: {
-          ...value.todos,
-          [id]: { ...todo, completed: !todo.completed },
-        },
-      });
-    }
-  }
-
-  removeTodo(id: string): void {
-    const value = this.todoState.getValue();
-    const todo = value.todos[id];
-    if (todo) {
-      return this.todoState.next({
-        ids: value.ids.filter(todoId => todoId !== id),
-        todos: Object.entries(value.todos).reduce<{ [key: string]: Todo }>(
-          (acc, [todoId, todo]) => {
-            if (id === todoId) {
-              return acc;
-            }
-            acc[todoId] = todo;
-            return acc;
-          },
-          {}
-        ),
-      });
-    }
-  }
+  removeTodo = (id: string) =>
+    this.todoApiService.remove(id).pipe(
+      withLatestFrom(this.todoState),
+      map(([, todoState]) => TodoUtils.removeTodo(todoState, id)),
+      tap(state => this.todoState.next(state))
+    );
 }

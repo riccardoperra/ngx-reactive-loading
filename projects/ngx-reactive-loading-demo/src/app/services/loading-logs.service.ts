@@ -1,10 +1,16 @@
 import { Injectable } from '@angular/core';
 import { CreateHotToastRef, HotToastService } from '@ngneat/hot-toast';
-import { LoadingService } from 'ngx-reactive-loading';
-import { skip } from 'rxjs/operators';
+import { LoadingEvent, LoadingService } from 'ngx-reactive-loading';
+import { scan, shareReplay, skip } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
-export class LoadingToastService<T extends PropertyKey> {
+export class LoadingLogsService<T extends PropertyKey> {
+  readonly getLogs = (loadingStore: LoadingService) =>
+    loadingStore.events$.pipe(
+      scan((acc, value) => acc.concat(value), [] as LoadingEvent[]),
+      shareReplay({ refCount: true, bufferSize: 1 })
+    );
+
   constructor(private readonly toastService: HotToastService) {}
 
   observeLoadingStatus(loadingStore: LoadingService<T>): void {

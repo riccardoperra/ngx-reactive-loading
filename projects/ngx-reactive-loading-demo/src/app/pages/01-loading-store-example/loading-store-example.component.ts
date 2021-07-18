@@ -20,7 +20,9 @@ import { UIStore } from '../../store/ui-store';
 })
 export class LoadingStoreExampleComponent implements OnInit {
   readonly pageTitle$ = this.uiStore.pageTitle$;
-  readonly todoTitle = new FormControl('', Validators.required);
+  readonly todoTitle = new FormControl('', control =>
+    Validators.required(control)
+  );
   readonly todos$ = this.todoState.todos$;
 
   // Events

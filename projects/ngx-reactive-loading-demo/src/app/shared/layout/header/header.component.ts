@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  Input,
   OnInit,
   Output,
   TrackByFunction,
@@ -16,6 +17,7 @@ type Route = { label: string; url: string };
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
+  @Input() appTitle: string = '';
   readonly title$ = this.uiStore.pageTitle$;
 
   constructor(private readonly uiStore: UIStore) {}

@@ -17,7 +17,7 @@
 <div [style.padding.rem]="1">
   <div fxFill fxLayout="row wrap" fxLayoutGap="10px">
     <div fxFlex.xs="100" fxFlex.gt-xs="75">
-      <app-form-todo (submitEvent)="addEvent$.next($event)"> </app-form-todo>
+      <app-form-todo (submitEvent)="addEvent$.next($event)"></app-form-todo>
 
       <mat-spinner
         [style.margin]="'1rem auto'"
@@ -44,12 +44,12 @@
             </mat-card-title>
           </mat-card-header>
           <mat-card-content>
-            <mat-list role="list">
-              <app-todo
-                *ngFor="let todo of todos$ | async; trackBy: trackByTodo"
-                [todo]="todo"
-              ></app-todo>
-            </mat-list>
+            <app-todo-list [todos]="(todos$ | async) || []" [todoTpl]="todoTpl">
+            </app-todo-list>
+            <ng-template #todoTpl let-todo>
+              <app-todo [todo]="todo" (removeEvent)="removeEvent$.next($event)">
+              </app-todo>
+            </ng-template>
           </mat-card-content>
         </mat-card>
       </ng-template>

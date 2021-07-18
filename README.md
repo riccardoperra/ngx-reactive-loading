@@ -20,13 +20,13 @@
 Install with npm
 
 ```
-npm i rxjs-reactive-loading
+npm i ngx-reactive-loading
 ```
 
 Or with yarn
 
 ```
-yarn add rxjs-reactive-loading
+yarn add ngx-reactive-loading
 ```
 
 ## Basic usage

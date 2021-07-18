@@ -19,7 +19,7 @@ jobs:
             NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           npm ci
-          npm run lint
+          npm run lint -- ngx-reactive-loading
           npm run build -- --prod
           npm run test -- --watch=false --browsers=ChromeHeadless
           npm run build:lib

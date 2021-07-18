@@ -12,8 +12,6 @@
 - [Utils](#utils)
 ## Getting started
 
----
-
 Install with npm
 
 ```
@@ -27,8 +25,6 @@ yarn add rxjs-reactive-loading
 ```
 
 ## Basic usage
-
----
 
 The loading store is the core of this library, it allows handling easily different loading states through your
 application.
@@ -104,8 +100,6 @@ export class ExampleComponent implements OnInit {
 ```
 
 ## Working with Loading Service
-
----
 
 If you need a more sophisticated loading handling, and for a better integration with Angular dependency injection, it's
 possible to initialize a loading service that will expose the loading store api's with some strict-typed helpers.

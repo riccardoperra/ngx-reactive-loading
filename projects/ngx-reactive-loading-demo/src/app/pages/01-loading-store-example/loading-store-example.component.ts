@@ -50,7 +50,6 @@ export class LoadingStoreExampleComponent implements OnInit {
   readonly trackByTodo: TrackByFunction<Todo> = (_, todo) => todo.id;
 
   constructor(
-    private readonly todoService: TodoApiService,
     private readonly todoState: TodoStateService,
     private readonly uiStore: UIStore
   ) {}
@@ -59,7 +58,9 @@ export class LoadingStoreExampleComponent implements OnInit {
     this.reloadEvent$
       .pipe(
         exhaustMap(() =>
-          this.todoService.reload().pipe(this.loadingStore.reloadTodo.track())
+          this.todoState
+            .reloadTodos()
+            .pipe(this.loadingStore.reloadTodo.track())
         )
       )
       .subscribe();
@@ -67,7 +68,7 @@ export class LoadingStoreExampleComponent implements OnInit {
     this.addEvent$
       .pipe(
         mergeMap(title =>
-          this.todoService.add(title).pipe(this.loadingStore.addTodo.track())
+          this.todoState.addTodo(title).pipe(this.loadingStore.addTodo.track())
         )
       )
       .subscribe();
@@ -75,7 +76,9 @@ export class LoadingStoreExampleComponent implements OnInit {
     this.removeEvent$
       .pipe(
         exhaustMap(id =>
-          this.todoService.remove(id).pipe(this.loadingStore.removeTodo.track())
+          this.todoState
+            .removeTodo(id)
+            .pipe(this.loadingStore.removeTodo.track())
         )
       )
       .subscribe();

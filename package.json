@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:demo": "npm run build:lib && ng serve ngx-reactive-loading-demo",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
@@ -13,7 +14,7 @@
     "contributors:add": "all-contributors add",
     "deploy": "ng deploy --base-href=https://username.github.io/repo/",
     "copy": "cpx README.md dist/ngx-reactive-loading",
-    "build:lib": "ng build ngx-reactive-loading --prod && npm run copy",
+    "build:lib": "ng build ngx-reactive-loading && npm run copy",
     "test:lib": "ng test ngx-reactive-loading",
     "test:lib:headless": "cross-env CI=true npm run test:lib",
     "semantic-release": "semantic-release"

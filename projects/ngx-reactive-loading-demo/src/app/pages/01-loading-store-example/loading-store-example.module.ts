@@ -10,6 +10,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
+import { TodoStateService } from '../02-loading-store-service-example/todo.service';
 
 @NgModule({
   imports: [
@@ -31,6 +32,6 @@ import { MatIconModule } from '@angular/material/icon';
   ],
   exports: [RouterModule],
   declarations: [LoadingStoreExampleComponent],
-  providers: [],
+  providers: [TodoStateService],
 })
 export class LoadingStoreExampleModule {}

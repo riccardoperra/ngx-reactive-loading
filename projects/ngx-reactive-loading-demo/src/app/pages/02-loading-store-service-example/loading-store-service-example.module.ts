@@ -11,6 +11,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { LoadingStoreServiceExampleComponent } from './loading-store-service-example.component';
 import { LayoutModule } from '../../shared/layout/layout.module';
+import { TodoStateService } from './todo.service';
 
 @NgModule({
   imports: [

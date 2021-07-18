@@ -1,3 +1,11 @@
+## [1.0.1](https://github.com/riccardoperra/ngx-loading/compare/v1.0.0...v1.0.1) (2021-07-18)
+
+
+### Bug Fixes
+
+* fix track error message type-error ([aefe897](https://github.com/riccardoperra/ngx-loading/commit/aefe897dddf3f720e235be802719de1980dcad70))
+* removed isInitialized property in loading.service ([6489fdd](https://github.com/riccardoperra/ngx-loading/commit/6489fdd9343706d6b0c42a0ba45ddcd13e30b3db))
+
 # 1.0.0 (2021-07-18)
 
 

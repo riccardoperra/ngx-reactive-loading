@@ -3,7 +3,7 @@ import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { ComponentStore } from '@ngrx/component-store';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { ROUTES } from '../shared/constants/routes';
+import { ROUTES } from '../constants/routes';
 
 export type SidebarRoute = { label: string; url: string };
 
@@ -21,7 +21,7 @@ export const initialState: UIStoreState = {
   routes: ROUTES.map(({ label, url }) => ({ label, url })),
 };
 
-@Injectable({ providedIn: 'any' })
+@Injectable({ providedIn: 'root' })
 export class UIStore extends ComponentStore<UIStoreState> {
   readonly openSidebar$ = this.select(({ openSidebar }) => openSidebar);
   readonly pageTitle$ = this.select(({ pageTitle }) => pageTitle);

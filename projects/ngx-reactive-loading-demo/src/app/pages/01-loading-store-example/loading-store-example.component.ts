@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { createLoadingStore, someLoading } from 'ngx-reactive-loading';
 import { TodoApiService } from '../../services/todo-api.service';
-import { TodoStateService } from '../../services/todo.service';
+import { TodoStateService } from '../02-loading-store-service-example/todo.service';
 import { Subject } from 'rxjs';
 import { exhaustMap, mergeMap } from 'rxjs/operators';
 import { Todo } from '../../model/todo';

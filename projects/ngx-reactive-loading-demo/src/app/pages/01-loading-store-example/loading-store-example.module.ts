@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { LoadingStoreExampleComponent } from './loading-store-example.component';
 import { RouterModule } from '@angular/router';
-import { TodoModule } from '../../features/todo/todo.module';
+import { TodoModule } from '../../shared/todo/todo.module';
 import { FlexModule } from '@angular/flex-layout';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';

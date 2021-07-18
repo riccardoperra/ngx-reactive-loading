@@ -1,5 +1,5 @@
 import { Route } from '@angular/router';
-import { SidebarRoute } from '../../store/ui-store';
+import { SidebarRoute } from '../store/ui-store';
 
 export type LabeledRoute = Route & SidebarRoute;
 
@@ -10,7 +10,7 @@ export const ROUTES: LabeledRoute[] = [
     url: '/loading-store',
     loadChildren: () =>
       import(
-        '../../pages/01-loading-store-example/loading-store-example.module'
+        '../pages/01-loading-store-example/loading-store-example.module'
       ).then(m => m.LoadingStoreExampleModule),
   },
   {
@@ -19,7 +19,7 @@ export const ROUTES: LabeledRoute[] = [
     url: '/loading-store-with-service',
     loadChildren: () =>
       import(
-        '../../pages/02-loading-store-service-example/loading-store-service-example.module'
+        '../pages/02-loading-store-service-example/loading-store-service-example.module'
       ).then(m => m.LoadingStoreServiceExampleModule),
   },
   {
@@ -28,7 +28,7 @@ export const ROUTES: LabeledRoute[] = [
     url: '/loading-store-with-ngrx',
     loadChildren: () =>
       import(
-        '../../pages/03-loading-store-ngrx-example/loading-store-ngrx-example.module'
+        '../pages/03-loading-store-ngrx-example/loading-store-ngrx-example.module'
       ).then(m => m.LoadingStoreNgrxExampleModule),
   },
 ];

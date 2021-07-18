@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { LayoutModule } from '../../shared/layout/layout.module';
 import { MatListModule } from '@angular/material/list';
-import { TodoModule } from '../../features/todo/todo.module';
+import { TodoModule } from '../../shared/todo/todo.module';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FlexModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';

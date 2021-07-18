@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Todo } from '../model/todo';
+import { Todo } from '../../model/todo';
 import { BehaviorSubject } from 'rxjs';
 import { map, shareReplay, tap, withLatestFrom } from 'rxjs/operators';
-import { TodoApiService } from './todo-api.service';
-import { TodoUtils } from '../helpers/todo-utils';
+import { TodoApiService } from '../../services/todo-api.service';
+import { TodoUtils } from '../../helpers/todo-utils';
 
 interface TodoState {
   ids: string[];
@@ -12,7 +12,7 @@ interface TodoState {
   };
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class TodoStateService {
   private readonly todoState = new BehaviorSubject<TodoState>({
     todos: {},

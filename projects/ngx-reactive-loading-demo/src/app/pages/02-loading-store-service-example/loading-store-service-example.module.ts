@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { TodoModule } from '../../features/todo/todo.module';
+import { TodoModule } from '../../shared/todo/todo.module';
 import { FlexModule } from '@angular/flex-layout';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
@@ -33,6 +33,6 @@ import { LayoutModule } from '../../shared/layout/layout.module';
   ],
   exports: [RouterModule],
   declarations: [LoadingStoreServiceExampleComponent],
-  providers: [],
+  providers: [TodoStateService],
 })
 export class LoadingStoreServiceExampleModule {}

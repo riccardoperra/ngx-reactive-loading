@@ -16,7 +16,7 @@ import { MatCardModule } from '@angular/material/card';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { HotToastModule } from '@ngneat/hot-toast';
-import { TodoModule } from './features/todo/todo.module';
+import { TodoModule } from './shared/todo/todo.module';
 import { LayoutModule } from './shared/layout/layout.module';
 
 @NgModule({

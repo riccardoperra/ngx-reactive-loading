@@ -40,26 +40,10 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
   /**
    * @internal
    * @private
-   * Used only internally, it could be used for lazy loading state in the future.
-   */
-  private readonly isInitialized: boolean = false;
-
-  /**
-   * @internal
-   * @private
    * Destroy subject to unsubscribe automatically all subscriptions if service is provided in component.
    */
   private readonly destroy$: Subject<void> = new Subject<void>();
-  /**
-   * @internal
-   * @private
-   */
-  private readonly initializedErrorMessage = `[${this.constructor.name}] Loading state already initialized`;
-  /**
-   * @internal
-   * @private
-   */
-  private readonly notInitializedErrorMessage = `[${this.constructor.name}] Loading state is not initialized yet`;
+
   /**
    * The loading store state.
    */
@@ -116,7 +100,6 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
     private readonly parent: LoadingService | null
   ) {
     this.state = createLoadingStore(defaultValue);
-    this.isInitialized = true;
   }
 
   /**
@@ -148,12 +131,7 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
    *
    */
   load<S>(source$: Observable<S>, property: T): Observable<S> {
-    return defer(() => {
-      if (!this.state) {
-        throw new Error(this.initializedErrorMessage);
-      }
-      return source$.pipe(this.state[property].track());
-    });
+    return defer(() => source$.pipe(this.state[property].track()));
   }
 
   /**
@@ -183,14 +161,10 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
    * ```
    */
   track<O>(key: T): MonoTypeOperatorFunction<O> {
-    if (!this.state) {
-      throw new Error(this.notInitializedErrorMessage);
-    }
-
     const loadingStoreState = this.state[key];
 
     if (!loadingStoreState) {
-      return pipe();
+      throw new Error(`[LoadingService] Property ${key} not found`);
     }
 
     return loadingStoreState.track();
@@ -253,10 +227,6 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
    * ```
    */
   someLoading(identifier: PropertyTuple<T> = []): Observable<boolean> {
-    if (!this.state) {
-      throw new Error(this.notInitializedErrorMessage);
-    }
-
     return defer(() => {
       if (!identifier || identifier.length === 0) {
         return someLoading([this.state]);
@@ -275,10 +245,6 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
   private getLoadingByIdentifiers(
     identifiers: PropertyTuple<T>
   ): LoadingStoreState[] {
-    if (!this.state) {
-      throw new Error(this.notInitializedErrorMessage);
-    }
-
     const stores: LoadingStoreState[] = [];
 
     for (const identifier of identifiers) {
@@ -297,10 +263,6 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
    * subscribers (only if service is provided attached in a Component)
    */
   ngOnDestroy(): void {
-    this.unsubscribe();
-  }
-
-  private unsubscribe(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }

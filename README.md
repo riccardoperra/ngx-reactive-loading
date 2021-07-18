@@ -13,6 +13,8 @@
   - [Providing in components](#component-based-loading-service)
   - [Providing in modules](#module-based-loading-service)
 - [Utils](#utils)
+- [Demo](projects/ngx-reactive-loading-demo)
+
 ## Getting started
 
 Install with npm

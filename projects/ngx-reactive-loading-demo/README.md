@@ -1,4 +1,6 @@
 ### ngx-reactive-loading Example application
+[Hosted Example](https://ngx-loading.vercel.app)
+
 Example application using ngx-reactive-loading library, showcasing some pattern to use it.
 
 This app is a simplified todo manager. The user can only add a new todo, remove it and get a new auto-generated list of todo.

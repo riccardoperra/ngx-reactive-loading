@@ -164,7 +164,7 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
     const loadingStoreState = this.state[key];
 
     if (!loadingStoreState) {
-      throw new Error(`[LoadingService] Property ${key} not found`);
+      throw new Error(`[LoadingService] Property ${key.toString()} not found`);
     }
 
     return loadingStoreState.track();

@@ -17,6 +17,7 @@ jobs:
         run: |
           npm ci
           npm run lint -- ngx-reactive-loading
+          npm run build:lib
           npm run test:lib:headless
 
       - name: Apply codecov
@@ -29,5 +30,4 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          npm run build:lib
           npx semantic-release --debug

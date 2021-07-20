@@ -1,4 +1,5 @@
 import { InjectionToken } from '@angular/core';
+import { LoadingStoreOptions } from '../model/loading-store-options';
 import { LoadingService } from '../services';
 
 /**
@@ -11,7 +12,7 @@ export const INITIAL_LOADING_STORE = new InjectionToken<PropertyKey[]>(
 /**
  * @internal
  */
-export const LOADING_STORE_OPTIONS = new InjectionToken<PropertyKey[]>(
+export const LOADING_STORE_OPTIONS = new InjectionToken<LoadingStoreOptions>(
   '[ngx-reactive-loading] Loading store options'
 );
 

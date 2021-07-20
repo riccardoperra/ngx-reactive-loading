@@ -1,10 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { CreateHotToastRef, HotToastService } from '@ngneat/hot-toast';
 import { LoadingEvent, LoadingService } from 'ngx-reactive-loading';
-import { scan, shareReplay, skip } from 'rxjs/operators';
+import { scan, shareReplay, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
-export class LoadingLogsService<T extends PropertyKey> {
+@Injectable()
+export class LoadingLogsService<T extends PropertyKey> implements OnDestroy {
+  readonly destroy$: Subject<void> = new Subject<void>();
+
   readonly getLogs = (loadingStore: LoadingService) =>
     loadingStore.events$.pipe(
       scan((acc, value) => acc.concat(value), [] as LoadingEvent[]),
@@ -23,7 +26,7 @@ export class LoadingLogsService<T extends PropertyKey> {
 
     loadingStore
       .someLoading()
-      .pipe(skip(1))
+      .pipe(takeUntil(this.destroy$))
       .subscribe(evt => {
         if (loadingRef) {
           loadingRef.close();
@@ -48,5 +51,10 @@ export class LoadingLogsService<T extends PropertyKey> {
         toast.set(evt.type, ref);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

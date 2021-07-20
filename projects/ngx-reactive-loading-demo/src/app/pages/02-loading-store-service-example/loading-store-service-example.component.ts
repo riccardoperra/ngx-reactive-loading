@@ -19,6 +19,7 @@ type PageActions = 'addTodo' | 'removeTodo' | 'reloadTodo';
       'removeTodo',
       'reloadTodo',
     ]),
+    LoadingLogsService,
   ],
 })
 export class LoadingStoreServiceExampleComponent implements OnInit {

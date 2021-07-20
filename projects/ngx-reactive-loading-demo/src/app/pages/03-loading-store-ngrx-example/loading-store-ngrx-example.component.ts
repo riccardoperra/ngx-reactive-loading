@@ -14,6 +14,7 @@ type PageActions = 'addTodo' | 'removeTodo' | 'reloadTodo';
   selector: 'app-loading-store-with-service-example',
   templateUrl: './loading-store-ngrx-example.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [LoadingLogsService],
 })
 export class LoadingStoreNgrxExampleComponent {
   readonly pageTitle$ = this.uiStore.pageTitle$;

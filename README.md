@@ -31,17 +31,13 @@ yarn add ngx-reactive-loading
 
 ## Basic usage
 
-The loading store is the core of this library, it allows handling easily different loading states through your
+The loading store is the core of this library, it allows handling different loading states through your
 application.
 
 To create a loading store that will track all your loading states, you must call the `createLoadingStore` function
 specifying the properties that will be tracked.
 
 ```ts
-type LoadingStore<K extends readonly [...PropertyKey[]]> = {
-  [Key in K[number]]: Readonly<LoadingStoreState>;
-};
-
 type LoadingStoreState = {
   /**
    * The observable that will be updated automatically (loading: true | false)
@@ -55,9 +51,10 @@ type LoadingStoreState = {
 ```
 
 ```ts
-import {createLoadingStore} from 'ngx-reactive-loading';
-import {Component, OnInit} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import { createLoadingStore } from 'ngx-reactive-loading';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from "rxjs";
 
 enum ExampleComponentActions {
   Add = 'add',
@@ -66,19 +63,7 @@ enum ExampleComponentActions {
 
 @Component({
   selector: 'app-example',
-  template: `
-    <div>
-      IsLoading: <span>{{ isLoading$ | async }}</span>
-    </div>
-    
-    <div>
-      Add: <span>{{ isAdding$ | async }}</span>
-    </div>
-
-    <div>
-      Add: <span>{{ isReloading$ | async }}</span>
-    </div>
-  `,
+  template: ``,
 })
 export class ExampleComponent implements OnInit {
   readonly loadingStore = createLoadingStore([
@@ -86,9 +71,9 @@ export class ExampleComponent implements OnInit {
     ExampleComponentActions.Reload,
   ]);
 
-  readonly isAdding$ = this.loadingStore[ExampleComponentActions.Add].$;
-  readonly isReloading$ = this.loadingStore[ExampleComponentActions.Reload].$;
-  readonly isLoading$ = someLoading([this.loadingStore]);
+  readonly isAdding$: Observable<boolean> = this.loadingStore[ExampleComponentActions.Add].$;
+  readonly isReloading$: Observable<boolean> = this.loadingStore[ExampleComponentActions.Reload].$;
+  readonly isLoading$: Observable<boolean> = someLoading([this.loadingStore]);
 
   constructor(private readonly http: HttpClient) {
   }
@@ -111,17 +96,14 @@ export class ExampleComponent implements OnInit {
 
 ## Working with Loading Service
 
-If you need a more sophisticated way to handle loading, for a better integration with Angular dependency injection, you can
-initialize a loading service that expose the loading store api's with helpers.
+If you need a more sophisticated way to handle loading states, for a better integration with Angular dependency injection, you can 
+provide the loading service that will expose the loading store api's.
 
 ### Loading service api
 
 The LoadingService API includes convenient methods for handling loading state.
 
 ```ts
-/**
- * Used internally to type given property into a tuple.
- */
 export type PropertyTuple<T extends PropertyKey> = readonly [...T[]];
 
 export interface LoadingStoreOptions {
@@ -268,39 +250,28 @@ export interface LoadingService<T extends PropertyKey> {
 ```
 
 ### Component based loading service
-The way to instantiate a loading service into an angular component is calling the `LoadingService.componentProvider` method into 
-the component providers. This allows to define the properties the service will track, and the options 
-that customize the behavior of the service.
-
-Using this approach, you can inject the same loadingService instance in
-sub-nested components allowing better communication with service, avoiding prop drilling. This doesn't mean that you 
-should always inject the loading service in nested component. Consider this approach if your components are
-always in the same scope/context.
+To instantiate the loading service into an angular component you must call the `LoadingService.componentProvider` method to
+add the component provider. This loading service is subscribed to throughout through the lifecycle of the component.
 
 ```ts
-import {LoadingService} from 'ngx-reactive-loading';
-import {Component, OnInit} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import { LoadingService } from 'ngx-reactive-loading';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from "rxjs";
 
 type ComponentAction = 'add' | 'reload';
 
 @Component({
   selector: 'app-example',
-  template: `
-    <div>
-      Add: <span>{{ loadingStoreState.add.$ | async }}</span>
-    </div>
-
-    <div>
-      Add: <span>{{ loadingStoreState.reload.$ | async }}</span>
-    </div>
-  `,
+  template: ``,
   providers: [
     LoadingService.componentProvider<ComponentAction>(['add', 'reload']),
   ],
 })
 export class ExampleComponent implements OnInit {
   readonly loadingStoreState = this.loadingStore.state;
+  readonly isAdding$: Observableb<boolean> = this.loadingStoreState.add.$;
+  readonly isReloading$: Observable<boolean> = this.loadingStoreState.add.$;
 
   constructor(
     private readonly http: HttpClient,
@@ -322,8 +293,8 @@ export class ExampleComponent implements OnInit {
 
 ### Module based loading service
 There are some scenarios when you maybe need to provide the loading service at the root module or 
-in a specific lazy-loaded module to be able to inject the service wherever you want.
-Since this library expose the .forRoot/.forChild pattern, you are able to do it.
+in a feature module, for example when using a global state manager like NGRX. You can do it with `.forRoot`/`.forChild` module
+static methods.
 
 #### Registering root loading service
 To register a loading service at the root of your application, you must add 

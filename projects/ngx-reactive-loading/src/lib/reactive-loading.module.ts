@@ -53,8 +53,8 @@ export class ReactiveLoadingModule {
     };
   }
 
-  static forFeature<T extends PropertyKey[]>(
-    keys: [...T],
+  static forFeature<T extends PropertyKey>(
+    keys: PropertyTuple<T>,
     options?: LoadingStoreOptions
   ): ModuleWithProviders<ReactiveLoadingModule> {
     const featureStoreDefaultOptions: LoadingStoreOptions = {

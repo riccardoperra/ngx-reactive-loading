@@ -13,17 +13,21 @@ jobs:
         with:
           node-version: '14.x'
 
-      - name: NPM install, lint, build, test and release
-        env:
-            GH_TOKEN: ${{ secrets.GH_TOKEN }}
-            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: NPM install, lint, build, test
         run: |
           npm ci
           npm run lint -- ngx-reactive-loading
-          npm run build
-          npm run test:lib:headless 
+          npm run test:lib:headless
+
+      - name: Apply codecov
+        uses: codecov/codecov-action@v2
+        with:
+          files: ./coverage/ngx-reactive-loading/lcov.info
+
+      - name: Release
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
           npm run build:lib
           npx semantic-release --debug
-
-      - name: Codecov
-        uses: codecov/codecov-action@v2

@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/riccardoperra/ngx-loading/compare/v1.0.3...v1.0.4) (2021-07-20)
+
+
+### Bug Fixes
+
+* fix forFeature module typing ([ac057e9](https://github.com/riccardoperra/ngx-loading/commit/ac057e911133068294ed542c2d7f4b4aaae59991))
+
 ## [1.0.3](https://github.com/riccardoperra/ngx-loading/compare/v1.0.2...v1.0.3) (2021-07-18)
 
 

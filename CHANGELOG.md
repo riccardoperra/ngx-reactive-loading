@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/riccardoperra/ngx-loading/compare/v1.0.4...v1.0.5) (2021-07-20)
+
+
+### Bug Fixes
+
+* fix `LOADING_STORE_OPTIONS` token type ([c2d760d](https://github.com/riccardoperra/ngx-loading/commit/c2d760daa1000088eb5ed3cf65343a8b02ff2a88))
+
 ## [1.0.4](https://github.com/riccardoperra/ngx-loading/compare/v1.0.3...v1.0.4) (2021-07-20)
 
 

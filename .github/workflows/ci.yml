@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
   push:
-    paths: 
+    paths:
       - '**.ts'
       - '**.html'
       - '**.scss'
@@ -30,9 +30,9 @@ jobs:
 
       - name: Build
         run: npm run test:lib:headless
-      
+
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GH_TOKEN }}
-          path-to-lcov: ./coverage/ng-reactive-loading/lcov.info
+          path-to-lcov: ./coverage/ngx-reactive-loading/lcov.info

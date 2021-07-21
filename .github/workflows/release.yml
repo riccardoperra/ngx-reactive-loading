@@ -1,8 +1,8 @@
 name: Publish the library
 
-on: 
+on:
   push:
-    branches: 
+    branches:
       - main
 
 jobs:
@@ -27,7 +27,7 @@ jobs:
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GH_TOKEN }}
-          path-to-lcov: ./coverage/ng-reactive-loading/lcov.info
+          path-to-lcov: ./coverage/ngx-reactive-loading/lcov.info
 
       - name: Release
         env:

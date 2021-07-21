@@ -3,14 +3,14 @@ name: CI
 on:
   pull_request:
   push:
-    paths:
-      - '**.ts'
-      - '**.html'
-      - '**.scss'
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
     steps:
       - uses: actions/checkout@v2
 

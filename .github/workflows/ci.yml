@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    paths: 
+      - '**.ts'
+      - '**.html'
+      - '**.scss'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run lint
+        run: npm run lint -- ngx-reactive-loading
+
+      - name: Run tests
+        run: npm run build:lib
+
+      - name: Build
+        run: npm run test:lib:headless
+      
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GH_TOKEN }}
+          path-to-lcov: ./coverage/ng-reactive-loading/lcov.info

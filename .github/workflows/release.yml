@@ -1,6 +1,9 @@
 name: Publish the library
 
-on: push
+on: 
+  push:
+    branches: 
+      - main
 
 jobs:
   build:
@@ -20,10 +23,11 @@ jobs:
           npm run build:lib
           npm run test:lib:headless
 
-      - name: Apply codecov
-        uses: codecov/codecov-action@v2
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
         with:
-          files: ./coverage/ngx-reactive-loading/lcov.info
+          github-token: ${{ secrets.GH_TOKEN }}
+          path-to-lcov: ./coverage/ng-reactive-loading/lcov.info
 
       - name: Release
         env:

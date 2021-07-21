@@ -1,4 +1,4 @@
-<img src="reactive_loading_banner.png">
+![NGX Reactive Loading](./reactive_loading_banner.png)
 
 > Better loading state in Angular applications with RxJS
 
@@ -6,10 +6,7 @@
 [![bundle size](https://img.shields.io/bundlephobia/min/ngx-reactive-loading)](https://www.npmjs.com/package/ngx-reactive-loading)
 [![npm downloads](https://img.shields.io/npm/dw/ngx-reactive-loading)](https://www.npmjs.com/package/ngx-reactive-loading)
 [![license](https://img.shields.io/npm/l/ngx-reactive-loading)](https://github.com/riccardoperra/ngx-reactive-loading/blob/main/LICENSE)
-[![Coverage Status][coveralls-image]][coveralls-url]
-
-[coveralls-image]: https://coveralls.io/repos/github/riccardoperra/ngx-reactive-loading/badge.svg?branch=master
-[coveralls-url]: https://coveralls.io/github/ng-select/ng-select?branch=master
+[![Coverage Status](https://coveralls.io/repos/github/riccardoperra/ngx-reactive-loading/badge.svg?branch=test_coverage)](https://coveralls.io/github/riccardoperra/ngx-reactive-loading?branch=test_coverage)
 
 ## Table of contents
 

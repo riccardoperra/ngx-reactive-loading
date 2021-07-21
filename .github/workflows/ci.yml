@@ -3,14 +3,13 @@ name: CI
 on:
   pull_request:
   push:
-    paths:
-      - '**.ts'
-      - '**.html'
-      - '**.scss'
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
       - uses: actions/checkout@v2
 
@@ -34,5 +33,5 @@ jobs:
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
-          github-token: ${{ secrets.GH_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: ./coverage/ngx-reactive-loading/lcov.info

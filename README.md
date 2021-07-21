@@ -1,17 +1,25 @@
+<img src="reactive_loading_banner.png">
+
 > Better loading state in Angular applications with RxJS
 
 [![npm version](https://badge.fury.io/js/ngx-reactive-loading.svg)](https://www.npmjs.com/package/ngx-reactive-loading)
 [![bundle size](https://img.shields.io/bundlephobia/min/ngx-reactive-loading)](https://www.npmjs.com/package/ngx-reactive-loading)
+[![npm downloads](https://img.shields.io/npm/dw/ngx-reactive-loading)](https://www.npmjs.com/package/ngx-reactive-loading)
+[![license](https://img.shields.io/npm/l/ngx-reactive-loading)](https://github.com/riccardoperra/ngx-reactive-loading/blob/main/LICENSE)
+[![Coverage Status][coveralls-image]][coveralls-url]
+
+[coveralls-image]: https://coveralls.io/repos/github/riccardoperra/ngx-reactive-loading/badge.svg?branch=master
+[coveralls-url]: https://coveralls.io/github/ng-select/ng-select?branch=master
 
 ## Table of contents
 
 - [Table of contents](#table-of-contents)
 - [Getting started](#getting-started)
 - [Basic usage](#basic-usage)
-- [Working with loading service](#working-with-loading-service)
-  - [Loading service api](#loading-service-api)
-  - [Providing in components](#component-based-loading-service)
-  - [Providing in modules](#module-based-loading-service)
+- [Loading service](#working-with-loading-service)
+  - [Api](#loading-service-api)
+  - [Use with components](#use-with-components)
+  - [Use with modules](#module-based-loading-service)
 - [Utils](#utils)
 - [Demo](projects/ngx-reactive-loading-demo)
 
@@ -40,11 +48,11 @@ specifying the properties that will be tracked.
 ```ts
 type LoadingStoreState = {
   /**
-   * The observable that will be updated automatically (loading: true | false)
+   * Subscribe to loading changes
    */
   readonly $: Observable<boolean>;
   /**
-   * The operator function that will update the loading observable.
+   * Update the loading observable
    */
   readonly track: <T>() => MonoTypeOperatorFunction<T>;
 };
@@ -215,8 +223,8 @@ export interface LoadingService<T extends PropertyKey> {
   isLoading(property: T): Observable<boolean>;
 
   /**
-   * Track the changes of one or more given loading state. If no properties are
-   * provided, all loading store property will be checked.
+   * Subscribe to the changes the loading state by the given property. 
+   * Default behavior checks for all properties.
    *
    * @example
    * import {LoadingService} from 'ngx-reactive-loading';
@@ -242,16 +250,14 @@ export interface LoadingService<T extends PropertyKey> {
   someLoading(properties: PropertyTuple<T> = []): Observable<boolean>;
 
   /**
-   * Used to automatically unsubscribe all
-   * subscribers (only if service is provided attached in a Component)
+   * Unsubscribe all subscription on component destroy.
    */
   ngOnDestroy(): void;
 }
 ```
 
-### Component based loading service
-To instantiate the loading service into an angular component you must call the `LoadingService.componentProvider` method to
-add the component provider. This loading service is subscribed to throughout through the lifecycle of the component.
+### Use with components
+To use the loading service with angular angular components and dependency injection you must provide the service into the component provider with the `LoadingService.componentProvider` method. The loading service is subscribed to throughout the lifecycle of the component and it will manage all your loading subscriptions.
 
 ```ts
 import { LoadingService } from 'ngx-reactive-loading';
@@ -291,10 +297,8 @@ export class ExampleComponent implements OnInit {
 }
 ```
 
-### Module based loading service
-There are some scenarios when you maybe need to provide the loading service at the root module or 
-in a feature module, for example when using a global state manager like NGRX. You can do it with `.forRoot`/`.forChild` module
-static methods.
+### Use with modules
+There are some scenarios when you may need to provide the loading service at the root or in a feature module, for example when using a global state manager like NGRX. You can do it calling the `ReactiveLoadingModule.forRoot` or  `ReactiveLoadingModule.forChild` methods.
 
 #### Registering root loading service
 To register a loading service at the root of your application, you must add 
@@ -319,8 +323,6 @@ in the imports of your `NgModule` with the service options.
 import { ReactiveLoadingModule } from 'ngx-reactive-loading';
 
 type TodoLoadingActions = 'addTodo' | 'removeTodo' | 'reloadTodo';
-
-import { ReactiveLoadingModule } from 'ngx-reactive-loading';
 
 @NgModule({
   imports: [

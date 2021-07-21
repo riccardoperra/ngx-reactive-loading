@@ -6,7 +6,7 @@
 [![bundle size](https://img.shields.io/bundlephobia/min/ngx-reactive-loading)](https://www.npmjs.com/package/ngx-reactive-loading)
 [![npm downloads](https://img.shields.io/npm/dw/ngx-reactive-loading)](https://www.npmjs.com/package/ngx-reactive-loading)
 [![license](https://img.shields.io/npm/l/ngx-reactive-loading)](https://github.com/riccardoperra/ngx-reactive-loading/blob/main/LICENSE)
-[![Coverage Status](https://coveralls.io/repos/github/riccardoperra/ngx-reactive-loading/badge.svg?branch=test_coverage)](https://coveralls.io/github/riccardoperra/ngx-reactive-loading?branch=test_coverage)
+[![Coverage Status](https://coveralls.io/repos/github/riccardoperra/ngx-reactive-loading/badge.svg?branch=main)](https://coveralls.io/github/riccardoperra/ngx-reactive-loading?branch=main)
 
 ## Table of contents
 
@@ -36,8 +36,7 @@ yarn add ngx-reactive-loading
 
 ## Basic usage
 
-The loading store is the core of this library, it allows handling different loading states through your
-application.
+The loading store is the core of this library, it allows handling different loading states through your application.
 
 To create a loading store that will track all your loading states, you must call the `createLoadingStore` function
 specifying the properties that will be tracked.
@@ -101,8 +100,8 @@ export class ExampleComponent implements OnInit {
 
 ## Working with Loading Service
 
-If you need a more sophisticated way to handle loading states, for a better integration with Angular dependency injection, you can 
-provide the loading service that will expose the loading store api's.
+If you need a more sophisticated way to handle loading states, for a better integration with Angular dependency
+injection, you can provide the loading service that will expose the loading store api's.
 
 ### Loading service api
 
@@ -113,8 +112,7 @@ export type PropertyTuple<T extends PropertyKey> = readonly [...T[]];
 
 export interface LoadingStoreOptions {
   /**
-   * Isolate the service instance, removing the accesses to the parent and
-   * root loading state.
+   * Isolate the service instance, removing all references to loading service parent.
    */
   standalone: boolean;
 }
@@ -125,7 +123,7 @@ export interface LoadingService<T extends PropertyKey> {
    */
   readonly state: LoadingStore<PropertyTuple<T>>;
   /**
-   * Track all changes of the current LoadingService loading state properties.
+   * Observe loading state property changes.
    */
   readonly events$: Observable<LoadingEvent>;
 
@@ -220,7 +218,7 @@ export interface LoadingService<T extends PropertyKey> {
   isLoading(property: T): Observable<boolean>;
 
   /**
-   * Subscribe to the changes the loading state by the given property. 
+   * Subscribe to the changes the loading state by the given property.
    * Default behavior checks for all properties.
    *
    * @example
@@ -254,7 +252,10 @@ export interface LoadingService<T extends PropertyKey> {
 ```
 
 ### Use with components
-To use the loading service with angular angular components and dependency injection you must provide the service into the component provider with the `LoadingService.componentProvider` method. The loading service is subscribed to throughout the lifecycle of the component and it will manage all your loading subscriptions.
+
+To use the loading service with angular components and dependency injection you must provide the service into the
+component provider with the `LoadingService.componentProvider` method. The loading service is subscribed to throughout
+the lifecycle of the component, and it will manage all your loading subscriptions.
 
 ```ts
 import { LoadingService } from 'ngx-reactive-loading';
@@ -295,11 +296,16 @@ export class ExampleComponent implements OnInit {
 ```
 
 ### Use with modules
-There are some scenarios when you may need to provide the loading service at the root or in a feature module, for example when using a global state manager like NGRX. You can do it calling the `ReactiveLoadingModule.forRoot` or  `ReactiveLoadingModule.forChild` methods.
+
+There are some scenarios when you may need to provide the loading service at the root or in a feature module, for
+example when using a global state manager like NGRX. You can do it calling the `ReactiveLoadingModule.forRoot`
+or `ReactiveLoadingModule.forChild` methods.
 
 #### Registering root loading service
-To register a loading service at the root of your application, you must add 
-the `ReactiveLoadingModule.forRoot()` method with the array of the properties that will be tracked.
+
+To register a loading service at the root of your application, you must add the `ReactiveLoadingModule.forRoot()` method
+with the array of the properties that will be tracked.
+
 ```ts
 import { ReactiveLoadingModule } from 'ngx-reactive-loading';
 
@@ -310,14 +316,17 @@ type RootLoadingActions = 'globalReload';
     ReactiveLoadingModule.forRoot<RootLoadingActions>(['globalReload'])
   ],
 })
-export class AppModule {}
+export class AppModule {
+}
 ```
 
 #### Registering feature loading service
-For feature modules you must register your loading service by adding the `ReactiveLoadingModule.forChild()` method
-in the imports of your `NgModule` with the service options.
+
+For feature modules you must register your loading service by adding the `ReactiveLoadingModule.forChild()` method in
+the imports of your `NgModule` with the service options.
+
 ```ts
-import { ReactiveLoadingModule } from 'ngx-reactive-loading';
+import { ReactiveLoadingModule } from "ngx-reactive-loading";
 
 type TodoLoadingActions = 'addTodo' | 'removeTodo' | 'reloadTodo';
 
@@ -325,11 +334,12 @@ type TodoLoadingActions = 'addTodo' | 'removeTodo' | 'reloadTodo';
   imports: [
     ReactiveLoadingModule.forFeature(
       ['addTodo', 'removeTodo', 'reloadTodo'],
-      {standalone: false} // This is the default behavior
+      { standalone: false } // This is the default behavior
     )
   ],
 })
-export class TodoModule {}
+export class TodoModule {
+}
 ```
 
 ### Utils

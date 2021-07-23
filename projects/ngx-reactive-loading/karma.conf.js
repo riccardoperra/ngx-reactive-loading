@@ -25,7 +25,7 @@ module.exports = function (config) {
         '../../coverage/ngx-reactive-loading'
       ),
       subdir: '.',
-      reporters: [{ type: 'lcovonly' }],
+      reporters: [{ type: 'html' }, { type: 'lcovonly' }],
     },
     reporters: ['progress', 'coverage'],
     port: 9876,

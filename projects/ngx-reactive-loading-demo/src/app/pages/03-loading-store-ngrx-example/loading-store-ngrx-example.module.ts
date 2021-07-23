@@ -18,6 +18,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { AppState } from './store';
 import todoActions from './store/todo.actions';
 import { ReactiveLoadingModule } from 'ngx-reactive-loading';
+import { environment } from '../../../environments/environment';
 
 @NgModule({
   imports: [
@@ -25,11 +26,18 @@ import { ReactiveLoadingModule } from 'ngx-reactive-loading';
     StoreModule.forRoot<AppState>({
       todo: todoReducer,
     }),
-    ReactiveLoadingModule.forFeature([
-      todoActions.todoAdd.type,
-      todoActions.todoRemove.type,
-      todoActions.todoReload.type,
-    ]),
+    ReactiveLoadingModule.forFeature(
+      [
+        todoActions.todoAdd.type,
+        todoActions.todoRemove.type,
+        todoActions.todoReload.type,
+      ],
+      {
+        logger: !environment.production,
+        name: 'LoadingStoreNgrxExampleLoader',
+        standalone: false,
+      }
+    ),
     EffectsModule.forRoot([TodoEffects]),
     RouterModule.forChild([
       {

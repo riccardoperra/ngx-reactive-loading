@@ -1,6 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { LoadingEvent, someLoading } from 'ngx-reactive-loading';
+import { fakeAsync, tick } from '@angular/core/testing';
 import { combineLatest, of, timer } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { LoadingService } from '../../public-api';

@@ -1,13 +1,6 @@
-import { ChangeDetectionStrategy, Component, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { PropertyTuple } from '../lib/model/property';
-import {
-  FEATURE_LOADING_STORE,
-  INITIAL_LOADING_STORE,
-  LOADING_STORE_OPTIONS,
-  PARENT_LOADING_STORE,
-  ROOT_LOADING_STORE,
-} from '../lib/providers/token';
+import { PropertyTuple } from '../lib/model';
 import { RootReactiveLoadingModule } from '../lib/reactive-loading.module';
 import {
   LoadingService,
@@ -17,6 +10,12 @@ import {
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { defer } from 'rxjs';
+import {
+  INITIAL_LOADING_STORE,
+  LOADING_STORE,
+  LOADING_STORE_OPTIONS,
+  PARENT_LOADING_STORE,
+} from '../lib/internal/tokens';
 
 type RootModuleActions = 'add' | 'delete';
 type FeatureModuleActions = 'addFeature' | 'deleteFeature';
@@ -85,7 +84,7 @@ describe('Reactive loading module', () => {
     TestBed.configureTestingModule({
       providers: [
         {
-          provide: LoadingService,
+          provide: LOADING_STORE,
           useValue: new LoadingService([], { standalone: true }, null),
         },
         componentProviders,

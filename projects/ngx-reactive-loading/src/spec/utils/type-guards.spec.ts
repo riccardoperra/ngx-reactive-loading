@@ -6,7 +6,7 @@ import {
   LoadingStoreState,
 } from '../../lib/model';
 
-describe('loading store typeg guards', () => {
+describe('loading store type guards', () => {
   it('is loadingStoreState', () => {
     const obj: LoadingStoreState = {
       $: of(true),

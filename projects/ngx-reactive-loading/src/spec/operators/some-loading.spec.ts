@@ -1,4 +1,4 @@
-import { fakeAsync, flush, tick } from '@angular/core/testing';
+import { fakeAsync, tick } from '@angular/core/testing';
 import { BehaviorSubject, combineLatest, Observable, timer } from 'rxjs';
 import { createLoadingStore, someLoading, withLoading } from '../../public-api';
 

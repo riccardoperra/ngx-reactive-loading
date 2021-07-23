@@ -11,10 +11,15 @@ import {
   merge,
   MonoTypeOperatorFunction,
   Observable,
-  pipe,
   Subject,
 } from 'rxjs';
-import { LoadingEvent, LoadingStore, LoadingStoreState } from '../model';
+import {
+  LoadingEvent,
+  LoadingStore,
+  LoadingStoreOptions,
+  LoadingStoreState,
+  PropertyTuple,
+} from '../model';
 import { createLoadingStore } from '../utils';
 import {
   distinctUntilChanged,
@@ -24,18 +29,42 @@ import {
   takeUntil,
 } from 'rxjs/operators';
 import { someLoading } from '../operators';
-import { PropertyTuple } from '../model/property';
-import { provideLoadingService } from '../providers/provider';
+import { LoadingStoreService } from '../model/loading-store';
 import {
   INITIAL_LOADING_STORE,
+  LOADING_STORE,
   LOADING_STORE_OPTIONS,
   PARENT_LOADING_STORE,
-} from '../providers/token';
-import { LoadingStoreOptions } from '../model/loading-store-options';
+} from '../internal/tokens';
+import {
+  provideInitialLoadingState,
+  provideLoadingStoreOptions,
+  provideParentLoadingStore,
+  provideSomeLoadingState,
+} from '../internal/providers';
+
+/**
+ * @internal
+ * @param keys Loading store property keys
+ * @param options Loading store options
+ */
+export const provideLoadingService = <T extends PropertyKey>(
+  keys: PropertyTuple<T>,
+  options?: LoadingStoreOptions
+): Provider[] => {
+  const defaultComponentProvider: LoadingStoreOptions = { standalone: false };
+  return [
+    provideInitialLoadingState(keys),
+    provideLoadingStoreOptions(options || defaultComponentProvider),
+    provideParentLoadingStore(),
+    LoadingService,
+    provideSomeLoadingState(),
+  ];
+};
 
 @Injectable()
 export class LoadingService<T extends PropertyKey = PropertyKey>
-  implements OnDestroy
+  implements OnDestroy, LoadingStoreService<T>
 {
   /**
    * @internal
@@ -79,21 +108,10 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
   }
 
   constructor(
-    /**
-     * Loading keys of the loading store
-     */
     @Inject(INITIAL_LOADING_STORE)
     private readonly defaultValue: PropertyTuple<T>,
-    /**
-     * Options of the loading store
-     */
     @Inject(LOADING_STORE_OPTIONS)
     private readonly options: LoadingStoreOptions,
-    /**
-     * Injected Loading service parent. It could be the service instantiated by the forRoot/forChild module
-     * or by a component provider. If there aren't parent instantiated service or `standalone` options is provided,
-     * the parent property will be null.
-     */
     @Inject(PARENT_LOADING_STORE)
     @Optional()
     @SkipSelf()

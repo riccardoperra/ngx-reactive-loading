@@ -16,7 +16,11 @@
 - [Loading service](#working-with-loading-service)
   - [Api](#loading-service-api)
   - [Use with components](#use-with-components)
-  - [Use with modules](#module-based-loading-service)
+  - [Use with modules](#use-with-modules)
+    - [Registering root loading service](#registering-root-loading-service)
+    - [Registering feature loading service](#registering-feature-loading-service)
+    - [Custom module configuration](#custom-module-configuration)
+- [Tokens](#tokens)
 - [Utils](#utils)
 - [Demo](projects/ngx-reactive-loading-demo)
 
@@ -58,7 +62,7 @@ type LoadingStoreState = {
 import { createLoadingStore } from 'ngx-reactive-loading';
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from "rxjs";
+import { Observable } from 'rxjs';
 
 enum ExampleComponentActions {
   Add = 'add',
@@ -75,12 +79,13 @@ export class ExampleComponent implements OnInit {
     ExampleComponentActions.Reload,
   ]);
 
-  readonly isAdding$: Observable<boolean> = this.loadingStore[ExampleComponentActions.Add].$;
-  readonly isReloading$: Observable<boolean> = this.loadingStore[ExampleComponentActions.Reload].$;
+  readonly isAdding$: Observable<boolean> =
+    this.loadingStore[ExampleComponentActions.Add].$;
+  readonly isReloading$: Observable<boolean> =
+    this.loadingStore[ExampleComponentActions.Reload].$;
   readonly isLoading$: Observable<boolean> = someLoading([this.loadingStore]);
 
-  constructor(private readonly http: HttpClient) {
-  }
+  constructor(private readonly http: HttpClient) {}
 
   add() {
     this.http
@@ -189,7 +194,7 @@ export interface LoadingService<T extends PropertyKey> {
    * }
    *
    */
-  track<O>(key: T): MonoTypeOperatorFunction<O>
+  track<O>(key: T): MonoTypeOperatorFunction<O>;
 
   /**
    * Track the changes of the given loading state property.
@@ -210,7 +215,7 @@ export interface LoadingService<T extends PropertyKey> {
    * })
    * export class ExampleComponent {
    *   readonly isAdding$: Observable<boolean> = this.loadingService.isLoading('add');
-   *   
+   *
    *   constructor(private readonly loadingService: LoadingService<ExampleActions>)
    * }
    *
@@ -234,10 +239,10 @@ export interface LoadingService<T extends PropertyKey> {
    * })
    * export class ExampleComponent {
    *   readonly isAddingOrDeleting$: Observable<boolean> = this.loadingService.someLoading([
-   *    'add', 
+   *    'add',
    *    'delete'
    *   ]);
-   *   
+   *
    *   constructor(private readonly loadingService: LoadingService<ExampleActions>)
    * }
    *
@@ -261,7 +266,7 @@ the lifecycle of the component, and it will manage all your loading subscription
 import { LoadingService } from 'ngx-reactive-loading';
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from "rxjs";
+import { Observable } from 'rxjs';
 
 type ComponentAction = 'add' | 'reload';
 
@@ -280,11 +285,10 @@ export class ExampleComponent implements OnInit {
   constructor(
     private readonly http: HttpClient,
     private readonly loadingStore: LoadingService<ComponentAction>
-  ) {
-  }
+  ) {}
 
   add() {
-    // Using load helper 
+    // Using load helper
     this.loadingStore.load(() => this.http.post('/', {}), 'add').subscribe();
   }
 
@@ -313,11 +317,10 @@ type RootLoadingActions = 'globalReload';
 
 @NgModule({
   imports: [
-    ReactiveLoadingModule.forRoot<RootLoadingActions>(['globalReload'])
+    ReactiveLoadingModule.forRoot<RootLoadingActions>(['globalReload']),
   ],
 })
-export class AppModule {
-}
+export class AppModule {}
 ```
 
 #### Registering feature loading service
@@ -326,7 +329,7 @@ For feature modules you must register your loading service by adding the `Reacti
 the imports of your `NgModule` with the service options.
 
 ```ts
-import { ReactiveLoadingModule } from "ngx-reactive-loading";
+import { ReactiveLoadingModule } from 'ngx-reactive-loading';
 
 type TodoLoadingActions = 'addTodo' | 'removeTodo' | 'reloadTodo';
 
@@ -335,20 +338,93 @@ type TodoLoadingActions = 'addTodo' | 'removeTodo' | 'reloadTodo';
     ReactiveLoadingModule.forFeature(
       ['addTodo', 'removeTodo', 'reloadTodo'],
       { standalone: false } // This is the default behavior
-    )
+    ),
   ],
 })
-export class TodoModule {
+export class TodoModule {}
+```
+
+#### Custom module configuration
+
+Using the `ReactiveLoadingModule` allows you to provide extra configuration params in addition to
+loading store options.
+
+```ts
+export interface LoadingStoreModuleOptions extends LoadingStoreOptions {
+  /**
+   * When true, log all loading state changes to the console.
+   * Use for debugging.
+   */
+  logger?: boolean;
+  /**
+   * The name of the provider. Useful for named logs.
+   */
+  name?: string;
 }
+```
+
+##### Event logger
+
+With the event logger, there will be a default eventListener to the loading store that
+will log all loading property changes automatically in the console. Providing the `name` option,
+the log will include also that name to differentiate it.
+
+```ts
+// feature.module.ts
+@NgModule({
+  imports: [
+    ReactiveLoadingModule.forFeature(['addTodo', 'removeTodo', 'reloadTodo'], {
+      standalone: false,
+      name: 'FeatureModule1',
+      logger: true,
+    }),
+  ],
+})
+export class FeatureModule {}
+```
+
+### Tokens
+
+#### SOME_LOADING
+
+The `SOME_LOADING` token is automatically provided when providing the loading service in a component
+or in modules. When injected, it allows you to observe the changes to the state between all service
+loading property, like the `someLoading` helper function.
+
+```ts
+import { ReactiveLoadingModule, LoadingService } from 'ngx-reactive-loading';
+import { Inject, Component, NgModule } from '@angular/core';
+import { of, Observable } from 'rxjs';
+
+@Component({ template: `<app-hello></app-hello>` })
+export class AppComponent {
+  constructor(private readonly loadingService: LoadingService) {
+    of(1).pipe(loadingService.track('prop1')).subscribe();
+  }
+}
+
+@Component({ template: ``, selector: 'app-hello' })
+export class HelloComponent {
+  constructor(
+    @Inject(SOME_LOADING) private readonly someLoading$: Observable<boolean>
+  ) {}
+}
+
+@NgModule({
+  declarations: [AppComponent, HelloComponent],
+  imports: [ReactiveLoadingModule.forRoot(['prop1'])],
+})
+export class AppModule {}
 ```
 
 ### Utils
 
 - someLoading
+
   ```ts
-  import {createLoadingStore, someLoading} from 'ngx-reactive-loading'; 
-  
-  const loadingStore = createLoadingStore(['add' | 'remove'])
+  import { createLoadingStore, someLoading } from 'ngx-reactive-loading';
+
+  const loadingStore = createLoadingStore(['add' | 'remove']);
 
   /**
    * Giving the loading store
@@ -365,24 +441,27 @@ export class TodoModule {
   /**
    * Giving multiple property
    */
-  const isAddingOrRemoving$ = someLoading([loadingStore.remove, loadingStore.add.$]);
+  const isAddingOrRemoving$ = someLoading([
+    loadingStore.remove,
+    loadingStore.add.$,
+  ]);
   ```
 
 - withLoading - Update the subject at the first emission and on complete
+
   ```ts
-  import {withLoading} from 'ngx-reactive-loading'; 
-  import {of,Subject} from 'rxjs'; 
-  
+  import { withLoading } from 'ngx-reactive-loading';
+  import { of, Subject } from 'rxjs';
+
   const isLoading$ = new Subject<boolean>();
   const $ = of(1).pipe(delay(1000), withLoading(isLoading$));
-  
+
   isLoading$.subscribe(result => {
     // Output 1: true
     // Output 2: false (after 1000ms)
   });
-  
+
   $.subscribe(result => {
     // Output 1: 1
-  })
+  });
   ```
-

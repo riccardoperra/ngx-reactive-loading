@@ -1,5 +1,6 @@
 import {
   Inject,
+  Injector,
   ModuleWithProviders,
   NgModule,
   Optional,
@@ -25,6 +26,7 @@ import {
   provideParentLoadingStore,
   provideSomeLoadingState,
 } from './internal/providers';
+import { LoggerService } from './services/logger.service';
 
 @NgModule({})
 export class RootReactiveLoadingModule {
@@ -49,17 +51,18 @@ export class ReactiveLoadingModule {
     return {
       ngModule: RootReactiveLoadingModule,
       providers: [
+        LoggerService,
         {
           provide: ROOT_LOADING_STORE_GUARD,
           useFactory: provideForRootGuard,
           deps: [[ROOT_LOADING_STORE, new Optional(), new SkipSelf()]],
         },
         provideInitialLoadingState(keys),
-        provideLoadingStoreOptions(rootStoreDefaultOptions),
+        provideLoadingStoreOptions(options || rootStoreDefaultOptions),
         {
           provide: LoadingService,
           useFactory: setupLoadingStore,
-          deps: [INITIAL_LOADING_STORE, LOADING_STORE_OPTIONS],
+          deps: [INITIAL_LOADING_STORE, Injector, LOADING_STORE_OPTIONS],
         },
         {
           provide: LOADING_STORE,
@@ -92,7 +95,7 @@ export class ReactiveLoadingModule {
         {
           provide: LoadingService,
           useFactory: setupLoadingStore,
-          deps: [INITIAL_LOADING_STORE, LOADING_STORE_OPTIONS],
+          deps: [INITIAL_LOADING_STORE, Injector, LOADING_STORE_OPTIONS],
         },
         {
           provide: LOADING_STORE,
@@ -118,17 +121,17 @@ function provideForRootGuard(loadingStore: LoadingStore<any> | null) {
 
 function setupLoadingStore<T extends PropertyKey>(
   initialState: PropertyTuple<T>,
+  injector: Injector,
   options: LoadingStoreModuleOptions
 ): LoadingService<T> {
   const service = new LoadingService<any>(initialState, options, null);
-
+  const logger = injector.get(LoggerService);
   if (options.logger) {
     service.events$.subscribe(event => {
-      console.group(
-        `LoadingService event: ${options.name || service.constructor.name}`
+      logger.log(
+        `LoadingService event: ${options.name || service.constructor.name}`,
+        event
       );
-      console.log(event);
-      console.groupEnd();
     });
   }
 

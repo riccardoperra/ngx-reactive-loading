@@ -1,6 +1,6 @@
 import { LoadingStoreOptions, PropertyTuple } from '../model';
 import { FactoryProvider, Injector, ValueProvider } from '@angular/core';
-import { IS_LOADING, SOME_LOADING } from '../providers/token';
+import { SOME_LOADING } from '../providers/token';
 import { LoadingStoreService } from '../model/loading-store';
 import {
   INITIAL_LOADING_STORE,

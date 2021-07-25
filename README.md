@@ -7,6 +7,7 @@
 [![npm downloads](https://img.shields.io/npm/dw/ngx-reactive-loading)](https://www.npmjs.com/package/ngx-reactive-loading)
 [![license](https://img.shields.io/npm/l/ngx-reactive-loading)](https://github.com/riccardoperra/ngx-reactive-loading/blob/main/LICENSE)
 [![Coverage Status](https://coveralls.io/repos/github/riccardoperra/ngx-reactive-loading/badge.svg?branch=main)](https://coveralls.io/github/riccardoperra/ngx-reactive-loading?branch=main)
+[![Supported version](https://img.shields.io/badge/Support%20Angular-12%2B-%23D6002F)](https://github.com/riccardoperra/ngx-reactive-loading)
 
 ## Table of contents
 

@@ -1,106 +1,81 @@
-import { fakeAsync, tick } from '@angular/core/testing';
-import { BehaviorSubject, combineLatest, Observable, timer } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { marbles } from 'rxjs-marbles';
 import { createLoadingStore, someLoading, withLoading } from '../../public-api';
 
 describe('someLoading', () => {
-  it('should return if there is loading', fakeAsync(() => {
-    const firstLoading$ = new BehaviorSubject<boolean>(false);
-    const first$: Observable<number> = timer(1000).pipe(
-      withLoading(firstLoading$)
-    );
+  it(
+    'should return if there is loading',
+    marbles(m => {
+      const firstLoading$ = new BehaviorSubject<boolean>(false);
+      const first$: Observable<string> = m
+        .cold('---(a|)', { a: 'first' })
+        .pipe(withLoading(firstLoading$));
 
-    const secondLoading$ = new BehaviorSubject<boolean>(false);
-    const second$: Observable<number> = timer(2000).pipe(
-      withLoading(secondLoading$)
-    );
+      m.expect(first$).toBeObservable('---(a|)', { a: 'first' });
 
-    const spy = jasmine.createSpy();
+      const secondLoading$ = new BehaviorSubject<boolean>(false);
+      const second$: Observable<string> = m
+        .cold('-----(a|)', { a: 'second' })
+        .pipe(withLoading(secondLoading$));
 
-    combineLatest([first$, second$]).subscribe();
+      m.expect(second$).toBeObservable('-----(a|)', { a: 'second' });
 
-    someLoading([firstLoading$, secondLoading$]).subscribe(spy);
+      const someLoading$ = someLoading([firstLoading$, secondLoading$]);
 
-    expect(spy).toHaveBeenCalledWith(true);
+      m.expect(someLoading$).toBeObservable('a----b', { a: true, b: false });
+    })
+  );
 
-    tick(1000);
+  it(
+    'should return if there is loading with loading store states',
+    marbles(m => {
+      const loadingStore = createLoadingStore<['add', 'delete']>([
+        'add',
+        'delete',
+      ]);
 
-    expect(spy).toHaveBeenCalledWith(true);
+      const first$: Observable<number> = m
+        .cold('---(a|)', { a: 0 })
+        .pipe(loadingStore.add.track());
 
-    tick(2000);
+      m.expect(first$).toBeObservable('---(a|)', { a: 0 });
 
-    expect(spy).toHaveBeenCalledWith(false);
-  }));
+      const second$: Observable<number> = m
+        .cold('----(a|)', { a: 1 })
+        .pipe(loadingStore.delete.track());
 
-  it('should return if there is loading with loading store states', fakeAsync(() => {
-    const loadingStore = createLoadingStore<['add', 'delete']>([
-      'add',
-      'delete',
-    ]);
+      m.expect(second$).toBeObservable('----(a|)', { a: 1 });
 
-    const first$: Observable<number> = timer(1000).pipe(
-      loadingStore.add.track()
-    );
+      const someLoadingStore$ = someLoading([loadingStore]);
+      const someLoadingAdd$ = someLoading([loadingStore.add]);
+      const someLoadingDelete$ = someLoading([loadingStore.delete.$]);
+      const someLoading$ = someLoading([
+        loadingStore.add,
+        loadingStore.delete.$,
+      ]);
 
-    const second$: Observable<number> = timer(1000).pipe(
-      loadingStore.delete.track()
-    );
+      m.expect(someLoading$).toBeObservable('a---b', { a: true, b: false });
 
-    const spy = jasmine.createSpy();
+      m.expect(someLoadingStore$).toBeObservable('a---b', {
+        a: true,
+        b: false,
+      });
 
-    combineLatest([first$, second$]).subscribe();
+      m.expect(someLoadingAdd$).toBeObservable('a--b', { a: true, b: false });
+      m.expect(someLoadingDelete$).toBeObservable('a---b', {
+        a: true,
+        b: false,
+      });
+    })
+  );
 
-    someLoading([loadingStore.add, loadingStore.delete.$]).subscribe(spy);
+  it(
+    'should no update if is invalid loading',
+    marbles(m => {
+      const value: any = 0;
 
-    expect(spy).toHaveBeenCalledWith(true);
-
-    tick(1000);
-
-    expect(spy).toHaveBeenCalledWith(true);
-
-    tick(2000);
-
-    expect(spy).toHaveBeenCalledWith(false);
-  }));
-
-  it('should return if there is some loading store loading', fakeAsync(() => {
-    const loadingStore = createLoadingStore<['add', 'delete']>([
-      'add',
-      'delete',
-    ]);
-
-    const first$: Observable<number> = timer(1000).pipe(
-      loadingStore.add.track()
-    );
-
-    const second$: Observable<number> = timer(1000).pipe(
-      loadingStore.delete.track()
-    );
-
-    const spy = jasmine.createSpy();
-
-    combineLatest([first$, second$]).subscribe();
-
-    someLoading([loadingStore]).subscribe(spy);
-
-    expect(spy).toHaveBeenCalledWith(true);
-
-    tick(1000);
-
-    expect(spy).toHaveBeenCalledWith(true);
-
-    tick(2000);
-
-    expect(spy).toHaveBeenCalledWith(false);
-  }));
-
-  it('should no update if there is no loading', fakeAsync(() => {
-    const loadingStore = createLoadingStore<['add']>(['add']);
-
-    const spy = jasmine.createSpy();
-
-    const value: any = true;
-    someLoading([value]).subscribe(spy);
-
-    expect(spy).not.toHaveBeenCalled();
-  }));
+      const loading$ = someLoading([value]);
+      m.expect(loading$).toBeObservable('|');
+    })
+  );
 });

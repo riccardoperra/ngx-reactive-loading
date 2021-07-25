@@ -1,4 +1,4 @@
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync } from '@angular/core/testing';
 import { combineLatest, of, timer } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { LoadingService } from '../../public-api';
@@ -20,33 +20,27 @@ describe('LoadingService', () => {
     expect(Object.keys(service.state)).toEqual(expected);
   });
 
-  it('isLoading', fakeAsync(() => {
-    const spy = jasmine.createSpy();
+  it(
+    'isLoading',
+    marbles(m => {
+      const obs$ = service.load(timer(5), 'prop1');
+      m.expect(obs$).toBeObservable('-----(a|)', { a: 0 });
 
-    service.load(timer(1000), 'prop1').subscribe();
+      const isLoading$ = service.isLoading('prop1');
+      m.expect(isLoading$).toBeObservable('a----b', { a: true, b: false });
+    })
+  );
 
-    service.isLoading('prop1').subscribe(spy);
+  it(
+    'track',
+    marbles(m => {
+      const obs$ = timer(5).pipe(service.track('prop1'));
+      m.expect(obs$).toBeObservable('-----(a|)', { a: 0 });
 
-    expect(spy).toHaveBeenCalledWith(true);
-
-    tick(1000);
-
-    expect(spy).toHaveBeenCalledWith(false);
-  }));
-
-  it('track', fakeAsync(() => {
-    const spy = jasmine.createSpy();
-
-    timer(1000).pipe(service.track('prop1')).subscribe();
-
-    service.isLoading('prop1').subscribe(spy);
-
-    expect(spy).toHaveBeenCalledWith(true);
-
-    tick(1000);
-
-    expect(spy).toHaveBeenCalledWith(false);
-  }));
+      const isLoading$ = service.isLoading('prop1');
+      m.expect(isLoading$).toBeObservable('a----b', { a: true, b: false });
+    })
+  );
 
   it('should throw key not found on track', fakeAsync(() => {
     expect(() => {
@@ -54,26 +48,34 @@ describe('LoadingService', () => {
     }).toThrowError(Error);
   }));
 
-  it('someLoading by props', fakeAsync(() => {
-    const spy = jasmine.createSpy();
+  it(
+    'someLoading',
+    marbles(m => {
+      const prop1$ = service.load(timer(3), 'prop1');
+      m.expect(prop1$).toBeObservable('---(a|)', { a: 0 });
+      const prop2$ = service.load(timer(6), 'prop2');
+      m.expect(prop2$).toBeObservable('------(a|)', { a: 0 });
 
-    combineLatest([
-      service.load(timer(1000), 'prop1'),
-      service.load(timer(2000), 'prop2'),
-    ]).subscribe();
+      const prop1And2$ = combineLatest([prop1$, prop2$]);
+      m.expect(prop1And2$).toBeObservable('------(c|)', { c: [0, 0] });
 
-    service.someLoading(['prop1', 'prop2']).subscribe(spy);
+      const someLoading$ = service.someLoading(['prop1', 'prop2']);
+      const someLoadingByAll$ = service.someLoading();
+      const someLoadingProp1$ = service.someLoading(['prop1']);
+      const someLoadingProp2$ = service.someLoading(['prop2']);
 
-    expect(spy).toHaveBeenCalledWith(true);
-
-    tick(1000);
-
-    expect(spy).toHaveBeenCalledWith(true);
-
-    tick(2000);
-
-    expect(spy).toHaveBeenCalledWith(false);
-  }));
+      m.expect(someLoading$).toBeObservable('a-----b', { a: true, b: false });
+      m.expect(someLoadingByAll$).toBeObservable('a-----b', {
+        a: true,
+        b: false,
+      });
+      m.expect(someLoadingProp1$).toBeObservable('a--b', { a: true, b: false });
+      m.expect(someLoadingProp2$).toBeObservable('a-----b', {
+        a: true,
+        b: false,
+      });
+    })
+  );
 
   it(
     'should throw key not found on someLoading',
@@ -90,57 +92,32 @@ describe('LoadingService', () => {
     })
   );
 
-  it('someLoading by all props', fakeAsync(() => {
-    const spy = jasmine.createSpy();
+  it(
+    'someLoading with parent',
+    marbles(m => {
+      const parentService = new LoadingService(
+        ['parent1'],
+        { standalone: true },
+        null
+      );
+      service = new LoadingService(
+        ['child1'],
+        { standalone: false },
+        parentService
+      );
 
-    combineLatest([
-      service.load(timer(1000), 'prop1'),
-      service.load(timer(2000), 'prop2'),
-    ]).subscribe();
+      const parent1$ = parentService.load(timer(3), 'parent1');
+      m.expect(parent1$).toBeObservable('---(a|)', { a: 0 });
+      const child1$ = service.load(timer(6), 'child1');
+      m.expect(child1$).toBeObservable('------(a|)', { a: 0 });
 
-    service.someLoading().subscribe(spy);
-
-    expect(spy).toHaveBeenCalledWith(true);
-
-    tick(1000);
-
-    expect(spy).toHaveBeenCalledWith(true);
-
-    tick(2000);
-
-    expect(spy).toHaveBeenCalledWith(false);
-  }));
-
-  it('someLoading with parent', fakeAsync(() => {
-    const spy = jasmine.createSpy();
-    const parentService = new LoadingService(
-      ['parent1'],
-      { standalone: true },
-      null
-    );
-    service = new LoadingService(
-      ['child1'],
-      { standalone: false },
-      parentService
-    );
-
-    combineLatest([
-      parentService.load(timer(1000), 'parent1'),
-      service.load(timer(2000), 'child1'),
-    ]).subscribe();
-
-    service.someLoading(['parent1']).subscribe(spy);
-
-    expect(spy).toHaveBeenCalledWith(true);
-
-    tick(1000);
-
-    expect(spy).toHaveBeenCalledWith(true);
-
-    tick(2000);
-
-    expect(spy).toHaveBeenCalledWith(false);
-  }));
+      const parent1SomeLoading$ = service.someLoading(['parent1']);
+      m.expect(parent1SomeLoading$).toBeObservable('a--b', {
+        a: true,
+        b: false,
+      });
+    })
+  );
 
   it(
     'would emit a new value for each property changed',

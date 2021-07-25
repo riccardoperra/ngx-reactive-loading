@@ -75,6 +75,21 @@ describe('LoadingService', () => {
     expect(spy).toHaveBeenCalledWith(false);
   }));
 
+  it(
+    'should throw key not found on someLoading',
+    marbles(m => {
+      const notFoundProperty = 'property';
+
+      const someLoading$ = service.someLoading([notFoundProperty]);
+
+      m.expect(someLoading$).toBeObservable(
+        '#',
+        {},
+        new Error(`[LoadingService] Property ${notFoundProperty} not found`)
+      );
+    })
+  );
+
   it('someLoading by all props', fakeAsync(() => {
     const spy = jasmine.createSpy();
 

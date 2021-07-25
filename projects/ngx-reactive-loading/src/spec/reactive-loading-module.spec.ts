@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { PropertyTuple } from '../lib/model';
+import { LoadingStoreModuleOptions, PropertyTuple } from '../lib/model';
 import { RootReactiveLoadingModule } from '../lib/reactive-loading.module';
 import {
   LoadingService,
@@ -13,6 +13,7 @@ import { defer, of } from 'rxjs';
 import { marbles } from 'rxjs-marbles';
 import { delay } from 'rxjs/operators';
 import { LoggerService } from '../lib/services/logger.service';
+import { LOADING_STORE_OPTIONS } from '../lib/internal/tokens';
 
 type RootModuleActions = 'add' | 'delete';
 type FeatureModuleActions = 'addFeature' | 'deleteFeature';
@@ -50,6 +51,29 @@ describe('Reactive loading module', () => {
       ['addFeature', 'deleteFeature'],
       loadingStore.state
     );
+  });
+
+  it('should create feature service with default options', () => {
+    TestBed.configureTestingModule({
+      imports: [
+        ReactiveLoadingModule.forFeature<FeatureModuleActions>([
+          'addFeature',
+          'deleteFeature',
+        ]),
+      ],
+    });
+
+    const module = TestBed.inject(ReactiveLoadingModule);
+    expect(module).toBeTruthy();
+
+    const options = TestBed.inject<LoadingStoreModuleOptions>(
+      LOADING_STORE_OPTIONS
+    );
+
+    expect(options).toEqual({
+      standalone: false,
+      logger: false,
+    });
   });
 
   it('should throw twice .forRoot error', () => {

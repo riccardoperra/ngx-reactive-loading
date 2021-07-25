@@ -268,9 +268,13 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
     for (const identifier of identifiers) {
       const loadingState =
         this.state[identifier] || this.getAllParentStates()[identifier];
-      if (loadingState) {
-        stores.push(loadingState);
+
+      if (!loadingState) {
+        throw new Error(
+          `[LoadingService] Property ${identifier.toString()} not found`
+        );
       }
+      stores.push(loadingState);
     }
 
     return stores;

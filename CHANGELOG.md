@@ -1,3 +1,11 @@
+# [1.2.0](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.1.1...v1.2.0) (2021-08-17)
+
+
+### Features
+
+* add `toEvent` util ([471ec15](https://github.com/riccardoperra/ngx-reactive-loading/commit/471ec15e417905395380811ebc0978146970148c))
+* add loading service duplicate key error ([53cd43a](https://github.com/riccardoperra/ngx-reactive-loading/commit/53cd43a727947f866e1efdd77617915e98b61669))
+
 ## [1.1.1](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.1.0...v1.1.1) (2021-07-25)
 
 

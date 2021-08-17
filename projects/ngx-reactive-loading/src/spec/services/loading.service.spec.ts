@@ -20,6 +20,32 @@ describe('LoadingService', () => {
     expect(Object.keys(service.state)).toEqual(expected);
   });
 
+  it('should throw key cannot be duplicated', () => {
+    expect(() => {
+      service = new LoadingService(
+        ['prop1', 'prop1'],
+        { standalone: true },
+        null
+      );
+    }).toThrowError(`Key 'prop1' cannot be duplicated in the current service.`);
+  });
+
+  it('should throw key already defined', () => {
+    const parent = new LoadingService(
+      ['key1', 'key2'],
+      { standalone: false },
+      null
+    );
+
+    expect(() => {
+      service = new LoadingService(
+        ['prop1', 'key1', 'prop2'],
+        { standalone: false },
+        parent
+      );
+    }).toThrowError(`Key 'key1' is already defined by a parent service.`);
+  });
+
   it(
     'isLoading',
     marbles(m => {

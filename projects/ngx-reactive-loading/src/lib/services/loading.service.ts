@@ -20,19 +20,11 @@ import {
   LoadingStoreState,
   PropertyTuple,
 } from '../model';
-import { createLoadingStore } from '../utils';
-import {
-  distinctUntilChanged,
-  map,
-  shareReplay,
-  skip,
-  takeUntil,
-} from 'rxjs/operators';
-import { someLoading } from '../operators';
+import { createLoadingStore, someLoading } from '../utils';
+import { distinctUntilChanged, shareReplay, takeUntil } from 'rxjs/operators';
 import { LoadingStoreService } from '../model/loading-store';
 import {
   INITIAL_LOADING_STORE,
-  LOADING_STORE,
   LOADING_STORE_OPTIONS,
   PARENT_LOADING_STORE,
 } from '../internal/tokens';
@@ -42,6 +34,7 @@ import {
   provideParentLoadingStore,
   provideSomeLoadingState,
 } from '../internal/providers';
+import { toLoadingEvent } from '../utils';
 
 /**
  * @internal
@@ -81,17 +74,7 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
   /**
    * Track all changes of each current LoadingService loading state property.
    */
-  readonly events$: Observable<LoadingEvent> = defer(() => {
-    const entries = Object.entries<LoadingStoreState>(this.state);
-    const events$ = entries.map(([type, state]) =>
-      state.$.pipe(map(isLoading => ({ type, loading: isLoading })))
-    );
-    const entriesLength = entries.length;
-    return merge(...events$).pipe(skip(entriesLength));
-  }).pipe(
-    shareReplay({ refCount: true, bufferSize: 1 }),
-    takeUntil(this.destroy$)
-  );
+  readonly events$: Observable<LoadingEvent>;
 
   /**
    * Helper to provide a LoadingService into a component. His use is necessary
@@ -117,7 +100,9 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
     @SkipSelf()
     private readonly parent: LoadingService | null
   ) {
+    this.verifyStoreKeys();
     this.state = createLoadingStore(defaultValue);
+    this.events$ = toLoadingEvent(this.state);
   }
 
   /**
@@ -315,5 +300,33 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
       });
       return acc;
     }, {});
+  }
+
+  private verifyStoreKeys(): void {
+    const serviceKeys = ([] as PropertyKey[]).concat(this.defaultValue);
+    const duplicateKey = serviceKeys.find(
+      (key, i, arr) => arr.indexOf(key) !== arr.lastIndexOf(key)
+    );
+
+    if (!!duplicateKey) {
+      throw new Error(
+        `Key '${duplicateKey.toString()}' cannot be duplicated in the current service.`
+      );
+    }
+
+    const parentKeys = this.getAllParents().reduce<PropertyKey[]>(
+      (acc, parent) => [...acc, ...parent.defaultValue],
+      []
+    );
+
+    const parentStateDuplicateKey = parentKeys.find(key =>
+      serviceKeys.includes(key)
+    );
+
+    if (parentStateDuplicateKey) {
+      throw new Error(
+        `Key '${parentStateDuplicateKey.toString()}' is already defined by a parent service.`
+      );
+    }
   }
 }

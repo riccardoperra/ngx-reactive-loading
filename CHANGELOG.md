@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.1.0...v1.1.1) (2021-07-25)
+
+
+### Bug Fixes
+
+* throw error if someLoading identifier does not exists ([6049767](https://github.com/riccardoperra/ngx-reactive-loading/commit/60497677c55d1dc73a8bfbc684b956a3b1366409))
+
 ## [1.1.1](https://github.com/riccardoperra/ngx-loading/compare/v1.1.0...v1.1.1) (2021-07-25)
 
 

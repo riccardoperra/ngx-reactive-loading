@@ -86,7 +86,8 @@ export class ExampleComponent implements OnInit {
     this.loadingStore[ExampleComponentActions.Reload].$;
   readonly isLoading$: Observable<boolean> = someLoading([this.loadingStore]);
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {
+  }
 
   add() {
     this.http
@@ -286,7 +287,8 @@ export class ExampleComponent implements OnInit {
   constructor(
     private readonly http: HttpClient,
     private readonly loadingStore: LoadingService<ComponentAction>
-  ) {}
+  ) {
+  }
 
   add() {
     // Using load helper
@@ -321,7 +323,8 @@ type RootLoadingActions = 'globalReload';
     ReactiveLoadingModule.forRoot<RootLoadingActions>(['globalReload']),
   ],
 })
-export class AppModule {}
+export class AppModule {
+}
 ```
 
 #### Registering feature loading service
@@ -342,13 +345,13 @@ type TodoLoadingActions = 'addTodo' | 'removeTodo' | 'reloadTodo';
     ),
   ],
 })
-export class TodoModule {}
+export class TodoModule {
+}
 ```
 
 #### Custom module configuration
 
-Using the `ReactiveLoadingModule` allows you to provide extra configuration params in addition to
-loading store options.
+Using the `ReactiveLoadingModule` allows you to provide extra configuration params in addition to loading store options.
 
 ```ts
 export interface LoadingStoreModuleOptions extends LoadingStoreOptions {
@@ -366,9 +369,9 @@ export interface LoadingStoreModuleOptions extends LoadingStoreOptions {
 
 ##### Event logger
 
-With the event logger, there will be a default eventListener to the loading store that
-will log all loading property changes automatically in the console. Providing the `name` option,
-the log will include also that name to differentiate it.
+With the event logger, there will be a default eventListener to the loading store that will log all loading property
+changes automatically in the console. Providing the `name` option, the log will include also that name to differentiate
+it.
 
 ```ts
 // feature.module.ts
@@ -381,16 +384,17 @@ the log will include also that name to differentiate it.
     }),
   ],
 })
-export class FeatureModule {}
+export class FeatureModule {
+}
 ```
 
 ### Tokens
 
 #### SOME_LOADING
 
-The `SOME_LOADING` token is automatically provided when providing the loading service in a component
-or in modules. When injected, it allows you to observe the changes to the state between all service
-loading property, like the `someLoading` helper function.
+The `SOME_LOADING` token is automatically provided when providing the loading service in a component or in modules. When
+injected, it allows you to observe the changes to the state between all service loading property, like the `someLoading`
+helper function.
 
 ```ts
 import { ReactiveLoadingModule, LoadingService } from 'ngx-reactive-loading';
@@ -408,14 +412,16 @@ export class AppComponent {
 export class HelloComponent {
   constructor(
     @Inject(SOME_LOADING) private readonly someLoading$: Observable<boolean>
-  ) {}
+  ) {
+  }
 }
 
 @NgModule({
   declarations: [AppComponent, HelloComponent],
   imports: [ReactiveLoadingModule.forRoot(['prop1'])],
 })
-export class AppModule {}
+export class AppModule {
+}
 ```
 
 ### Utils
@@ -466,3 +472,25 @@ export class AppModule {}
     // Output 1: 1
   });
   ```
+
+- toLoadingEvent - Map loading store change to LoadingEvent object
+
+  ```ts
+  import { createLoadingStore, withLoading, toLoadingEvent } from 'ngx-reactive-loading';
+  import { of, Subject } from 'rxjs';
+
+  const store = createLoadingStore(['key1']);
+  const $ = of(1).pipe(delay(1000), store.key1.track());
+
+  const events$ = toLoadingEvent(store);
+  
+  $.subscribe(result => {
+    // Output 1: 1
+  });
+  
+  events$.subscribe((result) => {
+    // Output 1: {type: 'key1', loading: true}
+    // Output 2 (after 1000ms): {type: 'key1', loading: false}
+  })
+  ```
+  

@@ -1,6 +1,7 @@
 import { BehaviorSubject, Observable } from 'rxjs';
 import { marbles } from 'rxjs-marbles';
-import { createLoadingStore, someLoading, withLoading } from '../../public-api';
+import { withLoading } from '../../lib/operators';
+import { createLoadingStore, someLoading } from '../../lib/utils';
 
 describe('someLoading', () => {
   it(

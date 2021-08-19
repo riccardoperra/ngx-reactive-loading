@@ -1,3 +1,10 @@
+# [1.3.0-beta.1](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.2.0...v1.3.0-beta.1) (2021-08-19)
+
+
+### Features
+
+* add `untilLoading` reactive helper ([190761d](https://github.com/riccardoperra/ngx-reactive-loading/commit/190761d5f5323c5ee563807316272036b0f21092))
+
 # [1.2.0](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.1.1...v1.2.0) (2021-08-17)
 
 

@@ -1,3 +1,40 @@
+# [1.2.0](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.1.1...v1.2.0) (2021-08-17)
+
+
+### Features
+
+* add `toEvent` util ([471ec15](https://github.com/riccardoperra/ngx-reactive-loading/commit/471ec15e417905395380811ebc0978146970148c))
+* add loading service duplicate key error ([53cd43a](https://github.com/riccardoperra/ngx-reactive-loading/commit/53cd43a727947f866e1efdd77617915e98b61669))
+
+## [1.1.1](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.1.0...v1.1.1) (2021-07-25)
+
+
+### Bug Fixes
+
+* throw error if someLoading identifier does not exists ([6049767](https://github.com/riccardoperra/ngx-reactive-loading/commit/60497677c55d1dc73a8bfbc684b956a3b1366409))
+
+## [1.1.1](https://github.com/riccardoperra/ngx-loading/compare/v1.1.0...v1.1.1) (2021-07-25)
+
+
+### Bug Fixes
+
+* throw error if someLoading identifier does not exists ([6049767](https://github.com/riccardoperra/ngx-loading/commit/60497677c55d1dc73a8bfbc684b956a3b1366409))
+
+# [1.1.0](https://github.com/riccardoperra/ngx-loading/compare/v1.0.5...v1.1.0) (2021-07-24)
+
+
+### Bug Fixes
+
+* add loading store module options ([fba65bd](https://github.com/riccardoperra/ngx-loading/commit/fba65bd6eef55f2f719b23f9af3a28d911d0e440))
+* export SOME_LOADING token ([e267d96](https://github.com/riccardoperra/ngx-loading/commit/e267d9618d39aae05f1a1d26cf1833a8c3ca1fac))
+* remove cyclic dependencies ([6a08b46](https://github.com/riccardoperra/ngx-loading/commit/6a08b46d6483802c3f836f39de10e10ce0dfded7))
+
+
+### Features
+
+* add logger.service.ts, add module with logger test, fix token type ([c837246](https://github.com/riccardoperra/ngx-loading/commit/c837246b6fb7cde85e4b7432a1c0f69901575301))
+* add module loading logger ([1672954](https://github.com/riccardoperra/ngx-loading/commit/16729547186edd1014256045b0f824c75b721801))
+
 ## [1.0.5](https://github.com/riccardoperra/ngx-loading/compare/v1.0.4...v1.0.5) (2021-07-20)
 
 

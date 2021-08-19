@@ -1,25 +1,32 @@
 import {
   Inject,
+  Injector,
   ModuleWithProviders,
   NgModule,
   Optional,
   SkipSelf,
 } from '@angular/core';
-import { PropertyTuple } from './model/property';
 import {
-  FEATURE_LOADING_STORE,
-  ROOT_LOADING_STORE,
-  ROOT_LOADING_STORE_GUARD,
-} from './providers/token';
-import { LoadingStoreOptions } from './model/loading-store-options';
+  LoadingStore,
+  LoadingStoreModuleOptions,
+  PropertyTuple,
+} from './model';
 import { LoadingService } from './services';
 import {
-  provideExistingLoadingStore,
+  FEATURE_LOADING_STORE,
+  INITIAL_LOADING_STORE,
+  LOADING_STORE,
+  LOADING_STORE_OPTIONS,
+  ROOT_LOADING_STORE,
+  ROOT_LOADING_STORE_GUARD,
+} from './internal/tokens';
+import {
   provideInitialLoadingState,
   provideLoadingStoreOptions,
   provideParentLoadingStore,
-} from './providers/provider';
-import { LoadingStore } from './model';
+  provideSomeLoadingState,
+} from './internal/providers';
+import { LoggerService } from './services/logger.service';
 
 @NgModule({})
 export class RootReactiveLoadingModule {
@@ -33,42 +40,72 @@ export class RootReactiveLoadingModule {
 @NgModule({})
 export class ReactiveLoadingModule {
   static forRoot<T extends PropertyKey>(
-    keys: PropertyTuple<T>
+    keys: PropertyTuple<T>,
+    options?: LoadingStoreModuleOptions
   ): ModuleWithProviders<ReactiveLoadingModule> {
-    const rootStoreDefaultOptions: LoadingStoreOptions = { standalone: true };
+    const rootStoreDefaultOptions: LoadingStoreModuleOptions = {
+      standalone: true,
+      logger: false,
+    };
 
     return {
       ngModule: RootReactiveLoadingModule,
       providers: [
+        LoggerService,
         {
           provide: ROOT_LOADING_STORE_GUARD,
           useFactory: provideForRootGuard,
           deps: [[ROOT_LOADING_STORE, new Optional(), new SkipSelf()]],
         },
         provideInitialLoadingState(keys),
-        provideLoadingStoreOptions(rootStoreDefaultOptions),
-        LoadingService,
-        provideExistingLoadingStore(ROOT_LOADING_STORE),
+        provideLoadingStoreOptions(options || rootStoreDefaultOptions),
+        {
+          provide: LoadingService,
+          useFactory: setupLoadingStore,
+          deps: [INITIAL_LOADING_STORE, Injector, LOADING_STORE_OPTIONS],
+        },
+        {
+          provide: LOADING_STORE,
+          useExisting: LoadingService,
+        },
+        {
+          provide: ROOT_LOADING_STORE,
+          useExisting: LoadingService,
+        },
+        provideSomeLoadingState(),
       ],
     };
   }
 
   static forFeature<T extends PropertyKey>(
     keys: PropertyTuple<T>,
-    options?: LoadingStoreOptions
+    options?: LoadingStoreModuleOptions
   ): ModuleWithProviders<ReactiveLoadingModule> {
-    const featureStoreDefaultOptions: LoadingStoreOptions = {
+    const featureStoreDefaultOptions: LoadingStoreModuleOptions = {
       standalone: false,
+      logger: false,
     };
 
     return {
       ngModule: ReactiveLoadingModule,
       providers: [
         provideInitialLoadingState(keys),
-        provideParentLoadingStore,
+        provideParentLoadingStore(),
         provideLoadingStoreOptions(options || featureStoreDefaultOptions),
-        LoadingService,
-        provideExistingLoadingStore(FEATURE_LOADING_STORE),
+        {
+          provide: LoadingService,
+          useFactory: setupLoadingStore,
+          deps: [INITIAL_LOADING_STORE, Injector, LOADING_STORE_OPTIONS],
+        },
+        {
+          provide: LOADING_STORE,
+          useExisting: LoadingService,
+        },
+        {
+          provide: FEATURE_LOADING_STORE,
+          useExisting: LoadingService,
+        },
+        provideSomeLoadingState(),
       ],
     };
   }
@@ -80,4 +117,23 @@ function provideForRootGuard(loadingStore: LoadingStore<any> | null) {
       `ReactiveLoadingModule.forRoot() called twice. Feature modules should use ReactiveLoadingModule.forFeature() instead.`
     );
   }
+}
+
+function setupLoadingStore<T extends PropertyKey>(
+  initialState: PropertyTuple<T>,
+  injector: Injector,
+  options: LoadingStoreModuleOptions
+): LoadingService<T> {
+  const service = new LoadingService<any>(initialState, options, null);
+  const logger = injector.get(LoggerService);
+  if (options.logger) {
+    service.events$.subscribe(event => {
+      logger.log(
+        `LoadingService event: ${options.name || service.constructor.name}`,
+        event
+      );
+    });
+  }
+
+  return service as LoadingService<T>;
 }

@@ -88,6 +88,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/riccardoperra/ngx-loading.git"
+    "url": "https://github.com/riccardoperra/ngx-reactive-loading.git"
   }
 }

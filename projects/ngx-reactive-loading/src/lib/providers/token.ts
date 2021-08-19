@@ -1,45 +1,37 @@
 import { InjectionToken } from '@angular/core';
-import { LoadingStoreOptions } from '../model/loading-store-options';
-import { LoadingService } from '../services';
+import { Observable } from 'rxjs';
 
 /**
- * @internal
+ * Automatically provided when providing the loading service in a component
+ * or in modules. When injected, it allows you to observe the changes to the state between all service
+ * loading property, like the `someLoading` helper function.
+ *
+ * @example
+ * ```ts
+ * import { ReactiveLoadingModule, LoadingService } from 'ngx-reactive-loading';
+ * import { Inject, Component, NgModule } from '@angular/core';
+ * import { of, Observable } from 'rxjs';
+ *
+ * @Component({ template: `<app-hello></app-hello>` })
+ * export class AppComponent {
+ *   constructor(private readonly loadingService: LoadingService) {
+ *     of(1).pipe(loadingService.track('prop1')).subscribe();
+ *   }
+ * }
+ *
+ * @Component({ template: ``, selector: 'app-hello' })
+ * export class HelloComponent {
+ *   constructor(@Inject(SOME_LOADING) private readonly someLoading$: Observable<boolean>) {
+ *   }
+ * }
+ *
+ * @NgModule({
+ *  declarations: [AppComponent, HelloComponent],
+ *  imports: [ReactiveLoadingModule.forRoot(['prop1'])],
+ * })
+ export class AppModule {}
+ * ```
  */
-export const INITIAL_LOADING_STORE = new InjectionToken<PropertyKey[]>(
-  '[ngx-reactive-loading] Loading store initial value'
-);
-
-/**
- * @internal
- */
-export const LOADING_STORE_OPTIONS = new InjectionToken<LoadingStoreOptions>(
-  '[ngx-reactive-loading] Loading store options'
-);
-
-/**
- * @internal
- */
-export const PARENT_LOADING_STORE = new InjectionToken<LoadingService>(
-  '[ngx-reactive-loading] Parent loading store'
-);
-
-/**
- * @internal
- */
-export const ROOT_LOADING_STORE = new InjectionToken<LoadingService>(
-  '[ngx-reactive-loading] Root loading store'
-);
-
-/**
- * @internal
- */
-export const FEATURE_LOADING_STORE = new InjectionToken<LoadingService>(
-  '[ngx-reactive-loading] Feature loading store'
-);
-
-/**
- * @internal
- */
-export const ROOT_LOADING_STORE_GUARD = new InjectionToken<void>(
-  '[ngx-reactive-loading] Internal root guard'
+export const SOME_LOADING = new InjectionToken<Observable<boolean>>(
+  '[ngx-reactive-loading] loadingService/someLoading'
 );

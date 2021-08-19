@@ -11,31 +11,53 @@ import {
   merge,
   MonoTypeOperatorFunction,
   Observable,
-  pipe,
   Subject,
 } from 'rxjs';
-import { LoadingEvent, LoadingStore, LoadingStoreState } from '../model';
-import { createLoadingStore } from '../utils';
 import {
-  distinctUntilChanged,
-  map,
-  shareReplay,
-  skip,
-  takeUntil,
-} from 'rxjs/operators';
-import { someLoading } from '../operators';
-import { PropertyTuple } from '../model/property';
-import { provideLoadingService } from '../providers/provider';
+  LoadingEvent,
+  LoadingStore,
+  LoadingStoreOptions,
+  LoadingStoreState,
+  PropertyTuple,
+} from '../model';
+import { createLoadingStore, someLoading } from '../utils';
+import { distinctUntilChanged, shareReplay, takeUntil } from 'rxjs/operators';
+import { LoadingStoreService } from '../model/loading-store';
 import {
   INITIAL_LOADING_STORE,
   LOADING_STORE_OPTIONS,
   PARENT_LOADING_STORE,
-} from '../providers/token';
-import { LoadingStoreOptions } from '../model/loading-store-options';
+} from '../internal/tokens';
+import {
+  provideInitialLoadingState,
+  provideLoadingStoreOptions,
+  provideParentLoadingStore,
+  provideSomeLoadingState,
+} from '../internal/providers';
+import { toLoadingEvent } from '../utils';
+
+/**
+ * @internal
+ * @param keys Loading store property keys
+ * @param options Loading store options
+ */
+export const provideLoadingService = <T extends PropertyKey>(
+  keys: PropertyTuple<T>,
+  options?: LoadingStoreOptions
+): Provider[] => {
+  const defaultComponentProvider: LoadingStoreOptions = { standalone: false };
+  return [
+    provideInitialLoadingState(keys),
+    provideLoadingStoreOptions(options || defaultComponentProvider),
+    provideParentLoadingStore(),
+    LoadingService,
+    provideSomeLoadingState(),
+  ];
+};
 
 @Injectable()
 export class LoadingService<T extends PropertyKey = PropertyKey>
-  implements OnDestroy
+  implements OnDestroy, LoadingStoreService<T>
 {
   /**
    * @internal
@@ -52,17 +74,7 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
   /**
    * Track all changes of each current LoadingService loading state property.
    */
-  readonly events$: Observable<LoadingEvent> = defer(() => {
-    const entries = Object.entries<LoadingStoreState>(this.state);
-    const events$ = entries.map(([type, state]) =>
-      state.$.pipe(map(isLoading => ({ type, loading: isLoading })))
-    );
-    const entriesLength = entries.length;
-    return merge(...events$).pipe(skip(entriesLength));
-  }).pipe(
-    shareReplay({ refCount: true, bufferSize: 1 }),
-    takeUntil(this.destroy$)
-  );
+  readonly events$: Observable<LoadingEvent>;
 
   /**
    * Helper to provide a LoadingService into a component. His use is necessary
@@ -79,27 +91,18 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
   }
 
   constructor(
-    /**
-     * Loading keys of the loading store
-     */
     @Inject(INITIAL_LOADING_STORE)
     private readonly defaultValue: PropertyTuple<T>,
-    /**
-     * Options of the loading store
-     */
     @Inject(LOADING_STORE_OPTIONS)
     private readonly options: LoadingStoreOptions,
-    /**
-     * Injected Loading service parent. It could be the service instantiated by the forRoot/forChild module
-     * or by a component provider. If there aren't parent instantiated service or `standalone` options is provided,
-     * the parent property will be null.
-     */
     @Inject(PARENT_LOADING_STORE)
     @Optional()
     @SkipSelf()
     private readonly parent: LoadingService | null
   ) {
+    this.verifyStoreKeys();
     this.state = createLoadingStore(defaultValue);
+    this.events$ = toLoadingEvent(this.state);
   }
 
   /**
@@ -250,9 +253,13 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
     for (const identifier of identifiers) {
       const loadingState =
         this.state[identifier] || this.getAllParentStates()[identifier];
-      if (loadingState) {
-        stores.push(loadingState);
+
+      if (!loadingState) {
+        throw new Error(
+          `[LoadingService] Property ${identifier.toString()} not found`
+        );
       }
+      stores.push(loadingState);
     }
 
     return stores;
@@ -293,5 +300,33 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
       });
       return acc;
     }, {});
+  }
+
+  private verifyStoreKeys(): void {
+    const serviceKeys = ([] as PropertyKey[]).concat(this.defaultValue);
+    const duplicateKey = serviceKeys.find(
+      (key, i, arr) => arr.indexOf(key) !== arr.lastIndexOf(key)
+    );
+
+    if (!!duplicateKey) {
+      throw new Error(
+        `Key '${duplicateKey.toString()}' cannot be duplicated in the current service.`
+      );
+    }
+
+    const parentKeys = this.getAllParents().reduce<PropertyKey[]>(
+      (acc, parent) => [...acc, ...parent.defaultValue],
+      []
+    );
+
+    const parentStateDuplicateKey = parentKeys.find(key =>
+      serviceKeys.includes(key)
+    );
+
+    if (parentStateDuplicateKey) {
+      throw new Error(
+        `Key '${parentStateDuplicateKey.toString()}' is already defined by a parent service.`
+      );
+    }
   }
 }

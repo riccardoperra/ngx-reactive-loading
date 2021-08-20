@@ -5,6 +5,13 @@
 
 * add `untilLoading` reactive helper ([190761d](https://github.com/riccardoperra/ngx-reactive-loading/commit/190761d5f5323c5ee563807316272036b0f21092))
 
+## [1.2.1](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.2.0...v1.2.1) (2021-08-20)
+
+
+### Bug Fixes
+
+* wrong angular peer dependency ([e89cefa](https://github.com/riccardoperra/ngx-reactive-loading/commit/e89cefad3567fa02243c0fc9a9d70267d0ff13c9))
+
 # [1.2.0](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.1.1...v1.2.0) (2021-08-17)
 
 

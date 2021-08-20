@@ -27,6 +27,7 @@ import {
   provideSomeLoadingState,
 } from './internal/providers';
 import { LoggerService } from './services/logger.service';
+import { LoadingDirective } from './components/loading.directive';
 
 @NgModule({})
 export class RootReactiveLoadingModule {
@@ -37,7 +38,10 @@ export class RootReactiveLoadingModule {
   ) {}
 }
 
-@NgModule({})
+@NgModule({
+  declarations: [LoadingDirective],
+  exports: [LoadingDirective],
+})
 export class ReactiveLoadingModule {
   static forRoot<T extends PropertyKey>(
     keys: PropertyTuple<T>,

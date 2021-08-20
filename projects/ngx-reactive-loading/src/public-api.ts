@@ -13,3 +13,4 @@ export {
 export { LoadingService } from './lib/services';
 export { ReactiveLoadingModule } from './lib/reactive-loading.module';
 export { SOME_LOADING } from './lib/providers/token';
+export { LoadingDirective } from './lib/components/loading.directive';

@@ -1,3 +1,11 @@
+# [1.3.0-beta.2](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.3.0-beta.1...v1.3.0-beta.2) (2021-08-20)
+
+
+### Bug Fixes
+
+* removed old rxjs isFunction internal reference ([07775f2](https://github.com/riccardoperra/ngx-reactive-loading/commit/07775f2ccc1e21259ef5447a1a953ddba95818fe))
+* wrong angular peer dependency ([e89cefa](https://github.com/riccardoperra/ngx-reactive-loading/commit/e89cefad3567fa02243c0fc9a9d70267d0ff13c9))
+
 # [1.3.0-beta.1](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.2.0...v1.3.0-beta.1) (2021-08-19)
 
 

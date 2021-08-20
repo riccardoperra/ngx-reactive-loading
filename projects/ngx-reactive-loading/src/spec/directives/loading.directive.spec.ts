@@ -30,7 +30,7 @@ describe('loading directive', () => {
   });
 
   it('should render main template', fakeAsync(() => {
-    const template = `<button *loading="'prop1'">Test</button>`;
+    const template = `<button *ngxLoading="'prop1'">Test</button>`;
 
     fixture = createTestComponent(template);
     fixture.detectChanges();
@@ -53,7 +53,7 @@ describe('loading directive', () => {
   }));
 
   it('should work with multiple loading', fakeAsync(() => {
-    const template = `<button *loading="['prop1', 'prop2']">Test</button>`;
+    const template = `<button *ngxLoading="['prop1', 'prop2']">Test</button>`;
     let sub: Subscription | null = null;
     let sub2: Subscription | null = null;
 
@@ -85,7 +85,7 @@ describe('loading directive', () => {
 
   it('should render else template', fakeAsync(() => {
     const template = `
-      <button *loading="'prop2'; else elseBlock">Test</button>
+      <button *ngxLoading="'prop2'; else elseBlock">Test</button>
       <ng-template #elseBlock><span>Loading...</span></ng-template>
     `;
 
@@ -119,7 +119,7 @@ describe('loading directive', () => {
 
   it('should throw error if given property is invalid', fakeAsync(() => {
     const template = `
-      <button *loading="['invalid']; else elseBlock">Test</button>
+      <button *ngxLoading="['invalid']; else elseBlock">Test</button>
       <ng-template #elseBlock><span>Loading...</span></ng-template>
     `;
 

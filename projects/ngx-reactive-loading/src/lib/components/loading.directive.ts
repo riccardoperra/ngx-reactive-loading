@@ -13,7 +13,7 @@ import { LoadingService } from '../services';
 import { LOADING_STORE } from '../internal/tokens';
 
 @Directive({
-  selector: '[loading]',
+  selector: '[ngxLoading]',
 })
 export class LoadingDirective implements OnDestroy, OnInit {
   private readonly destroy$: Subject<void> = new Subject<void>();
@@ -21,11 +21,11 @@ export class LoadingDirective implements OnDestroy, OnInit {
   private readonly loadingElseTemplate$ =
     new BehaviorSubject<TemplateRef<unknown> | null>(null);
 
-  @Input() set loading(_: string | string[]) {
+  @Input() set ngxLoading(_: string | string[]) {
     this.loadingKeys$.next(_);
   }
 
-  @Input() set loadingElse(_: TemplateRef<unknown>) {
+  @Input() set ngxLoadingElse(_: TemplateRef<unknown>) {
     this.loadingElseTemplate$.next(_);
   }
 

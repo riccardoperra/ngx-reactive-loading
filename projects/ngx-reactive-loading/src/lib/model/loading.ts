@@ -1,5 +1,4 @@
 import { isObservable, MonoTypeOperatorFunction, Observable } from 'rxjs';
-import { isFunction } from 'rxjs/internal-compatibility';
 
 export type LoadingStoreState = {
   readonly $: Observable<boolean>;
@@ -18,7 +17,7 @@ export const isLoadingStoreState = (
     !!value &&
     '$' in value &&
     isObservable((value as Partial<LoadingStoreState>).$) &&
-    isFunction((value as Partial<LoadingStoreState>).track)
+    typeof (value as Partial<LoadingStoreState>).track === 'function'
   );
 };
 

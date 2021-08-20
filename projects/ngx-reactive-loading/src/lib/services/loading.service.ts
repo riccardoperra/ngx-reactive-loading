@@ -6,13 +6,7 @@ import {
   Provider,
   SkipSelf,
 } from '@angular/core';
-import {
-  defer,
-  merge,
-  MonoTypeOperatorFunction,
-  Observable,
-  Subject,
-} from 'rxjs';
+import { defer, MonoTypeOperatorFunction, Observable, Subject } from 'rxjs';
 import {
   LoadingEvent,
   LoadingStore,
@@ -25,6 +19,7 @@ import { distinctUntilChanged, shareReplay, takeUntil } from 'rxjs/operators';
 import { LoadingStoreService } from '../model/loading-store';
 import {
   INITIAL_LOADING_STORE,
+  LOADING_STORE,
   LOADING_STORE_OPTIONS,
   PARENT_LOADING_STORE,
 } from '../internal/tokens';
@@ -51,6 +46,10 @@ export const provideLoadingService = <T extends PropertyKey>(
     provideLoadingStoreOptions(options || defaultComponentProvider),
     provideParentLoadingStore(),
     LoadingService,
+    {
+      provide: LOADING_STORE,
+      useExisting: LoadingService,
+    },
     provideSomeLoadingState(),
   ];
 };
@@ -134,7 +133,7 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
    *
    */
   load<S>(source$: Observable<S>, property: T): Observable<S> {
-    return defer(() => source$.pipe(this.state[property].track()));
+    return defer(() => source$.pipe(this.track(property)));
   }
 
   /**
@@ -249,8 +248,9 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
     identifiers: PropertyTuple<T>
   ): LoadingStoreState[] {
     const stores: LoadingStoreState[] = [];
+    const sanitizedIdentifiers = identifiers.filter(Boolean);
 
-    for (const identifier of identifiers) {
+    for (const identifier of sanitizedIdentifiers) {
       const loadingState =
         this.state[identifier] || this.getAllParentStates()[identifier];
 

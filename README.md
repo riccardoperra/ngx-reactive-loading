@@ -21,6 +21,7 @@
     - [Registering root loading service](#registering-root-loading-service)
     - [Registering feature loading service](#registering-feature-loading-service)
     - [Custom module configuration](#custom-module-configuration)
+- [Loading directive](#using-loading-directive)
 - [Tokens](#tokens)
 - [Utils](#utils)
 - [Demo](projects/ngx-reactive-loading-demo)
@@ -86,8 +87,7 @@ export class ExampleComponent implements OnInit {
     this.loadingStore[ExampleComponentActions.Reload].$;
   readonly isLoading$: Observable<boolean> = someLoading([this.loadingStore]);
 
-  constructor(private readonly http: HttpClient) {
-  }
+  constructor(private readonly http: HttpClient) {}
 
   add() {
     this.http
@@ -287,8 +287,7 @@ export class ExampleComponent implements OnInit {
   constructor(
     private readonly http: HttpClient,
     private readonly loadingStore: LoadingService<ComponentAction>
-  ) {
-  }
+  ) {}
 
   add() {
     // Using load helper
@@ -323,8 +322,7 @@ type RootLoadingActions = 'globalReload';
     ReactiveLoadingModule.forRoot<RootLoadingActions>(['globalReload']),
   ],
 })
-export class AppModule {
-}
+export class AppModule {}
 ```
 
 #### Registering feature loading service
@@ -345,8 +343,7 @@ type TodoLoadingActions = 'addTodo' | 'removeTodo' | 'reloadTodo';
     ),
   ],
 })
-export class TodoModule {
-}
+export class TodoModule {}
 ```
 
 #### Custom module configuration
@@ -384,8 +381,7 @@ it.
     }),
   ],
 })
-export class FeatureModule {
-}
+export class FeatureModule {}
 ```
 
 ### Tokens
@@ -412,16 +408,14 @@ export class AppComponent {
 export class HelloComponent {
   constructor(
     @Inject(SOME_LOADING) private readonly someLoading$: Observable<boolean>
-  ) {
-  }
+  ) {}
 }
 
 @NgModule({
   declarations: [AppComponent, HelloComponent],
   imports: [ReactiveLoadingModule.forRoot(['prop1'])],
 })
-export class AppModule {
-}
+export class AppModule {}
 ```
 
 ### Utils
@@ -476,21 +470,56 @@ export class AppModule {
 - toLoadingEvent - Map loading store change to LoadingEvent object
 
   ```ts
-  import { createLoadingStore, withLoading, toLoadingEvent } from 'ngx-reactive-loading';
+  import {
+    createLoadingStore,
+    withLoading,
+    toLoadingEvent,
+  } from 'ngx-reactive-loading';
   import { of, Subject } from 'rxjs';
 
   const store = createLoadingStore(['key1']);
   const $ = of(1).pipe(delay(1000), store.key1.track());
 
   const events$ = toLoadingEvent(store);
-  
+
   $.subscribe(result => {
     // Output 1: 1
   });
-  
-  events$.subscribe((result) => {
+
+  events$.subscribe(result => {
     // Output 1: {type: 'key1', loading: true}
     // Output 2 (after 1000ms): {type: 'key1', loading: false}
-  })
+  });
   ```
-  
+
+## Using loading directive
+
+Loading directive provide a simple approach to switch templates when the loading state change.
+To work correctly the loading service must be provided by a component or module.
+
+```ts
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { LoadingService } from 'ngx-reactive-loading';
+
+@Component({
+  selector: 'app-root',
+  template: `
+    <button *ngxLoading="'add'; else loadingTpl">Add</button>
+    <ng-template #loadingTpl>Loading...</ng-template>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [LoadingService.componentProvide(['add'])],
+})
+class AppComponent {
+  constructor(private readonly loadingService: LoadingService) {}
+}
+```
+
+### API
+
+#### Inputs
+
+| Input            | Type                         | Default | Required | Description                                             |
+| ---------------- | ---------------------------- | ------- | -------- | ------------------------------------------------------- |
+| [ngxLoading]     | PropertyKey \| PropertyKey[] | []      | false    | Set the loading state properties that will be observed  |
+| [ngxLoadingElse] | TemplateRef<unknown> \| null | null    | false    | Render the custom loading template when `loading` is true |

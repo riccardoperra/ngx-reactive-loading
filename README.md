@@ -42,10 +42,10 @@ yarn add ngx-reactive-loading
 
 ## Basic usage
 
-The loading store is the core of this library, it allows handling different loading states through your application.
+The loading store is a key value object that allows handling multiple loading states through your application.
 
-To create a loading store that will track all your loading states, you must call the `createLoadingStore` function
-specifying the properties that will be tracked.
+To create a loading store that persist the given loading states, you must invoke the `createLoadingStore` function
+specifying the properties that will be observed and updated.
 
 ```ts
 type LoadingStoreState = {
@@ -83,8 +83,10 @@ export class ExampleComponent implements OnInit {
 
   readonly isAdding$: Observable<boolean> =
     this.loadingStore[ExampleComponentActions.Add].$;
+  
   readonly isReloading$: Observable<boolean> =
     this.loadingStore[ExampleComponentActions.Reload].$;
+  
   readonly isLoading$: Observable<boolean> = someLoading([this.loadingStore]);
 
   constructor(private readonly http: HttpClient) {}
@@ -108,7 +110,7 @@ export class ExampleComponent implements OnInit {
 ## Working with Loading Service
 
 If you need a more sophisticated way to handle loading states, for a better integration with Angular dependency
-injection, you can provide the loading service that will expose the loading store api's.
+injection, you can use a loading service that will expose the loading store api's.
 
 ### Loading service api
 
@@ -261,7 +263,7 @@ export interface LoadingService<T extends PropertyKey> {
 ### Use with components
 
 To use the loading service with angular components and dependency injection you must provide the service into the
-component provider with the `LoadingService.componentProvider` method. The loading service is subscribed to throughout
+component provider invoking the `LoadingService.componentProvider` method. The loading service is subscribed to throughout
 the lifecycle of the component, and it will manage all your loading subscriptions.
 
 ```ts

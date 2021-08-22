@@ -29,6 +29,9 @@ import {
 import { LoggerService } from './services/logger.service';
 import { LoadingDirective } from './components/loading.directive';
 
+/**
+ * @internal
+ */
 @NgModule({})
 export class RootReactiveLoadingModule {
   constructor(

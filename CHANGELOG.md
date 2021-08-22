@@ -1,3 +1,18 @@
+# [1.3.0](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.2.1...v1.3.0) (2021-08-22)
+
+
+### Bug Fixes
+
+* add `LOADING_STORE` token provider when initializing loading service with component ([3510bc9](https://github.com/riccardoperra/ngx-reactive-loading/commit/3510bc91673dc8af97904e2b3db99372b5a1a1b8))
+* removed old rxjs isFunction internal reference ([07775f2](https://github.com/riccardoperra/ngx-reactive-loading/commit/07775f2ccc1e21259ef5447a1a953ddba95818fe))
+* update eslint lib prefix, fix loading directive prefix ([7d66ec9](https://github.com/riccardoperra/ngx-reactive-loading/commit/7d66ec958b51c04799fb8c9c4785b39ad85ecf97))
+
+
+### Features
+
+* add `untilLoading` reactive helper ([190761d](https://github.com/riccardoperra/ngx-reactive-loading/commit/190761d5f5323c5ee563807316272036b0f21092))
+* add loading directive ([52620ce](https://github.com/riccardoperra/ngx-reactive-loading/commit/52620ce567445b8289aa2a61489d3ef5ed7fa854))
+
 # [1.3.0-beta.3](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.3.0-beta.2...v1.3.0-beta.3) (2021-08-20)
 
 

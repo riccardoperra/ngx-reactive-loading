@@ -14,7 +14,7 @@ import {
   LoadingStoreState,
   PropertyTuple,
 } from '../model';
-import { createLoadingStore, someLoading } from '../utils';
+import { someLoading } from '../utils';
 import { distinctUntilChanged, shareReplay, takeUntil } from 'rxjs/operators';
 import { LoadingStoreService } from '../model/loading-store';
 import {
@@ -30,6 +30,7 @@ import {
   provideSomeLoadingState,
 } from '../internal/providers';
 import { toLoadingEvent } from '../utils';
+import { createLoadingStore } from '../core';
 
 /**
  * @internal

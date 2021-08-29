@@ -31,4 +31,13 @@ export const ROUTES: LabeledRoute[] = [
         '../pages/03-loading-store-ngrx-example/loading-store-ngrx-example.module'
       ).then(m => m.LoadingStoreNgrxExampleModule),
   },
+  {
+    path: 'loading-registry',
+    label: 'Example with loading registry',
+    url: '/loading-registry',
+    loadChildren: () =>
+      import(
+        '../pages/04-loading-registry-example/loading-registry-example.module'
+      ).then(m => m.LoadingRegistryExampleModule),
+  },
 ];

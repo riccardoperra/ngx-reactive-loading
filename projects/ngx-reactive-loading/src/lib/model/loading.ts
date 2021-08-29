@@ -3,6 +3,7 @@ import { isObservable, MonoTypeOperatorFunction, Observable } from 'rxjs';
 export type LoadingStoreState = {
   readonly $: Observable<boolean>;
   readonly track: <T>() => MonoTypeOperatorFunction<T>;
+  readonly destroy: () => void;
 };
 
 export type LoadingStore<K extends readonly [...PropertyKey[]]> = {
@@ -17,6 +18,7 @@ export const isLoadingStoreState = (
     !!value &&
     '$' in value &&
     isObservable((value as Partial<LoadingStoreState>).$) &&
+    typeof (value as Partial<LoadingStoreState>).destroy === 'function' &&
     typeof (value as Partial<LoadingStoreState>).track === 'function'
   );
 };

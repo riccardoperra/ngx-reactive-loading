@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { marbles } from 'rxjs-marbles';
-import { createLoadingStore } from '../../lib/utils/create-loading-store';
+import { createLoadingStore } from '../../lib/core/create-loading-store';
 import { toLoadingEvent } from '../../lib/utils/to-event';
 
 describe('toLoadingEvent', () => {

@@ -1,5 +1,6 @@
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
+import { LoadingRegistry } from '../model/loading-registry';
 
 /**
  * Automatically provided when providing the loading service in a component
@@ -35,3 +36,7 @@ import { Observable } from 'rxjs';
 export const SOME_LOADING = new InjectionToken<Observable<boolean>>(
   '[ngx-reactive-loading] loadingService/someLoading'
 );
+
+export const LOADING_REGISTRY = new InjectionToken<
+  LoadingRegistry<PropertyKey>
+>('[ngx-reactive-loading] dynamicLoadingStore');

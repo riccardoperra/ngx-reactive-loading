@@ -1,5 +1,7 @@
 import { Observable } from 'rxjs';
-import { createLoadingStore } from '../../lib/utils';
+import { marbles } from 'rxjs-marbles';
+import { tap } from 'rxjs/operators';
+import { createLoadingStore } from '../../lib/core';
 
 describe('createLoadingStore', () => {
   it('should create store', () => {
@@ -13,4 +15,20 @@ describe('createLoadingStore', () => {
     expect(store.key1.$).toBeInstanceOf(Observable);
     expect(store.key1.track).toBeInstanceOf(Function);
   });
+
+  it(
+    'should destroy',
+    marbles(m => {
+      const store = createLoadingStore<['key1']>(['key1']);
+
+      const loading$ = store.key1.$;
+
+      const source = m
+        .cold('-----a|', { a: 1 })
+        .pipe(tap(() => store.key1.destroy()));
+      m.expect(source).toBeObservable('-----a|', { a: 1 });
+
+      m.expect(loading$).toBeObservable('a----|', { a: false });
+    })
+  );
 });

@@ -1,4 +1,4 @@
-import { of, pipe } from 'rxjs';
+import { noop, of, pipe } from 'rxjs';
 import {
   isLoadingStore,
   isLoadingStoreState,
@@ -11,6 +11,7 @@ describe('loading store type guards', () => {
     const obj: LoadingStoreState = {
       $: of(true),
       track: pipe,
+      destroy: noop,
     };
 
     const result = isLoadingStoreState(obj);
@@ -22,6 +23,7 @@ describe('loading store type guards', () => {
     const obj: any = {
       $: 'true',
       track: {},
+      destroy: noop,
     };
 
     const result = isLoadingStoreState(obj);
@@ -34,10 +36,12 @@ describe('loading store type guards', () => {
       prop1: {
         $: of(true),
         track: pipe,
+        destroy: noop,
       },
       prop2: {
         $: of(false),
         track: pipe,
+        destroy: noop,
       },
     };
 

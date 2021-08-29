@@ -1,7 +1,5 @@
-import { BehaviorSubject } from 'rxjs';
-import { withLoading } from '../operators';
-import { LoadingStore, LoadingStoreState } from '../model';
-import { shareReplay } from 'rxjs/operators';
+import { LoadingStore } from '../model';
+import { buildLoadingState } from './build-loading-state';
 
 /**
  * @description
@@ -21,13 +19,3 @@ export const createLoadingStore = <LoadingKeys extends readonly PropertyKey[]>(
   }
   return stores;
 };
-
-function buildLoadingState(): LoadingStoreState {
-  const loadingSubject = new BehaviorSubject<boolean>(false);
-  return {
-    $: loadingSubject
-      .asObservable()
-      .pipe(shareReplay({ refCount: true, bufferSize: 1 })),
-    track: <T>() => withLoading(loadingSubject),
-  };
-}

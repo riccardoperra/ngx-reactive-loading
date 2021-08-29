@@ -1,3 +1,10 @@
+# [1.4.0-beta.1](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.3.0...v1.4.0-beta.1) (2021-08-29)
+
+
+### Features
+
+* add loading registry core and `createLoadingRegistry` helper ([8156c8f](https://github.com/riccardoperra/ngx-reactive-loading/commit/8156c8f6c053b3d678f2031148e89439b3defd15))
+
 # [1.3.0](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.2.1...v1.3.0) (2021-08-22)
 
 

@@ -1,3 +1,10 @@
+# [1.4.0-beta.2](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.4.0-beta.1...v1.4.0-beta.2) (2021-08-29)
+
+
+### Features
+
+* add registry clear emit action, remove reactiveMap map constructor inheritance ([ef408d6](https://github.com/riccardoperra/ngx-reactive-loading/commit/ef408d676f95e6cc9612389592ba1a6650a996b2))
+
 # [1.4.0-beta.1](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.3.0...v1.4.0-beta.1) (2021-08-29)
 
 

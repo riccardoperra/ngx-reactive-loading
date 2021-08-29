@@ -1,7 +1,7 @@
 import { ReactiveMap } from '../../lib/internal/reactive-map';
-import { marbles } from 'rxjs-marbles';
-import { Observable, of, ReplaySubject } from 'rxjs';
-import { delay, map, tap } from 'rxjs/operators';
+import { Context, marbles } from 'rxjs-marbles';
+import { ReplaySubject } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
 describe('reactiveMap', () => {
   let reactiveMap = new ReactiveMap<PropertyKey, unknown>();
@@ -27,8 +27,8 @@ describe('reactiveMap', () => {
       ['k2', 3],
     ]);
 
-    expect(Array.from(reactiveMap.keys())).toEqual(['k1', 'k2']);
-    expect(Array.from(reactiveMap.values())).toEqual([1, 2]);
+    expect(reactiveMap.keys()).toEqual(['k1', 'k2']);
+    expect(reactiveMap.values()).toEqual([1, 2]);
   });
 
   it('should delete', () => {
@@ -38,6 +38,18 @@ describe('reactiveMap', () => {
 
     const result = reactiveMap.delete('k1');
     expect(result).toBe(true);
+
+    expect(reactiveMap.keys()).not.toContain('k1');
+  });
+
+  it('should clear', () => {
+    reactiveMap.set('k1', 1);
+    reactiveMap.set('k2', 2);
+    reactiveMap.set('k3', 3);
+
+    reactiveMap.clear();
+    expect(reactiveMap.keys()).toEqual([]);
+    expect(reactiveMap.values()).toEqual([]);
   });
 
   it('should not delete', () => {
@@ -54,32 +66,28 @@ describe('reactiveMap', () => {
       reactiveMap.changes$.subscribe(replaySubject$);
       const source$ = replaySubject$.pipe(map(_ => Array.from(_.keys())));
 
-      const s1 = m
-        .cold('--a', { a: 1 })
-        .pipe(tap(() => reactiveMap.set('k1', 1)));
-      m.expect(s1).toBeObservable('--a', { a: 1 });
-      const s2 = m
-        .cold('----a', { a: 1 })
-        .pipe(tap(() => reactiveMap.set('k2', 2)));
-      m.expect(s2).toBeObservable('----a', { a: 1 });
-      const s3 = m
-        .cold('------a', { a: 1 })
-        .pipe(tap(() => reactiveMap.set('k3', 3)));
-      m.expect(s3).toBeObservable('------a', { a: 1 });
+      doAction(m, '--a', () => reactiveMap.set('k1', 1));
+      doAction(m, '----a', () => reactiveMap.set('k2', 2));
+      doAction(m, '------a', () => reactiveMap.set('k3', 3));
+      doAction(m, '--------a', () => reactiveMap.delete('k3'));
+      doAction(m, '----------a', () => reactiveMap.clear());
 
       m.equal(
         source$,
-        m.hot('a-b-c-d', {
+        m.hot('a-b-c-d-e-f', {
           a: [],
           b: ['k1'],
           c: ['k1', 'k2'],
           d: ['k1', 'k2', 'k3'],
+          e: ['k1', 'k2'],
+          f: [],
         })
       );
     })
   );
 });
 
-function delayedAction(callback: () => void, delayN: number): Observable<void> {
-  return of(void 0).pipe(delay(delayN), tap(callback));
-}
+const doAction = (m: Context, expected: string, callback: () => void) => {
+  const action = m.cold(expected).pipe(tap(() => callback()));
+  m.expect(action).toBeObservable(expected);
+};

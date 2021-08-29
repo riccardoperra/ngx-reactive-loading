@@ -8,7 +8,8 @@ type ActionEvent<K extends PropertyKey, T> = {
   value: ReactiveMap<K, T>;
 };
 
-export class ReactiveMap<K extends PropertyKey, T> extends Map<K, T> {
+export class ReactiveMap<K extends PropertyKey, T> {
+  private readonly internalMap = new Map<K, T>();
   private readonly actions$ = new Subject<ActionEvent<K, T>>();
 
   readonly changes$: Observable<ReactiveMap<K, T>> = this.actions$.pipe(
@@ -16,8 +17,31 @@ export class ReactiveMap<K extends PropertyKey, T> extends Map<K, T> {
     startWith(this)
   );
 
+  get(key: K): T | null {
+    return this.internalMap.get(key) ?? null;
+  }
+
+  set(key: K, value: T): this {
+    this.internalMap.set(key, value);
+    this.actions$.next({ type: 'add', value: this });
+    return this;
+  }
+
+  getMany(keys: K[]): (T | undefined)[] {
+    return keys.map(k => this.internalMap.get(k));
+  }
+
+  setMany(values: [K, T][]): void {
+    for (const [key, value] of values) {
+      if (!this.internalMap.has(key)) {
+        this.internalMap.set(key, value);
+      }
+    }
+    this.actions$.next({ type: 'add', value: this });
+  }
+
   delete(key: K): boolean {
-    const removed = super.delete(key);
+    const removed = this.internalMap.delete(key);
     if (removed) {
       this.actions$.next({
         type: 'delete',
@@ -27,22 +51,19 @@ export class ReactiveMap<K extends PropertyKey, T> extends Map<K, T> {
     return removed;
   }
 
-  set(key: K, value: T): this {
-    super.set(key, value);
-    this.actions$.next({ type: 'add', value: this });
-    return this;
+  clear() {
+    this.internalMap.clear();
+    this.actions$.next({
+      type: 'clear',
+      value: this,
+    });
   }
 
-  getMany(keys: K[]): (T | undefined)[] {
-    return keys.map(k => this.get(k));
+  keys(): K[] {
+    return Array.from(this.internalMap.keys());
   }
 
-  setMany(values: [K, T][]): void {
-    for (const [key, value] of values) {
-      if (!this.has(key)) {
-        super.set(key, value);
-      }
-    }
-    this.actions$.next({ type: 'add', value: this });
+  values(): T[] {
+    return Array.from(this.internalMap.values());
   }
 }

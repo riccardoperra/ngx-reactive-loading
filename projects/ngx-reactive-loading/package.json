@@ -17,13 +17,15 @@
     "angular",
     "loading",
     "rxjs",
-    "ngrx",
-    "component state"
+    "reactive",
+    "loading-state",
+    "async",
+    "loader"
   ],
-  "description": "Better loading state in Angular application with RxJS",
+  "description": "Dynamic Loading state handling in Angular applications with RxJS",
   "peerDependencies": {
-    "@angular/common": "^12.1.1",
-    "@angular/core": "^12.1.1"
+    "@angular/common": "^12.0.0",
+    "@angular/core": "^12.0.0"
   },
   "dependencies": {
     "tslib": "^2.2.0"

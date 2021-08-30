@@ -36,7 +36,6 @@
 
 ✅ Flexible and automatic loading state handling <br>
 ✅ Static and dynamic loading state creation <br>
-✅ Flexible and integrable with reactive approach <br>
 ✅ Angular Dependency Injection support <br>
 ✅ No external dependencies outside Angular <br>
 ✅ Fully tree-shakeable <br>
@@ -66,7 +65,7 @@ yarn add ngx-reactive-loading
 
 ### Loading store
 
-The loading store is a key value object that allows handling multiple loading states through your application.
+The loading store is a key value object that allows handling multiple loading states defined statically through your application
 
 To create a loading store that persist the given loading states, you must invoke the `createLoadingStore` function
 specifying the properties that will be observed and updated.
@@ -77,7 +76,7 @@ specifying the properties that will be observed and updated.
 //example.component.ts
 
 import { createLoadingStore } from 'ngx-reactive-loading';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -91,6 +90,7 @@ enum ExampleActions {
   template: `
     <ng-container *ngIf="isLoading$ | async"> Loading... </ng-container>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleComponent implements OnInit {
   readonly loadingStore = createLoadingStore([
@@ -102,7 +102,8 @@ export class ExampleComponent implements OnInit {
   readonly isReloading$ = this.loadingStore[ExampleActions.Reload].$;
   readonly isLoading$: Observable<boolean> = someLoading([this.loadingStore]);
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {
+  }
 
   add() {
     this.http
@@ -166,7 +167,7 @@ const someLoading = registry.someLoading(['key1', 'key2']);
 ## Working with Loading Service
 
 If you need a more sophisticated way to handle loading states, for a better integration with Angular dependency
-injection, you can use a loading service that will expose the loading store api's.
+injection, you can use a loading service that will expose the [loading store](#loading-store) api's. 
 
 ### Loading service api
 
@@ -340,7 +341,7 @@ type ComponentAction = 'add' | 'reload';
 export class ExampleComponent implements OnInit {
   readonly loadingStoreState = this.loadingStore.state;
   readonly isAdding$: Observableb<boolean> = this.loadingStoreState.add.$;
-  readonly isReloading$: Observable<boolean> = this.loadingStoreState.add.$;
+  readonly isReloading$: Observable<boolean> = this.loadingStoreState.reload.$;
 
   constructor(
     private readonly http: HttpClient,
@@ -348,12 +349,12 @@ export class ExampleComponent implements OnInit {
   ) {}
 
   add() {
-    // Using load helper
+    // Using load method
     this.loadingStore.load(() => this.http.post('/', {}), 'add').subscribe();
   }
 
   reload() {
-    // Using track helper
+    // Using track method
     this.http.get('/').pipe(this.loadingStore.track('reload')).subscribe();
   }
 }
@@ -425,8 +426,7 @@ export interface LoadingStoreModuleOptions extends LoadingStoreOptions {
 ##### Event logger
 
 With the event logger, there will be a default eventListener to the loading store that will log all loading property
-changes automatically in the console. Providing the `name` option, the log will include also that name to differentiate
-it.
+changes automatically in the console. Providing the `name` option, the log will include also that will name it.
 
 ```ts
 // feature.module.ts
@@ -441,6 +441,38 @@ it.
 })
 export class FeatureModule {}
 ```
+
+### Using loading directive
+
+Loading directive provide a simple approach to switch templates when the loading state change. To work correctly the
+loading service must be provided by a component or module.
+
+```ts
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { LoadingService } from 'ngx-reactive-loading';
+
+@Component({
+  selector: 'app-root',
+  template: `
+    <button *ngxLoading="'add'; else loadingTpl">Add</button>
+    <ng-template #loadingTpl>Loading...</ng-template>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [LoadingService.componentProvide(['add'])],
+})
+class AppComponent {
+  constructor(private readonly loadingService: LoadingService) {}
+}
+```
+
+#### API
+
+#### Inputs
+
+| Input            | Type                         | Default | Required | Description                                               |
+| ---------------- | ---------------------------- | ------- | -------- | --------------------------------------------------------- |
+| [ngxLoading]     | PropertyKey \| PropertyKey[] | []      | false    | Set the loading state properties that will be observed    |
+| [ngxLoadingElse] | TemplateRef<unknown> \| null | null    | false    | Render the custom loading template when `loading` is true |
 
 ### Tokens
 
@@ -480,8 +512,7 @@ export class AppModule {}
 
 If you need to handle dynamic loading states, the loading registry could be the best choice. Unlike the loading service,
 the loading registry currently does not have all the dependency injection mechanism since it must be used in the same
-scope. This mean that you can anyway instantiate it in a module, but you cannot provide a new token if you need to track
-the keys of a parent component.
+context. This mean that you can anyway instantiate it in a module, but providing a new token will override all the previous created keys.
 
 ### Example
 
@@ -518,7 +549,7 @@ export class ExampleComponent implements OnInit {
 
 ## Utils
 
-- someLoading
+### someLoading
 
   ```ts
   import { createLoadingStore, someLoading } from 'ngx-reactive-loading';
@@ -546,7 +577,8 @@ export class ExampleComponent implements OnInit {
   ]);
   ```
 
-- withLoading - Update the subject at the first emission and on complete
+### withLoading
+Update the subject at the first emission and on complete
 
   ```ts
   import { withLoading } from 'ngx-reactive-loading';
@@ -565,7 +597,8 @@ export class ExampleComponent implements OnInit {
   });
   ```
 
-- toLoadingEvent - Map loading store change to LoadingEvent object
+### toLoadingEvent 
+Map loading store change to LoadingEvent object
 
   ```ts
   import {
@@ -589,35 +622,3 @@ export class ExampleComponent implements OnInit {
     // Output 2 (after 1000ms): {type: 'key1', loading: false}
   });
   ```
-
-### Using loading directive
-
-Loading directive provide a simple approach to switch templates when the loading state change. To work correctly the
-loading service must be provided by a component or module.
-
-```ts
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { LoadingService } from 'ngx-reactive-loading';
-
-@Component({
-  selector: 'app-root',
-  template: `
-    <button *ngxLoading="'add'; else loadingTpl">Add</button>
-    <ng-template #loadingTpl>Loading...</ng-template>
-  `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [LoadingService.componentProvide(['add'])],
-})
-class AppComponent {
-  constructor(private readonly loadingService: LoadingService) {}
-}
-```
-
-### API
-
-#### Inputs
-
-| Input            | Type                         | Default | Required | Description                                               |
-| ---------------- | ---------------------------- | ------- | -------- | --------------------------------------------------------- |
-| [ngxLoading]     | PropertyKey \| PropertyKey[] | []      | false    | Set the loading state properties that will be observed    |
-| [ngxLoadingElse] | TemplateRef<unknown> \| null | null    | false    | Render the custom loading template when `loading` is true |

@@ -76,7 +76,9 @@ enum ExampleActions {
 
 @Component({
   selector: 'app-example',
-  template: `<ng-container *ngIf="isLoading$ | async">Loading...</ng-container>`,
+  template: `<ng-container *ngIf="isLoading$ | async"
+    >Loading...</ng-container
+  >`,
 })
 export class ExampleComponent implements OnInit {
   readonly loadingStore = createLoadingStore([
@@ -88,8 +90,7 @@ export class ExampleComponent implements OnInit {
   readonly isReloading$ = this.loadingStore[ExampleActions.Reload].$;
   readonly isLoading$: Observable<boolean> = someLoading([this.loadingStore]);
 
-  constructor(private readonly http: HttpClient) {
-  }
+  constructor(private readonly http: HttpClient) {}
 
   add() {
     this.http
@@ -109,34 +110,43 @@ export class ExampleComponent implements OnInit {
 
 ### Loading registry
 
-The loading registry is an object that can holds dynamically the loading states. To create a loading registry you must
+The loading registry is a key value storage that can holds dynamically the loading states of your application. To create a loading registry you must
 invoke the `createLoadingRegistry` function.
 
 ### Example
 
 ```ts
-import { createLoadingRegistry } from "ngx-reactive-loading";
+import { createLoadingRegistry } from 'ngx-reactive-loading';
 
 const registry = createLoadingRegistry();
 
 // Add loading state by given key
 registry.add('key1');
+
 // Add loading states by given keys
 registry.addAll(['key2', 'key3']);
+
 // Delete a loading state by given key
 registry.delete('key1');
+
 // Get loading state object
 registry.get('key1');
+
 // Observe the changes of all loading states. Value is emitted on state change, on add or on delete event;
-registry.registry$.subscribe((values) => console.log(values));
+registry.registry$.subscribe(values => console.log(values));
+
 // Operator function that will update the loading state when observable is subscribed
 of(1).pipe(registry.track('key1'));
+
 // Clear the registry and unsubscribe all observables.
 registry.destroy();
+
 // Get the current keys of registry
 const keys = registry.keys();
+
 // Observe the changes of a loading state by the given key
 const isLoading = registry.isLoading('key1');
+
 // Observe the changes of a loading state by multiple keys and check if one of the given keys is loading.
 const someLoading = registry.someLoading(['key1', 'key2']);
 ```
@@ -323,8 +333,7 @@ export class ExampleComponent implements OnInit {
   constructor(
     private readonly http: HttpClient,
     private readonly loadingStore: LoadingService<ComponentAction>
-  ) {
-  }
+  ) {}
 
   add() {
     // Using load helper
@@ -359,8 +368,7 @@ type RootLoadingActions = 'globalReload';
     ReactiveLoadingModule.forRoot<RootLoadingActions>(['globalReload']),
   ],
 })
-export class AppModule {
-}
+export class AppModule {}
 ```
 
 #### Registering feature loading service
@@ -381,8 +389,7 @@ type TodoLoadingActions = 'addTodo' | 'removeTodo' | 'reloadTodo';
     ),
   ],
 })
-export class TodoModule {
-}
+export class TodoModule {}
 ```
 
 #### Custom module configuration
@@ -420,8 +427,7 @@ it.
     }),
   ],
 })
-export class FeatureModule {
-}
+export class FeatureModule {}
 ```
 
 ### Tokens
@@ -448,16 +454,14 @@ export class AppComponent {
 export class HelloComponent {
   constructor(
     @Inject(SOME_LOADING) private readonly someLoading$: Observable<boolean>
-  ) {
-  }
+  ) {}
 }
 
 @NgModule({
   declarations: [AppComponent, HelloComponent],
   imports: [ReactiveLoadingModule.forRoot(['prop1'])],
 })
-export class AppModule {
-}
+export class AppModule {}
 ```
 
 ## Working with loading registry
@@ -479,16 +483,13 @@ import { createLoadingRegistry, LOADING_REGISTRY } from 'ngx-reactive-loading';
   imports: [],
   exports: [],
   declarations: [],
-  providers: [
-    { provide: LOADING_REGISTRY, useFactory: createLoadingRegistry },
-  ],
+  providers: [{ provide: LOADING_REGISTRY, useFactory: createLoadingRegistry }],
 })
-export class ExampleModule {
-}
+export class ExampleModule {}
 
 // example.component.ts
 import { Component, OnInit } from '@angular/core';
-import { LoadingRegistry, LOADING_REGISTRY } from "ngx-reactive-loading";
+import { LoadingRegistry, LOADING_REGISTRY } from 'ngx-reactive-loading';
 
 @Component({ selector: 'app-example', template: `` })
 export class ExampleComponent implements OnInit {
@@ -496,11 +497,10 @@ export class ExampleComponent implements OnInit {
     @Inject(LOADING_REGISTRY)
     readonly loadingRegistry: LoadingRegistry
   ) {
-    this.loadingRegistry.addAll(['k1', 'k2'])
+    this.loadingRegistry.addAll(['k1', 'k2']);
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 }
 ```
 
@@ -597,8 +597,7 @@ import { LoadingService } from 'ngx-reactive-loading';
   providers: [LoadingService.componentProvide(['add'])],
 })
 class AppComponent {
-  constructor(private readonly loadingService: LoadingService) {
-  }
+  constructor(private readonly loadingService: LoadingService) {}
 }
 ```
 
@@ -606,7 +605,7 @@ class AppComponent {
 
 #### Inputs
 
-| Input            | Type                         | Default | Required | Description                                             |
-| ---------------- | ---------------------------- | ------- | -------- | ------------------------------------------------------- |
-| [ngxLoading]     | PropertyKey \| PropertyKey[] | []      | false    | Set the loading state properties that will be observed  |
+| Input            | Type                         | Default | Required | Description                                               |
+| ---------------- | ---------------------------- | ------- | -------- | --------------------------------------------------------- |
+| [ngxLoading]     | PropertyKey \| PropertyKey[] | []      | false    | Set the loading state properties that will be observed    |
 | [ngxLoadingElse] | TemplateRef<unknown> \| null | null    | false    | Render the custom loading template when `loading` is true |

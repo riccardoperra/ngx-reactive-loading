@@ -1,0 +1,51 @@
+<mat-toolbar>
+  <span>{{ pageTitle$ | async }}</span>
+  <span class="spacer"></span>
+
+  <ng-template [ngxLoading]="[]" [ngxLoadingElse]="spinner">
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="(isLoading$ | async) ?? false"
+      (click)="reloadEvent$.next()"
+    >
+      Refresh
+    </button>
+  </ng-template>
+
+  <ng-template #spinner>
+    <mat-icon>
+      <mat-spinner diameter="20"></mat-spinner>
+    </mat-icon>
+  </ng-template>
+</mat-toolbar>
+
+<div [style.padding.rem]="1">
+  <div fxFill>
+    <app-form-todo (submitEvent)="addEvent$.next($event)"></app-form-todo>
+
+    <mat-card
+      [style.marginTop.rem]="1"
+      *ngIf="(todos$ | async)!.length > 0 ?? false"
+    >
+      <mat-card-header>
+        <mat-card-title>
+          <h2>Todos</h2>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ng-container *ngxLoading="[]; else loaderTpl"></ng-container>
+        <ng-template #loaderTpl>
+          <mat-spinner [style.margin]="'1rem auto'" [diameter]="40">
+          </mat-spinner>
+        </ng-template>
+        <app-todo-list [todos]="(todos$ | async) || []" [todoTpl]="todoTpl">
+        </app-todo-list>
+        <ng-template #todoTpl let-todo>
+          <app-todo [todo]="todo" (removeEvent)="removeEvent$.next($event)">
+          </app-todo>
+        </ng-template>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

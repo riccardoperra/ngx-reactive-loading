@@ -40,4 +40,13 @@ export const ROUTES: LabeledRoute[] = [
         '../pages/04-loading-registry-example/loading-registry-example.module'
       ).then(m => m.LoadingRegistryExampleModule),
   },
+  {
+    path: 'loading-directive',
+    label: 'Example with loading directive',
+    url: '/loading-directive',
+    loadChildren: () =>
+      import(
+        '../pages/05-loading-directive-example/loading-directive-example.module'
+      ).then(m => m.LoadingDirectiveExampleModule),
+  },
 ];

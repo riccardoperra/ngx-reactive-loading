@@ -7,11 +7,14 @@
 [![npm downloads](https://img.shields.io/npm/dw/ngx-reactive-loading)](https://www.npmjs.com/package/ngx-reactive-loading)
 [![license](https://img.shields.io/npm/l/ngx-reactive-loading)](https://github.com/riccardoperra/ngx-reactive-loading/blob/main/LICENSE)
 [![Coverage Status](https://coveralls.io/repos/github/riccardoperra/ngx-reactive-loading/badge.svg?branch=main)](https://coveralls.io/github/riccardoperra/ngx-reactive-loading?branch=main)
+[![Workflow Status](https://img.shields.io/github/workflow/status/riccardoperra/ngx-reactive-loading/CI)](https://www.npmjs.com/package/ngx-reactive-loading)
 [![Supported version](https://img.shields.io/badge/Support%20Angular-12%2B-%23D6002F)](https://github.com/riccardoperra/ngx-reactive-loading)
 
 ## Table of contents
 
 - [Table of contents](#table-of-contents)
+- [Features](#features)
+- [Versions](#versions)
 - [Getting started](#getting-started)
 - [Basic usage](#basic-usage)
   - [Loading store](#loading-store)
@@ -28,6 +31,22 @@
 - [Tokens](#tokens)
 - [Utils](#utils)
 - [Demo](projects/ngx-reactive-loading-demo)
+
+## Features
+
+✅ Flexible and automatic loading state handling <br>
+✅ Static and dynamic loading state creation <br>
+✅ Flexible and integrable with reactive approach <br>
+✅ Angular Dependency Injection support <br>
+✅ No external dependencies outside Angular <br>
+✅ Fully tree-shakeable <br>
+✅ 100% tested <br>
+
+## Versions
+
+| ngx-reactive-loading | Angular  | RxJS   |
+| -------------------- | -------- | ------ |
+| >1.3.0               | >=12.0.0 | >6.5.3 |
 
 ## Getting started
 
@@ -55,15 +74,8 @@ specifying the properties that will be observed and updated.
 #### Example
 
 ```ts
-type LoadingStoreState = {
-  // Loading changes observer
-  readonly $: Observable<boolean>;
-  // Operator that update the loading object
-  readonly track: <T>() => MonoTypeOperatorFunction<T>;
-};
-```
+//example.component.ts
 
-```ts
 import { createLoadingStore } from 'ngx-reactive-loading';
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -76,9 +88,9 @@ enum ExampleActions {
 
 @Component({
   selector: 'app-example',
-  template: `<ng-container *ngIf="isLoading$ | async"
-    >Loading...</ng-container
-  >`,
+  template: `
+    <ng-container *ngIf="isLoading$ | async"> Loading... </ng-container>
+  `,
 })
 export class ExampleComponent implements OnInit {
   readonly loadingStore = createLoadingStore([

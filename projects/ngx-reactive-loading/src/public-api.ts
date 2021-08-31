@@ -10,3 +10,8 @@ export { LoadingService } from './lib/services';
 export { ReactiveLoadingModule } from './lib/reactive-loading.module';
 export { SOME_LOADING, LOADING_REGISTRY } from './lib/providers/token';
 export { LoadingDirective } from './lib/components/loading.directive';
+export {
+  HTTP_LOADING_REGISTRY,
+  HttpLoadingRegistryInterceptor,
+  putLoadingContext,
+} from './lib/interceptors/http-loading-registry.interceptor';

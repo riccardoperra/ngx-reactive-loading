@@ -1,5 +1,5 @@
-import { combineLatest, MonoTypeOperatorFunction, pipe } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { combineLatest, MonoTypeOperatorFunction, of, pipe } from 'rxjs';
+import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { LoadingStoreState, PropertyTuple } from '../model';
 import { someLoading as internalSomeLoading } from '../utils/some-loading';
 import { LoadingRegistry } from '../model/loading-registry';
@@ -10,13 +10,15 @@ export const createLoadingRegistry = <T extends PropertyKey = PropertyKey>(
   initialKeys: PropertyTuple<T> = []
 ): LoadingRegistry<T> => {
   const registry = new ReactiveMap<T, LoadingStoreState>();
-
   registry.setMany(initialKeys.map(key => [key, buildLoadingState()]));
 
   const registry$ = registry.changes$.pipe(
     switchMap(sources => {
       const keys = Array.from(sources.keys());
       const values = Array.from(sources.values()).map(state => state.$);
+      if (keys.length === 0 && values.length === 0) {
+        return of({});
+      }
       return combineLatest(values).pipe(
         map(values =>
           values.reduce(
@@ -33,13 +35,13 @@ export const createLoadingRegistry = <T extends PropertyKey = PropertyKey>(
 
   const someLoading = (keys: T[]) =>
     registry.changes$.pipe(
-      switchMap(_ =>
-        internalSomeLoading(
-          _.getMany(keys)
-            .filter((value): value is NonNullable<LoadingStoreState> => !!value)
-            .map(state => state.$)
-        )
-      )
+      switchMap(_ => {
+        const sources$ = _.getMany(keys)
+          .filter((value): value is NonNullable<LoadingStoreState> => !!value)
+          .map(state => state.$);
+        return sources$.length > 0 ? internalSomeLoading(sources$) : of(false);
+      }),
+      distinctUntilChanged()
     );
 
   const isLoading = (key: T) => someLoading([key]);

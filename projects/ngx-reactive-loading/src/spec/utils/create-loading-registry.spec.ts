@@ -88,7 +88,7 @@ describe('loadingRegistry', () => {
       const loading$ = store.isLoading('no_exist');
       const source = m.cold('---a|', { a: 1 }).pipe(store.track('no_exist'));
       m.expect(source).toBeObservable('---a|', { a: 1 });
-      m.expect(loading$).toBeObservable(m.cold('----', {}));
+      m.expect(loading$).toBeObservable(m.cold('a', { a: false }));
     })
   );
 
@@ -121,9 +121,10 @@ describe('loadingRegistry', () => {
 
       m.equal(
         replaySubject$,
-        m.hot('(ab)', {
-          a: { k1: false },
-          b: { k1: false, k2: false },
+        m.hot('(abc)', {
+          a: {},
+          b: { k1: false },
+          c: { k1: false, k2: false },
         })
       );
     })
@@ -145,8 +146,9 @@ describe('loadingRegistry', () => {
 
       m.equal(
         replaySubject$,
-        m.hot('a', {
-          a: { k1: false, k2: false },
+        m.hot('(ab)', {
+          a: {},
+          b: { k1: false, k2: false },
         })
       );
     })

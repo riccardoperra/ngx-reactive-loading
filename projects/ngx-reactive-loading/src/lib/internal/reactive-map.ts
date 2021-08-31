@@ -1,7 +1,7 @@
-import { Observable, Subject } from 'rxjs';
+import { defer, Observable, Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
-type ActionsType = 'add' | 'delete' | 'clear';
+type ActionsType = 'add' | 'delete' | 'clear' | 'init';
 
 type ActionEvent<K extends PropertyKey, T> = {
   type: ActionsType;
@@ -12,10 +12,16 @@ export class ReactiveMap<K extends PropertyKey, T> {
   private readonly internalMap = new Map<K, T>();
   private readonly actions$ = new Subject<ActionEvent<K, T>>();
 
-  readonly changes$: Observable<ReactiveMap<K, T>> = this.actions$.pipe(
-    map(action => action.value),
-    startWith(this)
+  readonly changes$: Observable<ReactiveMap<K, T>> = defer(() =>
+    this.actions$.pipe(
+      map(action => action.value),
+      startWith(this)
+    )
   );
+
+  constructor() {
+    this.actions$.next({ type: 'init', value: this });
+  }
 
   get(key: K): T | null {
     return this.internalMap.get(key) ?? null;

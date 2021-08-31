@@ -53,7 +53,6 @@ export class HttpLoadingRegistryInterceptor implements HttpInterceptor {
       return defer(() => {
         this.requestCount++;
         return next.handle(request).pipe(
-          delay(3000),
           this.loadingRegistry.track(loadingContext),
           finalize(() =>
             asapScheduler.schedule(() => {

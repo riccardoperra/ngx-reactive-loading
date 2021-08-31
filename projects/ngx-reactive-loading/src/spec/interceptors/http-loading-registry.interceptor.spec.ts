@@ -1,24 +1,9 @@
-import { TestBed } from '@angular/core/testing';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
-import {
-  HttpClient,
-  HttpHandler,
-  HttpHeaders,
-  HttpInterceptor,
-  HttpRequest,
-  HTTP_INTERCEPTORS,
-} from '@angular/common/http';
+import { HttpContext, HttpHandler, HttpRequest } from '@angular/common/http';
 import {
   HttpLoadingRegistryInterceptor,
-  HTTP_LOADING_CONTEXT,
-  HTTP_LOADING_REGISTRY,
   putLoadingContext,
 } from '../../lib/interceptors/http-loading-registry.interceptor';
-import { Injectable } from '@angular/core';
-import { catchError, delay, mapTo, take } from 'rxjs/operators';
+import { mapTo } from 'rxjs/operators';
 import { Observable, of, ReplaySubject } from 'rxjs';
 import { marbles } from 'rxjs-marbles';
 import { createLoadingRegistry, LoadingRegistry } from '../../public-api';
@@ -28,8 +13,9 @@ describe(`HttpLoadingRegistryInterceptor`, () => {
 
   const interceptor: HttpLoadingRegistryInterceptor =
     new HttpLoadingRegistryInterceptor(registry);
+
   it(
-    'should update',
+    'should update loading',
     marbles(m => {
       const replaySubject$ = new ReplaySubject();
       registry.registry$.subscribe(replaySubject$);
@@ -55,6 +41,30 @@ describe(`HttpLoadingRegistryInterceptor`, () => {
         d: { testKey: false },
         e: {},
       });
+    })
+  );
+
+  it(
+    'should no update and create loading',
+    marbles(m => {
+      const replaySubject$ = new ReplaySubject();
+      registry.registry$.subscribe(replaySubject$);
+
+      const next: HttpHandler = {
+        handle: () => of(true) as Observable<any>,
+      };
+
+      const httpRequestStub: HttpRequest<any> = {
+        url: '/',
+        context: new HttpContext(),
+      } as HttpRequest<any>;
+
+      const destination$ = interceptor
+        .intercept(httpRequestStub, next)
+        .pipe(mapTo(true));
+
+      m.expect(destination$).toBeObservable('(a|)', { a: true });
+      m.equal(replaySubject$, 'a', { a: {} });
     })
   );
 });

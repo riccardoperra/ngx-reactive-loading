@@ -6,11 +6,7 @@ import {
   Optional,
   SkipSelf,
 } from '@angular/core';
-import {
-  LoadingStore,
-  LoadingStoreModuleOptions,
-  PropertyTuple,
-} from './model';
+import { LoadingStoreModuleOptions, PropertyTuple } from './model';
 import { LoadingService } from './services';
 import {
   FEATURE_LOADING_STORE,
@@ -28,6 +24,7 @@ import {
 } from './internal/providers';
 import { LoggerService } from './services/logger.service';
 import { LoadingDirective } from './components/loading.directive';
+import { LoadingStore } from './core';
 
 /**
  * @internal

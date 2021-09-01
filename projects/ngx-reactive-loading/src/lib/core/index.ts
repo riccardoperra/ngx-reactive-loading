@@ -1,2 +1,2 @@
 export { createLoadingRegistry } from './create-loading-registry';
-export { createLoadingStore } from './create-loading-store';
+export { createLoadingStore, LoadingStore } from './create-loading-store';

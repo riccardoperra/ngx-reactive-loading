@@ -1,11 +1,8 @@
-import {
-  LoadingEvent,
-  LoadingStore,
-  LoadingStoreState,
-  PropertyTuple,
-} from '../model';
+import { LoadingEvent, PropertyTuple } from '../model';
 import { defer, merge, Observable } from 'rxjs';
 import { map, shareReplay, skip } from 'rxjs/operators';
+import { LoadingStore } from '../core';
+import { LoadingStoreState } from '../internal/factory/loading-state';
 
 /**
  * Map loading state change to LoadingEvent object.

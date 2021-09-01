@@ -1,4 +1,3 @@
-export * from './loading';
 export * from './loading-event';
 export * from './loading-store-options';
 export * from './property';

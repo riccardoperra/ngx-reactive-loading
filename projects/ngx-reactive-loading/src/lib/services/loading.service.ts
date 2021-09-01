@@ -7,14 +7,8 @@ import {
   SkipSelf,
 } from '@angular/core';
 import { defer, MonoTypeOperatorFunction, Observable, Subject } from 'rxjs';
-import {
-  LoadingEvent,
-  LoadingStore,
-  LoadingStoreOptions,
-  LoadingStoreState,
-  PropertyTuple,
-} from '../model';
-import { someLoading } from '../utils';
+import { LoadingEvent, LoadingStoreOptions, PropertyTuple } from '../model';
+import { someLoading, toLoadingEvent } from '../utils';
 import { distinctUntilChanged, shareReplay, takeUntil } from 'rxjs/operators';
 import { LoadingStoreService } from '../model/loading-store';
 import {
@@ -29,8 +23,8 @@ import {
   provideParentLoadingStore,
   provideSomeLoadingState,
 } from '../internal/providers';
-import { toLoadingEvent } from '../utils';
-import { createLoadingStore } from '../core';
+import { createLoadingStore, LoadingStore } from '../core';
+import { LoadingStoreState } from '../internal/factory/loading-state';
 
 /**
  * @internal
@@ -157,7 +151,7 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
    *   constructor(private readonly loadingService: LoadingService<ExampleActions>,
    *               private readonly http: HttpClient) {
    *     this.http.post('/', {})
-   *      .pipe(this.loadingService.track('add'))
+   *      .pipe(this.loadingService.track("add"))
    *      .subscribe();
    *   }
    * }
@@ -192,7 +186,7 @@ export class LoadingService<T extends PropertyKey = PropertyKey>
    *   ]
    * })
    * export class ExampleComponent {
-   *   readonly isAdd$: Observable<boolean> = this.loadingService.isLoading('add');
+   *   readonly isAdd$: Observable<boolean> = this.loadingService.isLoading("add");
    *
    *   constructor(private readonly loadingService: LoadingService<ExampleActions>)
    * }

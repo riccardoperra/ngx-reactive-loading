@@ -1,0 +1,59 @@
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { shareReplay, takeUntil } from 'rxjs/operators';
+import { MergeObject } from './merge-object';
+
+export type LoadingFactoryTuple<T extends {}> = {
+  [K in keyof T]: LoadingFactory<T[K]>;
+};
+
+export type LoadingFactoryState<Type extends PropertyKey> = {
+  $: Observable<boolean>;
+  type: Type;
+  destroy: () => void;
+};
+
+export type LoadingFactory<R> = (
+  context: BehaviorSubject<boolean>,
+  destroy$: Subject<void>
+) => R;
+
+export const createLoadingStateFactory = <
+  Type extends PropertyKey,
+  FactoryReturn extends {}
+>(
+  type: Type,
+  factory: LoadingFactory<FactoryReturn>
+): LoadingFactoryState<Type> & FactoryReturn => {
+  const loadingSubject$ = new BehaviorSubject<boolean>(false);
+  const destroy$ = new Subject<void>();
+
+  const destroyFn = () => {
+    destroy$.next();
+    destroy$.complete();
+  };
+
+  return {
+    $: loadingSubject$
+      .asObservable()
+      .pipe(
+        shareReplay({ refCount: true, bufferSize: 1 }),
+        takeUntil(destroy$)
+      ),
+    type,
+    destroy: destroyFn,
+    ...factory(loadingSubject$, destroy$),
+  };
+};
+
+export const withLoadingStateFactory = <R extends readonly {}[]>(
+  ...factories: LoadingFactoryTuple<R>
+): LoadingFactory<MergeObject<R>> => {
+  return (loading, destroy$) =>
+    factories.reduce<{}>(
+      (acc, factory) => ({
+        ...acc,
+        ...factory(loading, destroy$),
+      }),
+      {}
+    ) as MergeObject<R>;
+};

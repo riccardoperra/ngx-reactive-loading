@@ -1,7 +1,7 @@
-import { LoadingStore } from './loading';
 import { PropertyTuple } from './property';
 import { MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { LoadingEvent } from './loading-event';
+import { LoadingStore } from '../core';
 
 export interface LoadingStoreService<T extends PropertyKey = PropertyKey> {
   readonly state: LoadingStore<PropertyTuple<T>>;

@@ -1,11 +1,14 @@
 import { MonoTypeOperatorFunction, Observable } from 'rxjs';
-import { LoadingStoreState } from './loading';
+import {
+  ControlledLoadingRegistryState,
+  LoadingRegistryState,
+} from '../internal/factory/loading-registry-state';
 
-export type LoadingRegistry<K extends PropertyKey = PropertyKey> = {
+export interface LoadingRegistry<K extends PropertyKey = PropertyKey> {
   /**
    * Get loading state object
    */
-  readonly get: (key: K) => LoadingStoreState | null;
+  readonly get: (key: K) => LoadingRegistryState | null;
   /**
    * Add loading state by given key
    */
@@ -42,4 +45,12 @@ export type LoadingRegistry<K extends PropertyKey = PropertyKey> = {
    * Get the current keys of registry
    */
   readonly keys: () => K[];
-};
+}
+
+export interface ControlledLoadingRegistry<K extends PropertyKey = PropertyKey>
+  extends LoadingRegistry<K> {
+  /**
+   * Get controlled loading state object
+   */
+  readonly get: (key: K) => ControlledLoadingRegistryState | null;
+}

@@ -1,6 +1,6 @@
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
-import { LoadingRegistry } from '../model/loading-registry';
+import { LoadingRegistry } from '../model';
 
 /**
  * Automatically provided when providing the loading service in a component

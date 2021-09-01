@@ -1,16 +1,28 @@
 import { combineLatest, MonoTypeOperatorFunction, of, pipe } from 'rxjs';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
-import { LoadingStoreState, PropertyTuple } from '../model';
+import {
+  ControlledLoadingRegistry,
+  LoadingRegistry,
+  PropertyTuple,
+} from '../model';
 import { someLoading as internalSomeLoading } from '../utils/some-loading';
-import { LoadingRegistry } from '../model/loading-registry';
 import { ReactiveMap } from '../internal/reactive-map';
-import { buildLoadingState } from './build-loading-state';
+import {
+  buildControlledLoadingRegistryState,
+  buildLoadingRegistryState,
+  LoadingRegistryState,
+} from '../internal/factory/loading-registry-state';
 
-export const createLoadingRegistry = <T extends PropertyKey = PropertyKey>(
-  initialKeys: PropertyTuple<T> = []
-): LoadingRegistry<T> => {
-  const registry = new ReactiveMap<T, LoadingStoreState>();
-  registry.setMany(initialKeys.map(key => [key, buildLoadingState()]));
+const createLoadingRegistryFactory = <
+  T extends PropertyKey,
+  FactoryState extends LoadingRegistryState
+>(
+  initialKeys: PropertyTuple<T> = [],
+  factory: () => FactoryState
+) => {
+  const registry = new ReactiveMap<T, FactoryState>();
+
+  registry.setMany(initialKeys.map(key => [key, factory()]));
 
   const registry$ = registry.changes$.pipe(
     switchMap(sources => {
@@ -37,7 +49,7 @@ export const createLoadingRegistry = <T extends PropertyKey = PropertyKey>(
     registry.changes$.pipe(
       switchMap(_ => {
         const sources$ = _.getMany(keys)
-          .filter((value): value is NonNullable<LoadingStoreState> => !!value)
+          .filter((value): value is NonNullable<FactoryState> => !!value)
           .map(state => state.$);
         return sources$.length > 0 ? internalSomeLoading(sources$) : of(false);
       }),
@@ -60,7 +72,7 @@ export const createLoadingRegistry = <T extends PropertyKey = PropertyKey>(
   const destroyByKeys = (keys: T[]) => {
     const state = registry
       .getMany(keys)
-      .filter((value): value is NonNullable<LoadingStoreState> => !!value);
+      .filter((value): value is NonNullable<FactoryState> => !!value);
     state.forEach(key => key.destroy());
   };
 
@@ -80,11 +92,25 @@ export const createLoadingRegistry = <T extends PropertyKey = PropertyKey>(
     isLoading,
     track,
     get: (key: T) => registry.get(key) ?? null,
-    add: (key: T) => void registry.set(key, buildLoadingState()),
-    addAll: (keys: T[]) =>
-      registry.setMany(keys.map(k => [k, buildLoadingState()])),
+    add: (key: T) => void registry.set(key, factory()),
+    addAll: (keys: T[]) => registry.setMany(keys.map(k => [k, factory()])),
     delete: deleteByKey,
     destroy: destroyAll,
     keys,
   };
 };
+
+export const createLoadingRegistry = <T extends PropertyKey = PropertyKey>(
+  initialKeys: PropertyTuple<T> = []
+): LoadingRegistry<T> =>
+  createLoadingRegistryFactory(initialKeys, buildLoadingRegistryState);
+
+export const createControlledLoadingRegistry = <
+  T extends PropertyKey = PropertyKey
+>(
+  initialKeys: PropertyTuple<T> = []
+): ControlledLoadingRegistry<T> =>
+  createLoadingRegistryFactory(
+    initialKeys,
+    buildControlledLoadingRegistryState
+  );

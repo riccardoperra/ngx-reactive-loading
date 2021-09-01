@@ -1,5 +1,8 @@
-import { LoadingStore } from '../model';
-import { buildLoadingState } from './build-loading-state';
+import {
+  buildLoadingStoreState,
+  isLoadingStoreState,
+  LoadingStoreState,
+} from '../internal/factory/loading-state';
 
 /**
  * @description
@@ -15,7 +18,21 @@ export const createLoadingStore = <LoadingKeys extends readonly PropertyKey[]>(
 ): LoadingStore<LoadingKeys> => {
   const stores = {} as LoadingStore<LoadingKeys>;
   for (const key of keys) {
-    stores[key] = buildLoadingState();
+    stores[key] = buildLoadingStoreState();
   }
   return stores;
+};
+
+export const isLoadingStore = (
+  value: unknown
+): value is LoadingStore<PropertyKey[]> => {
+  return (
+    typeof value === 'object' &&
+    !!value &&
+    Object.values(value).every(value => isLoadingStoreState(value))
+  );
+};
+
+export type LoadingStore<K extends readonly [...PropertyKey[]]> = {
+  [Key in K[number]]: Readonly<LoadingStoreState>;
 };

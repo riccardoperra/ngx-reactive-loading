@@ -1,6 +1,6 @@
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { shareReplay, takeUntil } from 'rxjs/operators';
-import { MergeObject } from './merge-object';
+import { UnionToIntersection } from './union-to-intersection';
 
 export type LoadingFactoryTuple<T extends {}> = {
   [K in keyof T]: LoadingFactory<T[K]>;
@@ -47,7 +47,7 @@ export const createLoadingStateFactory = <
 
 export const withLoadingStateFactory = <R extends readonly {}[]>(
   ...factories: LoadingFactoryTuple<R>
-): LoadingFactory<MergeObject<R>> => {
+): LoadingFactory<UnionToIntersection<R[number]>> => {
   return (loading, destroy$) =>
     factories.reduce<{}>(
       (acc, factory) => ({
@@ -55,5 +55,5 @@ export const withLoadingStateFactory = <R extends readonly {}[]>(
         ...factory(loading, destroy$),
       }),
       {}
-    ) as MergeObject<R>;
+    ) as UnionToIntersection<R[number]>;
 };

@@ -2,7 +2,6 @@ import { Observable, ReplaySubject } from 'rxjs';
 import { createLoadingRegistry } from '../../lib/core';
 import { LoadingRegistry } from '../../lib/model/loading-registry';
 import { marbles } from 'rxjs-marbles';
-import { share, toArray } from 'rxjs/operators';
 
 describe('loadingRegistry', () => {
   let store: LoadingRegistry<any>;

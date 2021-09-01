@@ -27,12 +27,15 @@ export const HTTP_LOADING_REGISTRY = new InjectionToken<LoadingRegistry>(
   }
 );
 
-export const putLoadingContext = (key: PropertyKey) =>
+export const setHttpLoadingContext = (key: PropertyKey) =>
   new HttpContext().set(HTTP_LOADING_CONTEXT, key);
 
 @Injectable()
 export class HttpLoadingRegistryInterceptor implements HttpInterceptor {
-  requestMap: Map<PropertyKey, number> = new Map<PropertyKey, number>();
+  private readonly requestMap: Map<PropertyKey, number> = new Map<
+    PropertyKey,
+    number
+  >();
 
   constructor(
     @Inject(HTTP_LOADING_REGISTRY)

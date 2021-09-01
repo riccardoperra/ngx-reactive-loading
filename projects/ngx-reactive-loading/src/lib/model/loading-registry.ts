@@ -24,7 +24,7 @@ export interface LoadingRegistry<K extends PropertyKey = PropertyKey> {
   /**
    * Observe the changes of a loading state by multiple keys and check if one of the given keys is loading.
    */
-  readonly someLoading: (keys: K[]) => Observable<boolean>;
+  readonly someLoading: (keys?: K[]) => Observable<boolean>;
   /**
    * Observe the changes of a loading state by the given key
    */

@@ -17,5 +17,6 @@ export { LoadingDirective } from './lib/components/loading.directive';
 export {
   HTTP_LOADING_REGISTRY,
   HttpLoadingRegistryInterceptor,
-  putLoadingContext,
+  HTTP_LOADING_CONTEXT,
+  setHttpLoadingContext,
 } from './lib/interceptors/http-loading-registry.interceptor';

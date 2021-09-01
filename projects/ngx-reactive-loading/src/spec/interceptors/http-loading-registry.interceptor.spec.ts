@@ -7,7 +7,7 @@ import {
 import {
   HTTP_LOADING_REGISTRY,
   HttpLoadingRegistryInterceptor,
-  putLoadingContext,
+  setHttpLoadingContext,
 } from '../../lib/interceptors/http-loading-registry.interceptor';
 import { delay, mapTo } from 'rxjs/operators';
 import { merge, Observable, of, ReplaySubject } from 'rxjs';
@@ -49,7 +49,7 @@ describe(`HttpLoadingRegistryInterceptor`, () => {
 
       const httpRequestStub: HttpRequest<any> = {
         url: '/',
-        context: putLoadingContext('testKey'),
+        context: setHttpLoadingContext('testKey'),
       } as HttpRequest<any>;
 
       const destination$ = interceptor
@@ -105,7 +105,7 @@ describe(`HttpLoadingRegistryInterceptor`, () => {
 
       const httpRequestStub: HttpRequest<any> = {
         url: '/',
-        context: putLoadingContext('test1'),
+        context: setHttpLoadingContext('test1'),
       } as HttpRequest<any>;
 
       const destination$ = merge(

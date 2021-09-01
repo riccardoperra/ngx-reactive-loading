@@ -7,10 +7,10 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { asapScheduler, defer, Observable } from 'rxjs';
-import { delay, finalize } from 'rxjs/operators';
-import { createLoadingRegistry } from '../core';
-import { LoadingRegistry } from '../model';
+import { defer, Observable } from 'rxjs';
+import { finalize } from 'rxjs/operators';
+import { ControlledLoadingRegistry, LoadingRegistry } from '../model';
+import { createControlledLoadingRegistry } from '../core/create-loading-registry';
 
 const LOADING_DEFAULT_CONTEXT =
   '[ngx-reactive-loading/loading-store-interceptor/default]';
@@ -23,7 +23,7 @@ export const HTTP_LOADING_REGISTRY = new InjectionToken<LoadingRegistry>(
   '[ngx-reactive-loading] HttpLoadingRegistry',
   {
     providedIn: 'root',
-    factory: createLoadingRegistry,
+    factory: createControlledLoadingRegistry,
   }
 );
 
@@ -32,11 +32,11 @@ export const putLoadingContext = (key: PropertyKey) =>
 
 @Injectable()
 export class HttpLoadingRegistryInterceptor implements HttpInterceptor {
-  requestCount: number = 0;
+  requestMap: Map<PropertyKey, number> = new Map<PropertyKey, number>();
 
   constructor(
     @Inject(HTTP_LOADING_REGISTRY)
-    private readonly loadingRegistry: LoadingRegistry
+    private readonly loadingRegistry: ControlledLoadingRegistry
   ) {}
 
   intercept<T>(
@@ -51,15 +51,20 @@ export class HttpLoadingRegistryInterceptor implements HttpInterceptor {
       }
 
       return defer(() => {
-        this.requestCount++;
+        this.addRequest(loadingContext);
+
+        if (this.getRequest(loadingContext) === 1) {
+          this.loadingRegistry.get(loadingContext)!.set(true);
+        }
+
         return next.handle(request).pipe(
-          this.loadingRegistry.track(loadingContext),
-          finalize(() =>
-            asapScheduler.schedule(() => {
+          finalize(() => {
+            this.endRequest(loadingContext);
+            if (this.getRequest(loadingContext) === 0) {
+              this.loadingRegistry.get(loadingContext)!.set(false);
               this.loadingRegistry.delete(loadingContext);
-              this.requestCount--;
-            })
-          )
+            }
+          })
         );
       });
     }
@@ -69,5 +74,17 @@ export class HttpLoadingRegistryInterceptor implements HttpInterceptor {
 
   private getContext(request: HttpRequest<unknown>): PropertyKey {
     return request.context.get(HTTP_LOADING_CONTEXT);
+  }
+
+  getRequest(context: PropertyKey): number {
+    return this.requestMap.get(context) || 0;
+  }
+
+  private addRequest(context: PropertyKey): void {
+    this.requestMap.set(context, (this.requestMap.get(context) ?? 0) + 1);
+  }
+
+  private endRequest(context: PropertyKey): void {
+    this.requestMap.set(context, this.requestMap.get(context)! - 1);
   }
 }

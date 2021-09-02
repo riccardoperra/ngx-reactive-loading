@@ -14,9 +14,12 @@ export { LoadingService } from './lib/services';
 export { ReactiveLoadingModule } from './lib/reactive-loading.module';
 export { SOME_LOADING, LOADING_REGISTRY } from './lib/providers/token';
 export { LoadingDirective } from './lib/components/loading.directive';
+
+// Http Module
+
 export {
+  HTTP_LOADING_CONTEXT,
+  withHttpLoadingContext,
   HTTP_LOADING_REGISTRY,
   HttpLoadingRegistryInterceptor,
-  HTTP_LOADING_CONTEXT,
-  setHttpLoadingContext,
-} from './lib/interceptors/http-loading-registry.interceptor';
+} from './lib/http/';

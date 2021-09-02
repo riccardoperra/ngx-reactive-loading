@@ -4,17 +4,15 @@ import {
   HttpHandler,
   HttpRequest,
 } from '@angular/common/http';
-import {
-  HTTP_LOADING_REGISTRY,
-  HttpLoadingRegistryInterceptor,
-  setHttpLoadingContext,
-} from '../../lib/interceptors/http-loading-registry.interceptor';
+import { HttpLoadingRegistryInterceptor } from '../../lib/http/http-loading-registry.interceptor';
 import { delay, mapTo } from 'rxjs/operators';
 import { merge, Observable, of, ReplaySubject } from 'rxjs';
 import { marbles } from 'rxjs-marbles';
 import { ControlledLoadingRegistry } from '../../lib/model';
 import { createControlledLoadingRegistry } from '../../lib/core/create-loading-registry';
 import { TestBed } from '@angular/core/testing';
+import { HTTP_LOADING_REGISTRY } from '../../lib/http/http-loading-registry';
+import { withHttpLoadingContext } from '../../lib/http/http-loading-context';
 
 describe(`HttpLoadingRegistryInterceptor`, () => {
   const registry: ControlledLoadingRegistry = createControlledLoadingRegistry();
@@ -49,7 +47,7 @@ describe(`HttpLoadingRegistryInterceptor`, () => {
 
       const httpRequestStub: HttpRequest<any> = {
         url: '/',
-        context: setHttpLoadingContext('testKey'),
+        context: withHttpLoadingContext('testKey'),
       } as HttpRequest<any>;
 
       const destination$ = interceptor
@@ -105,7 +103,7 @@ describe(`HttpLoadingRegistryInterceptor`, () => {
 
       const httpRequestStub: HttpRequest<any> = {
         url: '/',
-        context: setHttpLoadingContext('test1'),
+        context: withHttpLoadingContext('test1'),
       } as HttpRequest<any>;
 
       const destination$ = merge(

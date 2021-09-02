@@ -7,28 +7,14 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { defer, Observable } from 'rxjs';
+import { asapScheduler, defer, Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { ControlledLoadingRegistry, LoadingRegistry } from '../model';
-import { createControlledLoadingRegistry } from '../core/create-loading-registry';
-
-const LOADING_DEFAULT_CONTEXT =
-  '[ngx-reactive-loading/loading-store-interceptor/default]';
-
-export const HTTP_LOADING_CONTEXT = new HttpContextToken<PropertyKey>(
-  () => LOADING_DEFAULT_CONTEXT
-);
-
-export const HTTP_LOADING_REGISTRY = new InjectionToken<LoadingRegistry>(
-  '[ngx-reactive-loading] HttpLoadingRegistry',
-  {
-    providedIn: 'root',
-    factory: createControlledLoadingRegistry,
-  }
-);
-
-export const setHttpLoadingContext = (key: PropertyKey) =>
-  new HttpContext().set(HTTP_LOADING_CONTEXT, key);
+import { ControlledLoadingRegistry } from '../model';
+import {
+  HTTP_LOADING_CONTEXT,
+  LOADING_DEFAULT_CONTEXT,
+} from './http-loading-context';
+import { HTTP_LOADING_REGISTRY } from './http-loading-registry';
 
 @Injectable()
 export class HttpLoadingRegistryInterceptor implements HttpInterceptor {
@@ -53,23 +39,21 @@ export class HttpLoadingRegistryInterceptor implements HttpInterceptor {
         this.loadingRegistry.add(loadingContext);
       }
 
-      return defer(() => {
-        this.addRequest(loadingContext);
+      this.addRequest(loadingContext);
 
-        if (this.getRequest(loadingContext) === 1) {
-          this.loadingRegistry.get(loadingContext)!.set(true);
-        }
+      if (this.getRequest(loadingContext) === 1) {
+        this.loadingRegistry.get(loadingContext)!.set(true);
+      }
 
-        return next.handle(request).pipe(
-          finalize(() => {
-            this.endRequest(loadingContext);
-            if (this.getRequest(loadingContext) === 0) {
-              this.loadingRegistry.get(loadingContext)!.set(false);
-              this.loadingRegistry.delete(loadingContext);
-            }
-          })
-        );
-      });
+      return next.handle(request).pipe(
+        finalize(() => {
+          this.endRequest(loadingContext);
+          if (this.getRequest(loadingContext) === 0) {
+            this.loadingRegistry.get(loadingContext)!.set(false);
+            this.loadingRegistry.delete(loadingContext);
+          }
+        })
+      );
     }
 
     return next.handle(request);

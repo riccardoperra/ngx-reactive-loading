@@ -1,10 +1,4 @@
-import {
-  BehaviorSubject,
-  defer,
-  MonoTypeOperatorFunction,
-  pipe,
-  Subject,
-} from 'rxjs';
+import { defer, MonoTypeOperatorFunction, pipe, Subject } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
 export const withLoading = <T>(

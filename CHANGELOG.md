@@ -1,3 +1,10 @@
+# [1.4.0-beta.4](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.4.0-beta.3...v1.4.0-beta.4) (2021-09-02)
+
+
+### Bug Fixes
+
+* rename the `setHttpLoadingContext` helper  with `withHttpLoadingContext` ([6903809](https://github.com/riccardoperra/ngx-reactive-loading/commit/6903809188906a4c970396165ebe939c80507279))
+
 # [1.4.0-beta.3](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.4.0-beta.2...v1.4.0-beta.3) (2021-09-01)
 
 

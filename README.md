@@ -12,6 +12,8 @@
 
 [![Supported RxJS version](https://img.shields.io/badge/Support-RxJS%207-%23d81b60)](https://github.com/riccardoperra/ngx-reactive-loading)
 
+# ngx-reactive-loading
+
 ## Features
 
 ✅ Flexible and automatic loading state handling <br>
@@ -29,6 +31,7 @@
 - [Basic usage](#basic-usage)
   - [Loading store](#loading-store)
   - [Loading registry](#loading-registry)
+    - [Api](#loading-registry-api)
 - [Loading service](#working-with-loading-service)
   - [Api](#loading-service-api)
   - [Use with components](#use-with-components)
@@ -69,16 +72,11 @@ yarn add ngx-reactive-loading
 ### Loading store
 
 The loading store is a key value object that allows handling multiple loading states defined statically through your
-application
+application.
 
-To create a loading store that persist the given loading states, you must invoke the `createLoadingStore` function
-specifying the properties that will be observed and updated.
-
-#### Example
+Create a loading store that persist the given loading states invoking the `createLoadingStore` function specifying the properties that will be observed and updated.
 
 ```ts
-//example.component.ts
-
 import { createLoadingStore } from 'ngx-reactive-loading';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -91,15 +89,15 @@ enum ExampleActions {
 
 @Component({
   selector: 'app-example',
-  template: `
-    <ng-container *ngIf="isLoading$ | async"> Loading... </ng-container>
-  `,
+  template: `<ng-container *ngIf="isLoading$ | async"
+    >Loading...</ng-container
+  > `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExampleComponent implements OnInit {
   readonly loadingStore = createLoadingStore([
-    ExampleComponentActions.Add,
-    ExampleComponentActions.Reload,
+    ExampleActions.Add,
+    ExampleActions.Reload,
   ]);
 
   readonly isAdding$ = this.loadingStore[ExampleActions.Add].$;
@@ -126,44 +124,80 @@ export class ExampleComponent implements OnInit {
 
 ### Loading registry
 
-The loading registry is a key value storage that can holds dynamically the loading states of your application. To create
+The loading registry is a key value storage that can holds dynamically the loading states of your application. Create
 a loading registry you must invoke the `createLoadingRegistry` function.
 
-### Example
+#### Loading registry api
+
+Add loading state by given key
 
 ```ts
-import { createLoadingRegistry } from 'ngx-reactive-loading';
-
 const registry = createLoadingRegistry();
-
-// Add loading state by given key
 registry.add('key1');
+```
 
-// Add loading states by given keys
+Add multiple loading state by given key at once
+
+```ts
+const registry = createLoadingRegistry();
 registry.addAll(['key2', 'key3']);
+```
 
-// Delete a loading state by given key
+Delete a loading state by the given key and automatically unsubscribe the active subscriptions.
+
+```ts
+const registry = createLoadingRegistry();
 registry.delete('key1');
+```
 
-// Get loading state object
-registry.get('key1');
+Get a loading state object by the given key.
 
-// Observe the changes of all loading states. Value is emitted on state change, on add or on delete event;
+```ts
+const registry = createLoadingRegistry();
+const state = registry.get('key1');
+```
+
+Observe the changes of all loading states. Value is emitted after each state or registry change;
+
+```ts
+const registry = createLoadingRegistry();
 registry.registry$.subscribe(values => console.log(values));
+```
 
-// Operator function that will update the loading state when observable is subscribed
+Update automatically the observable when subscribe.
+
+```ts
+const registry = createLoadingRegistry();
 of(1).pipe(registry.track('key1'));
+```
 
-// Clear the registry and unsubscribe all observables.
+Clear the registry and unsubscribe all observables.
+
+```ts
+const registry = createLoadingRegistry();
 registry.destroy();
+```
 
-// Get the current keys of registry
+Get the current keys of registry.
+
+```ts
+const registry = createLoadingRegistry();
 const keys = registry.keys();
+```
 
-// Observe the changes of a loading state by the given key
-const isLoading = registry.isLoading('key1');
+Observe the changes of a loading state by the given key.
+Since the loading registry is dynamic, it could be called or subscribed
+even if the key doesn't already exist.
 
-// Observe the changes of a loading state by multiple keys and check if one of the given keys is loading.
+```ts
+const registry = createLoadingRegistry();
+const isLoading$ = registry.isLoading('key1');
+```
+
+Observe the changes of a loading state by multiple keys and check if atleast one state of the given property key is loading.
+
+```ts
+const registry = createLoadingRegistry();
 const someLoading = registry.someLoading(['key1', 'key2']);
 ```
 
@@ -633,6 +667,8 @@ export class AppComponent implements OnInit {
   }
 }
 ```
+
+---
 
 ## Utils
 

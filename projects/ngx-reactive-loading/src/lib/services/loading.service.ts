@@ -6,10 +6,17 @@ import {
   Provider,
   SkipSelf,
 } from '@angular/core';
-import { defer, MonoTypeOperatorFunction, Observable, Subject } from 'rxjs';
+import {
+  defer,
+  distinctUntilChanged,
+  MonoTypeOperatorFunction,
+  Observable,
+  shareReplay,
+  Subject,
+  takeUntil,
+} from 'rxjs';
 import { LoadingEvent, LoadingStoreOptions, PropertyTuple } from '../model';
 import { someLoading, toLoadingEvent } from '../utils';
-import { distinctUntilChanged, shareReplay, takeUntil } from 'rxjs/operators';
 import { LoadingStoreService } from '../model/loading-store';
 import {
   INITIAL_LOADING_STORE,

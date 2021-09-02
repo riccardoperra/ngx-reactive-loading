@@ -1,13 +1,5 @@
-import { merge, race, Subject } from 'rxjs';
+import { switchMap } from 'rxjs';
 import { marbles } from 'rxjs-marbles';
-import {
-  concatMap,
-  first,
-  map,
-  mapTo,
-  switchMap,
-  switchMapTo,
-} from 'rxjs/operators';
 import { untilLoading } from '../../lib/utils';
 
 describe('untilLoading', () => {

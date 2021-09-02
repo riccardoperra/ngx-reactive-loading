@@ -1,5 +1,10 @@
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { shareReplay, takeUntil } from 'rxjs/operators';
+import {
+  BehaviorSubject,
+  Observable,
+  shareReplay,
+  Subject,
+  takeUntil,
+} from 'rxjs';
 import { UnionToIntersection } from './union-to-intersection';
 
 /**
@@ -54,16 +59,10 @@ export const withLoadingStateFactory = <R extends readonly {}[]>(
     ) as UnionToIntersection<R[number]>;
 };
 
-/**
- * @internal
- */
 export type LoadingFactoryTuple<T extends {}> = {
   [K in keyof T]: LoadingFactory<T[K]>;
 };
 
-/**
- * @internal
- */
 export type LoadingFactoryState<Type extends PropertyKey> = {
   $: Observable<boolean>;
   type: Type;

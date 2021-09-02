@@ -5,10 +5,8 @@ import {
   TrackByFunction,
 } from '@angular/core';
 import { createLoadingStore, someLoading } from 'ngx-reactive-loading';
-import { TodoApiService } from '../../services/todo-api.service';
 import { TodoStateService } from '../02-loading-store-service-example/todo.service';
-import { Subject } from 'rxjs';
-import { exhaustMap, mergeMap } from 'rxjs/operators';
+import { exhaustMap, mergeMap, Subject } from 'rxjs';
 import { Todo } from '../../model/todo';
 import { FormControl, Validators } from '@angular/forms';
 import { UIStore } from '../../store/ui-store';

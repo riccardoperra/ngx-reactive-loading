@@ -1,6 +1,5 @@
 import { fakeAsync } from '@angular/core/testing';
-import { combineLatest, of, timer } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { combineLatest, delay, of, timer } from 'rxjs';
 import { LoadingService } from '../../public-api';
 import { marbles } from 'rxjs-marbles';
 

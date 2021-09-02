@@ -1,8 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { CreateHotToastRef, HotToastService } from '@ngneat/hot-toast';
 import { LoadingEvent, LoadingService } from 'ngx-reactive-loading';
-import { scan, shareReplay, takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { scan, shareReplay, Subject, takeUntil } from 'rxjs';
 
 @Injectable()
 export class LoadingLogsService<T extends PropertyKey> implements OnDestroy {

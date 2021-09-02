@@ -7,8 +7,7 @@ import {
   tick,
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { defer, of, Subscription } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { defer, delay, of, Subscription } from 'rxjs';
 import { LoadingService, ReactiveLoadingModule } from '../../public-api';
 
 describe('loading directive', () => {

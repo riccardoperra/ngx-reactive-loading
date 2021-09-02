@@ -1,12 +1,4 @@
-import { merge, Observable, of } from 'rxjs';
-import {
-  catchError,
-  endWith,
-  first,
-  mapTo,
-  startWith,
-  switchMapTo,
-} from 'rxjs/operators';
+import { first, mapTo, merge, Observable, startWith, switchMapTo } from 'rxjs';
 
 /**
  * Listen to all triggers, then wait for result and end loading upon emit.

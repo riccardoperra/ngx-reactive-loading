@@ -1,6 +1,5 @@
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { marbles } from 'rxjs-marbles';
-import { tap } from 'rxjs/operators';
 import { createLoadingStore } from '../../lib/core';
 
 describe('createLoadingStore', () => {

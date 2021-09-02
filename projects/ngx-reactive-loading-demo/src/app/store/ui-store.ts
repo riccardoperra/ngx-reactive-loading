@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, map, Observable, tap, withLatestFrom } from 'rxjs';
 import { ComponentStore } from '@ngrx/component-store';
-import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { ROUTES } from '../constants/routes';
 

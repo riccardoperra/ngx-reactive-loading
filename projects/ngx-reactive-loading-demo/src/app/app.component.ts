@@ -1,7 +1,13 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { filter, map } from 'rxjs/operators';
+import { filter, map } from 'rxjs';
 import { UIStore } from './store/ui-store';
+import { HttpClient } from '@angular/common/http';
+import {
+  HTTP_LOADING_REGISTRY,
+  LoadingRegistry,
+  withHttpLoadingContext,
+} from 'ngx-reactive-loading';
 
 @Component({
   selector: 'app-root',
@@ -15,8 +21,16 @@ export class AppComponent {
 
   constructor(
     private readonly uiStore: UIStore,
-    private readonly router: Router
+    private readonly router: Router,
+    @Inject(HTTP_LOADING_REGISTRY)
+    readonly httpLoadingRegistry: LoadingRegistry,
+    private readonly http: HttpClient
   ) {
+    this.httpLoadingRegistry.registry$.subscribe(console.log);
+    this.http
+      .get('/', { context: withHttpLoadingContext('loader') })
+      .subscribe();
+
     this.router.events
       .pipe(
         filter((e): e is NavigationEnd => e instanceof NavigationEnd),

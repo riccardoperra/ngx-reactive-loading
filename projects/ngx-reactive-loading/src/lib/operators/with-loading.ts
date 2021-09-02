@@ -1,5 +1,4 @@
-import { defer, MonoTypeOperatorFunction, pipe, Subject } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { defer, finalize, MonoTypeOperatorFunction, pipe, Subject } from 'rxjs';
 
 export const withLoading = <T>(
   loadingSubject: Subject<boolean>

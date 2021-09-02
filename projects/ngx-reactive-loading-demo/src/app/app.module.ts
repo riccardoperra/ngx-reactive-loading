@@ -18,6 +18,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { HotToastModule } from '@ngneat/hot-toast';
 import { TodoModule } from './shared/todo/todo.module';
 import { LayoutModule } from './shared/layout/layout.module';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HttpLoadingRegistryInterceptor } from 'ngx-reactive-loading';
 
 @NgModule({
   declarations: [AppComponent],
@@ -40,8 +42,16 @@ import { LayoutModule } from './shared/layout/layout.module';
     MatIconModule,
     MatToolbarModule,
     MatSidenavModule,
+    HttpClientModule,
   ],
-  providers: [MatSnackBar],
+  providers: [
+    MatSnackBar,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpLoadingRegistryInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
   exports: [],
 })

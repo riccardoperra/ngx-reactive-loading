@@ -4,15 +4,16 @@ import {
   HttpHandler,
   HttpRequest,
 } from '@angular/common/http';
-import { HttpLoadingRegistryInterceptor } from '../../lib/http/http-loading-registry.interceptor';
-import { delay, mapTo } from 'rxjs/operators';
-import { merge, Observable, of, ReplaySubject } from 'rxjs';
+import {
+  HTTP_LOADING_REGISTRY,
+  HttpLoadingRegistryInterceptor,
+  withHttpLoadingContext,
+} from '../../lib/http';
+import { delay, mapTo, merge, Observable, of, ReplaySubject } from 'rxjs';
 import { marbles } from 'rxjs-marbles';
 import { ControlledLoadingRegistry } from '../../lib/model';
 import { createControlledLoadingRegistry } from '../../lib/core/create-loading-registry';
 import { TestBed } from '@angular/core/testing';
-import { HTTP_LOADING_REGISTRY } from '../../lib/http/http-loading-registry';
-import { withHttpLoadingContext } from '../../lib/http/http-loading-context';
 
 describe(`HttpLoadingRegistryInterceptor`, () => {
   const registry: ControlledLoadingRegistry = createControlledLoadingRegistry();
@@ -85,7 +86,7 @@ describe(`HttpLoadingRegistryInterceptor`, () => {
         .pipe(mapTo(true));
 
       m.expect(destination$).toBeObservable('(a|)', { a: true });
-      m.equal(replaySubject$, 'a', { a: {} });
+      m.expect(replaySubject$).toBeObservable('a', { a: {} });
     })
   );
 
@@ -115,7 +116,7 @@ describe(`HttpLoadingRegistryInterceptor`, () => {
           .pipe(delay(2), mapTo(false))
       );
 
-      m.expect(destination$).toBeObservable('-----a-b|', {
+      m.expect(destination$).toBeObservable('-----a-(b|)', {
         a: true,
         b: false,
       });

@@ -9,9 +9,8 @@ import {
 } from '../public-api';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
-import { defer, of } from 'rxjs';
+import { defer, delay, of } from 'rxjs';
 import { marbles } from 'rxjs-marbles';
-import { delay } from 'rxjs/operators';
 import { LoggerService } from '../lib/services/logger.service';
 import { LOADING_STORE_OPTIONS } from '../lib/internal/tokens';
 

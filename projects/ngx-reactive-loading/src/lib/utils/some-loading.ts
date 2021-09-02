@@ -1,5 +1,11 @@
-import { combineLatest, isObservable, Observable } from 'rxjs';
-import { distinctUntilChanged, map, shareReplay } from 'rxjs/operators';
+import {
+  combineLatest,
+  distinctUntilChanged,
+  isObservable,
+  map,
+  Observable,
+  shareReplay,
+} from 'rxjs';
 import { isLoadingStore, LoadingStore } from '../core/create-loading-store';
 import {
   isLoadingStoreState,

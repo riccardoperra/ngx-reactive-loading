@@ -1,6 +1,5 @@
 import { LoadingEvent, PropertyTuple } from '../model';
-import { defer, merge, Observable } from 'rxjs';
-import { map, shareReplay, skip } from 'rxjs/operators';
+import { defer, map, merge, Observable, shareReplay, skip } from 'rxjs';
 import { LoadingStore } from '../core';
 import { LoadingStoreState } from '../internal/factory/loading-state';
 

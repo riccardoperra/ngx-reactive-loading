@@ -1,5 +1,12 @@
-import { combineLatest, MonoTypeOperatorFunction, of, pipe } from 'rxjs';
-import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import {
+  combineLatest,
+  distinctUntilChanged,
+  map,
+  MonoTypeOperatorFunction,
+  of,
+  pipe,
+  switchMap,
+} from 'rxjs';
 import {
   ControlledLoadingRegistry,
   LoadingRegistry,

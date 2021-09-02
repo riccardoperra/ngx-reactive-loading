@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { defer, Observable, of } from 'rxjs';
+import { defer, delay, Observable, of } from 'rxjs';
 import { marbles } from 'rxjs-marbles';
-import { delay } from 'rxjs/operators';
 import { provideSomeLoadingState } from '../../lib/internal/providers';
 import {
   INITIAL_LOADING_STORE,

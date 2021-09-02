@@ -1,13 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
   TrackByFunction,
 } from '@angular/core';
 import { SidebarRoute, UIStore } from '../../../store/ui-store';
 import { Router } from '@angular/router';
-import { defer } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { defer, filter } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar',

@@ -61,9 +61,6 @@ export type LoadingFactoryTuple<T extends {}> = {
   [K in keyof T]: LoadingFactory<T[K]>;
 };
 
-/**
- * @internal
- */
 export type LoadingFactoryState<Type extends PropertyKey> = {
   $: Observable<boolean>;
   type: Type;

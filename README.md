@@ -8,12 +8,22 @@
 [![license](https://img.shields.io/npm/l/ngx-reactive-loading)](https://github.com/riccardoperra/ngx-reactive-loading/blob/main/LICENSE)
 [![Coverage Status](https://coveralls.io/repos/github/riccardoperra/ngx-reactive-loading/badge.svg?branch=main)](https://coveralls.io/github/riccardoperra/ngx-reactive-loading?branch=main)
 [![Workflow Status](https://img.shields.io/github/workflow/status/riccardoperra/ngx-reactive-loading/CI)](https://www.npmjs.com/package/ngx-reactive-loading)
-[![Supported version](https://img.shields.io/badge/Support%20Angular-12%2B-%23D6002F)](https://github.com/riccardoperra/ngx-reactive-loading)
+[![Supported version](https://img.shields.io/badge/Support%20RxJS-~6.6.0-%23d81b60)](https://github.com/riccardoperra/ngx-reactive-loading)
+
+[![Supported RxJS version](https://img.shields.io/badge/Support-RxJS%207-%23d81b60)](https://github.com/riccardoperra/ngx-reactive-loading)
+
+## Features
+
+✅ Flexible and automatic loading state handling <br>
+✅ Static and dynamic loading state creation <br>
+✅ Angular Dependency Injection support <br>
+✅ No external dependencies outside Angular <br>
+✅ Fully tree-shakeable <br>
+✅ 100% tested <br>
 
 ## Table of contents
 
 - [Table of contents](#table-of-contents)
-- [Features](#features)
 - [Versions](#versions)
 - [Getting started](#getting-started)
 - [Basic usage](#basic-usage)
@@ -28,25 +38,17 @@
     - [Custom module configuration](#custom-module-configuration)
   - [Loading directive](#using-loading-directive)
 - [Loading registry](#working-with-loading-registry)
+  - [Use with components](#loading-registry-usage)
   - [Use with http interceptor](#use-with-http-interceptor)
 - [Tokens](#tokens)
 - [Utils](#utils)
 - [Demo](projects/ngx-reactive-loading-demo)
 
-## Features
-
-✅ Flexible and automatic loading state handling <br>
-✅ Static and dynamic loading state creation <br>
-✅ Angular Dependency Injection support <br>
-✅ No external dependencies outside Angular <br>
-✅ Fully tree-shakeable <br>
-✅ 100% tested <br>
-
 ## Versions
 
-| ngx-reactive-loading | Angular  | RxJS   |
-| -------------------- | -------- | ------ |
-| > 1.3.0               | > =12.0.0 | > 6.5.3 |
+| ngx-reactive-loading | Angular   | RxJS    |
+| -------------------- | --------- | ------- |
+| > 1.3.0              | > =12.0.0 | > 6.5.3 |
 
 ## Getting started
 
@@ -78,7 +80,7 @@ specifying the properties that will be observed and updated.
 //example.component.ts
 
 import { createLoadingStore } from 'ngx-reactive-loading';
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -92,7 +94,7 @@ enum ExampleActions {
   template: `
     <ng-container *ngIf="isLoading$ | async"> Loading... </ng-container>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExampleComponent implements OnInit {
   readonly loadingStore = createLoadingStore([
@@ -104,8 +106,7 @@ export class ExampleComponent implements OnInit {
   readonly isReloading$ = this.loadingStore[ExampleActions.Reload].$;
   readonly isLoading$: Observable<boolean> = someLoading([this.loadingStore]);
 
-  constructor(private readonly http: HttpClient) {
-  }
+  constructor(private readonly http: HttpClient) {}
 
   add() {
     this.http
@@ -205,9 +206,9 @@ export interface LoadingService<T extends PropertyKey> {
   ): LoadingService;
 
   /**
-   * Returns the given observable with the loading operator attached.
+   * Attach the loading operator to the the given observable.
    * This allows to update the loading state of the given property
-   * automatically after each value emission.
+   * automatically after each emission.
    *
    * @example
    * import {LoadingService} from 'ngx-reactive-loading';
@@ -261,9 +262,6 @@ export interface LoadingService<T extends PropertyKey> {
 
   /**
    * Track the changes of the given loading state property.
-   * The returned observable has built-in memoization with
-   * default rxjs distinctUntilChanged operator and it has
-   * subscription optimization with shareReplay
    *
    * @example
    * import {LoadingService} from 'ngx-reactive-loading';
@@ -286,7 +284,7 @@ export interface LoadingService<T extends PropertyKey> {
   isLoading(property: T): Observable<boolean>;
 
   /**
-   * Subscribe to the changes the loading state by the given property.
+   * Subscribe to loadings state changes by the given property.
    * Default behavior checks for all properties.
    *
    * @example
@@ -348,8 +346,7 @@ export class ExampleComponent implements OnInit {
   constructor(
     private readonly http: HttpClient,
     private readonly loadingStore: LoadingService<ComponentAction>
-  ) {
-  }
+  ) {}
 
   add() {
     // Using load method
@@ -384,8 +381,7 @@ type RootLoadingActions = 'globalReload';
     ReactiveLoadingModule.forRoot<RootLoadingActions>(['globalReload']),
   ],
 })
-export class AppModule {
-}
+export class AppModule {}
 ```
 
 #### Registering feature loading service
@@ -406,8 +402,7 @@ type TodoLoadingActions = 'addTodo' | 'removeTodo' | 'reloadTodo';
     ),
   ],
 })
-export class TodoModule {
-}
+export class TodoModule {}
 ```
 
 #### Custom module configuration
@@ -444,8 +439,7 @@ changes automatically in the console. Providing the `name` option, the log will 
     }),
   ],
 })
-export class FeatureModule {
-}
+export class FeatureModule {}
 ```
 
 ### Using loading directive
@@ -467,8 +461,7 @@ import { LoadingService } from 'ngx-reactive-loading';
   providers: [LoadingService.componentProvide(['add'])],
 })
 class AppComponent {
-  constructor(private readonly loadingService: LoadingService) {
-  }
+  constructor(private readonly loadingService: LoadingService) {}
 }
 ```
 
@@ -505,26 +498,24 @@ export class AppComponent {
 export class HelloComponent {
   constructor(
     @Inject(SOME_LOADING) private readonly someLoading$: Observable<boolean>
-  ) {
-  }
+  ) {}
 }
 
 @NgModule({
   declarations: [AppComponent, HelloComponent],
   imports: [ReactiveLoadingModule.forRoot(['prop1'])],
 })
-export class AppModule {
-}
+export class AppModule {}
 ```
 
 ## Working with loading registry
 
 If you need to handle dynamic loading states, the loading registry could be the best choice. Unlike the loading service,
-the loading registry currently does not have all the dependency injection mechanism since it must be used in the same
-context. This mean that you can anyway instantiate it in a module, but providing a new token will override all the
-previous created keys.
+the loading registry currently shuold be provided only one time in the same node injector. Providing a new token in the same injector will override all the properties.
 
-### Example
+### Use with components
+
+First, provide the `LOADING_REGISTRY` token passing the factory function in the module or component.
 
 ```ts
 // example.module.ts
@@ -538,9 +529,12 @@ import { createLoadingRegistry, LOADING_REGISTRY } from 'ngx-reactive-loading';
   declarations: [],
   providers: [{ provide: LOADING_REGISTRY, useFactory: createLoadingRegistry }],
 })
-export class ExampleModule {
-}
+export class ExampleModule {}
+```
 
+Inside the component, you will have access to the `LOADING_REGISTRY` provider.
+
+```ts
 // example.component.ts
 import { Component, OnInit } from '@angular/core';
 import { LoadingRegistry, LOADING_REGISTRY } from 'ngx-reactive-loading';
@@ -554,8 +548,7 @@ export class ExampleComponent implements OnInit {
     this.loadingRegistry.addAll(['k1', 'k2']);
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 }
 ```
 
@@ -565,38 +558,34 @@ If you need to track the loading state for every http request status, you can us
 built-in `HttpLoadingRegistryInterceptor`.
 
 ```ts
-import { NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
-import { HttpModule } from "@angular/http";
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { HttpModule } from '@angular/http';
 
-import { AppComponent } from "./app.component";
+import { AppComponent } from './app.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  imports: [
-    BrowserModule,
-    HttpModule
-  ],
+  imports: [BrowserModule, HttpModule],
   declarations: [AppComponent],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpLoadingRegistryInterceptor,
-      multi: true
-    }
+      multi: true,
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule {
-}
+export class AppModule {}
 ```
 
-Providing the interceptor will automatically inject the loading registry which will only take care of your http calls.
-The http-loading-registry will be available through the `HTTP_LOADING_REGISTRY` token.
+Providing the interceptor will automatically rovide the loading registry which will take care of your http calls.
+The http loading registry will be available through the `HTTP_LOADING_REGISTRY` token.
 
-To make the interceptor work you must pass a context to each http call that will name the action of the loadingRegistry.
-The interceptor will automatically create and remove the dynamic keys of the registry, allowing you to listen to the
-status of a specific key or of the entire registry.
+To make the interceptor work you must pass a context to each http call that should be tracked by the itnerceptor.
+
+The interceptor will automatically create and remove the dynamic keys of the registry, allowing you to listen to all state changes.
 
 ```ts
 import { Component, Inject, OnInit } from '@angular/core';
@@ -604,7 +593,7 @@ import {
   HTTP_LOADING_REGISTRY,
   HTTP_LOADING_CONTEXT,
   LoadingRegistry,
-  setHttpLoadingContext,
+  withHttpLoadingContext,
 } from 'ngx-reactive-loading';
 import { HttpClient, HttpContext } from '@angular/common/http';
 
@@ -612,27 +601,34 @@ import { HttpClient, HttpContext } from '@angular/common/http';
   selector: 'app-root',
   template: `
     <ng-container *ngIf="someLoading$ | async">Some loading...</ng-container>
-    <ng-container *ngIf="isActionNameLoading$ | async">Action name loading...</ng-container>
+    <ng-container *ngIf="isActionNameLoading$ | async"
+      >Action name loading...</ng-container
+    >
   `,
 })
 export class AppComponent implements OnInit {
-  readonly someLoading$ = this.loadingRegistry.someLoading(['actionName', 'actionName2']);
+  readonly someLoading$ = this.loadingRegistry.someLoading([
+    'actionName',
+    'actionName2',
+  ]);
   readonly isActionNameLoading$ = this.loadingRegistry.isLoading('actionName');
 
   constructor(
     @Inject(HTTP_LOADING_REGISTRY)
     private readonly loadingRegistry: LoadingRegistry,
     private readonly http: HttpClient
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.http
-      .get('/', { context: new HttpContext().set(HTTP_LOADING_CONTEXT, 'actionName') })
+      .get('/', { context: withHttpLoadingContext('actionName2') })
       .subscribe();
 
+    // Passing context manually
     this.http
-      .get('/', { context: setHttpLoadingContext('actionName2') })
+      .get('/', {
+        context: new HttpContext().set(HTTP_LOADING_CONTEXT, 'actionName'),
+      })
       .subscribe();
   }
 }
@@ -640,40 +636,41 @@ export class AppComponent implements OnInit {
 
 ## Utils
 
-### someLoading
+Listen to the changes of the given property and return true if find
+an element which the state is currently loading.
 
-  ```ts
-  import { createLoadingStore, someLoading } from 'ngx-reactive-loading';
+```ts
+import { createLoadingStore, someLoading } from 'ngx-reactive-loading';
 
 const loadingStore = createLoadingStore(['add' | 'remove']);
 
 /**
- * Giving the loading store
+ * Passing the loading store
  */
 const isLoadingAll$ = someLoading([loadingStore]);
 /**
- * Giving the loading store property
+ * Passing the loading store property
  */
 const isAdding$ = someLoading([loadingStore.add]);
 /**
- * Giving the loading store property observable
+ * Passing the loading store property observable
  */
 const isRemoving$ = someLoading([loadingStore.remove.$]);
 /**
- * Giving multiple property
+ * Passing multiple property with different types
  */
 const isAddingOrRemoving$ = someLoading([
   loadingStore.remove,
   loadingStore.add.$,
 ]);
-  ```
+```
 
 ### withLoading
 
 Update the subject at the first emission and on complete
 
-  ```ts
-  import { withLoading } from 'ngx-reactive-loading';
+```ts
+import { withLoading } from 'ngx-reactive-loading';
 import { of, Subject } from 'rxjs';
 
 const isLoading$ = new Subject<boolean>();
@@ -687,14 +684,34 @@ isLoading$.subscribe(result => {
 $.subscribe(result => {
   // Output 1: 1
 });
-  ```
+```
+
+### untilLoading
+
+Listen to all triggers, then wait for result and end loading upon emit.
+
+```ts
+const reload$ = new BehaviorSubject<null>(null);
+
+const add$ = new Subject<string>();
+
+const items$ = this.reload$.pipe(
+ switchMap(() =>
+   this.service.getList().pipe(
+     catchError(() => of(null)
+   ),
+ share()
+);
+
+const isLoading$ = untilLoading([reload$, add$], [items$]);
+```
 
 ### toLoadingEvent
 
 Map loading store change to LoadingEvent object
 
-  ```ts
-  import {
+```ts
+import {
   createLoadingStore,
   withLoading,
   toLoadingEvent,
@@ -714,4 +731,4 @@ events$.subscribe(result => {
   // Output 1: {type: 'key1', loading: true}
   // Output 2 (after 1000ms): {type: 'key1', loading: false}
 });
-  ```
+```

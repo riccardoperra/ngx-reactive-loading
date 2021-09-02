@@ -1,3 +1,19 @@
+# [1.4.0-beta.3](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.4.0-beta.2...v1.4.0-beta.3) (2021-09-01)
+
+
+### Bug Fixes
+
+* fix loading registry `someLoading` signature ([4c594b8](https://github.com/riccardoperra/ngx-reactive-loading/commit/4c594b8af19d38dfc6e7e91203af7a006923cdd0))
+* **internal:** add `UnionToIntersection` type ([350e90f](https://github.com/riccardoperra/ngx-reactive-loading/commit/350e90feb80b923526b1d4d90e0ae8e6c21456b1))
+* someLoading now will trigger false value when key does not exist ([3bdeb8b](https://github.com/riccardoperra/ngx-reactive-loading/commit/3bdeb8b9cdaa9e0f563808528c9d73b76de2870d))
+
+
+### Features
+
+* **internal:** add loading state factory ([2c285b9](https://github.com/riccardoperra/ngx-reactive-loading/commit/2c285b95d37098353860daec924e5017717b9b37))
+* add loading registry interceptor ([f560508](https://github.com/riccardoperra/ngx-reactive-loading/commit/f56050892bb2a620c01347e89fbeac3853c0d141))
+* add loading registry interceptor optimization and switched to controlledLoadingRegistry ([22daff0](https://github.com/riccardoperra/ngx-reactive-loading/commit/22daff02b1e0e4a8073ee4538c39ef12496096c6))
+
 # [1.4.0-beta.2](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.4.0-beta.1...v1.4.0-beta.2) (2021-08-29)
 
 

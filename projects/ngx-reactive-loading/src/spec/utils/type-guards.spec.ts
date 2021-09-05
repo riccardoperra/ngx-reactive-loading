@@ -3,7 +3,7 @@ import {
   isLoadingStoreState,
   LOADING_STORE_STATE_SYMBOL,
   LoadingStoreState,
-} from '../../lib/internal/factory/loading-state';
+} from '../../lib/internal/factory';
 import {
   isLoadingStore,
   LoadingStore,

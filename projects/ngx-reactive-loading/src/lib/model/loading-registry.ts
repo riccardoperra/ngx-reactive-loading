@@ -2,7 +2,7 @@ import { MonoTypeOperatorFunction, Observable } from 'rxjs';
 import {
   ControlledLoadingRegistryState,
   LoadingRegistryState,
-} from '../internal/factory/loading-registry-state';
+} from '../internal/factory';
 
 export interface LoadingRegistry<K extends PropertyKey = PropertyKey> {
   /**

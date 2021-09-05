@@ -1,10 +1,7 @@
 import { combineLatest, isObservable, Observable } from 'rxjs';
 import { distinctUntilChanged, map, shareReplay } from 'rxjs/operators';
 import { isLoadingStore, LoadingStore } from '../core/create-loading-store';
-import {
-  isLoadingStoreState,
-  LoadingStoreState,
-} from '../internal/factory/loading-state';
+import { isLoadingStoreState, LoadingStoreState } from '../internal/factory';
 
 export const someLoading = <
   Loaders extends readonly [

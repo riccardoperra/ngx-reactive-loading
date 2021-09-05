@@ -11,7 +11,7 @@ import {
   buildControlledLoadingRegistryState,
   buildLoadingRegistryState,
   LoadingRegistryState,
-} from '../internal/factory/loading-registry-state';
+} from '../internal/factory';
 
 const createLoadingRegistryFactory = <
   T extends PropertyKey,

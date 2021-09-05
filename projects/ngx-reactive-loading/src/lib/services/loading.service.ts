@@ -24,7 +24,7 @@ import {
   provideSomeLoadingState,
 } from '../internal/providers';
 import { createLoadingStore, LoadingStore } from '../core';
-import { LoadingStoreState } from '../internal/factory/loading-state';
+import { LoadingStoreState } from '../internal/factory';
 
 /**
  * @internal

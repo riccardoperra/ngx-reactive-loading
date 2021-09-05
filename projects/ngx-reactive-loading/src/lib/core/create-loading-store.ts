@@ -2,7 +2,7 @@ import {
   buildLoadingStoreState,
   isLoadingStoreState,
   LoadingStoreState,
-} from '../internal/factory/loading-state';
+} from '../internal/factory';
 
 /**
  * @description

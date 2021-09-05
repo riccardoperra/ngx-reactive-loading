@@ -1,3 +1,23 @@
+# [1.4.0](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.3.0...v1.4.0) (2021-09-05)
+
+
+### Bug Fixes
+
+* fix `LoadingFactoryState` type error ([2692203](https://github.com/riccardoperra/ngx-reactive-loading/commit/26922038ad643e129b33652f1fa3eb3d47f2a218))
+* fix loading registry `someLoading` signature ([4c594b8](https://github.com/riccardoperra/ngx-reactive-loading/commit/4c594b8af19d38dfc6e7e91203af7a006923cdd0))
+* rename the `setHttpLoadingContext` helper  with `withHttpLoadingContext` ([6903809](https://github.com/riccardoperra/ngx-reactive-loading/commit/6903809188906a4c970396165ebe939c80507279))
+* **internal:** add `UnionToIntersection` type ([350e90f](https://github.com/riccardoperra/ngx-reactive-loading/commit/350e90feb80b923526b1d4d90e0ae8e6c21456b1))
+* someLoading now will trigger false value when key does not exist ([3bdeb8b](https://github.com/riccardoperra/ngx-reactive-loading/commit/3bdeb8b9cdaa9e0f563808528c9d73b76de2870d))
+
+
+### Features
+
+* **internal:** add loading state factory ([2c285b9](https://github.com/riccardoperra/ngx-reactive-loading/commit/2c285b95d37098353860daec924e5017717b9b37))
+* add loading registry core and `createLoadingRegistry` helper ([8156c8f](https://github.com/riccardoperra/ngx-reactive-loading/commit/8156c8f6c053b3d678f2031148e89439b3defd15))
+* add loading registry interceptor ([f560508](https://github.com/riccardoperra/ngx-reactive-loading/commit/f56050892bb2a620c01347e89fbeac3853c0d141))
+* add loading registry interceptor optimization and switched to controlledLoadingRegistry ([22daff0](https://github.com/riccardoperra/ngx-reactive-loading/commit/22daff02b1e0e4a8073ee4538c39ef12496096c6))
+* add registry clear emit action, remove reactiveMap map constructor inheritance ([ef408d6](https://github.com/riccardoperra/ngx-reactive-loading/commit/ef408d676f95e6cc9612389592ba1a6650a996b2))
+
 # [1.4.0-beta.5](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.4.0-beta.4...v1.4.0-beta.5) (2021-09-02)
 
 

@@ -100,11 +100,26 @@ const createLoadingRegistryFactory = <
   };
 };
 
+/**
+ * @description
+ * Creates a LoadingRegistry object.
+ * The loading registry is a key value storage that can holds dynamically the loading states of your application.
+ *
+ * @param initialKeys Default keys
+ */
 export const createLoadingRegistry = <T extends PropertyKey = PropertyKey>(
   initialKeys: PropertyTuple<T> = []
 ): LoadingRegistry<T> =>
   createLoadingRegistryFactory(initialKeys, buildLoadingRegistryState);
 
+/**
+ * @description
+ * Creates a ControlledLoadingRegistry object.
+ * The controlled loading registry is a loading registry with the ability
+ * to update a loading state by key programmatically.
+ *
+ * @param initialKeys Default keys
+ */
 export const createControlledLoadingRegistry = <
   T extends PropertyKey = PropertyKey
 >(

@@ -71,18 +71,23 @@ This library currently provide <strong>two ways</strong> to handle loading state
 - [LoadingStore](#loading-store):
 
   The loading store is a key value object that allows handling <strong>multiple loading states defined
-  statically</strong> through your application. It should be used through a built-in [LoadingService](#loading-service),
+  statically</strong> through your application.
+
+  It should be used through a <strong>built-in LoadingService</strong>,
   but this library allows you to create it also by a exported helper function.
+
   Providing the <strong>LoadingService</strong> currently allows you to use other features like custom injection tokens or the loading directive.
 
 - [LoadingRegistry](#loading-registry):
 
   The loading registry is an object that <strong>can holds dynamically the loading states</strong> of your application.
   The difference is substantial, since it allows you to define the loading states dinamically,
-  removing or adding it when you need it. It can be considered as a "lazy" loading store,
-  but currently it doesn't provide the same integrations. Basically, it is a wrapper of a `Map` object
-  with some extra methods that can help you to track the loading states. The observable <strong>subscriptions
-  are handled automatically</strong>, so you shouldn't worry about them. It is recommended to use it with dependency injection.
+  removing or adding it when you need it.
+
+  It can be considered as a "lazy" loading store, but currently it doesn't provide the same integrations.
+  Basically, it is a wrapper of a `Map` object with some extra methods that can help you to track the loading states.
+  The observable <strong>subscriptions are handled automatically</strong>, so you shouldn't worry about them.
+  It is recommended to use it with dependency injection.
 
 Both ways to handle loading state could be mixed as needed, there is no a better way,
 each one has been created to solve a specific problem.

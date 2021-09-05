@@ -43,14 +43,14 @@
   - [Use with components](#loading-registry-usage)
   - [Use with http interceptor](#use-with-http-interceptor)
 - [Tokens](#tokens)
-- [Utils](#utils)
+- [Standalone utils](#standalone-utils)
 - [Demo](projects/ngx-reactive-loading-demo)
 
 ## Versions
 
 | ngx-reactive-loading | Angular   | RxJS    |
 | -------------------- | --------- | ------- |
-| > 1.3.0              | > =12.0.0 | > 6.5.3 |
+| > 1.3.0              | \>=12.0.0 | \>6.5.3 |
 
 ## Getting started
 
@@ -614,10 +614,10 @@ export class AppModule {
 }
 ```
 
-Providing the interceptor will automatically rovide the loading registry which will take care of your http calls. The
+Providing the interceptor will automatically provide the loading registry which will take care of your http calls. The
 http loading registry will be available through the `HTTP_LOADING_REGISTRY` token.
 
-To make the interceptor work you must pass a context to each http call that should be tracked by the itnerceptor.
+To make the interceptor work you must pass a context to each http call that should be tracked by the interceptor.
 
 The interceptor will automatically create and remove the dynamic keys of the registry, allowing you to listen to all
 state changes.
@@ -672,80 +672,60 @@ export class AppComponent implements OnInit {
 
 ---
 
-## Utils
+## Standalone utils
 
-Listen to the changes of the given property and return true if find an element which the state is currently loading.
+ngx-reactive-loading comes with built-in functions that can help you to handle the loading states of your application.
+These functions are standalone, and they do not force you to use all the features of this library.
+
+### Observable creators
+
+#### someLoading
+
+Listen to the state changes of the given properties and return true if it find a state which is currently loading.
 
 ```ts
 import { createLoadingStore, someLoading } from 'ngx-reactive-loading';
-
-const loadingStore = createLoadingStore(['add' | 'remove']);
+import { Subject } from "rxjs";
 
 /**
- * Passing the loading store
+ * Passing the loading store or his properties
  */
+const loadingStore = createLoadingStore(['add', 'remove', 'clear']);
 const isLoadingAll$ = someLoading([loadingStore]);
+const isAddingOrClearing$ = someLoading([loadingStore.add, loadingStore.clear]);
+
 /**
- * Passing the loading store property
+ * Passing observables
  */
-const isAdding$ = someLoading([loadingStore.add]);
-/**
- * Passing the loading store property observable
- */
-const isRemoving$ = someLoading([loadingStore.remove.$]);
-/**
- * Passing multiple property with different types
- */
-const isAddingOrRemoving$ = someLoading([
-  loadingStore.remove,
-  loadingStore.add.$,
-]);
+const loadingAdd$ = new Subject<boolean>();
+const loading$ = new Subject<boolean>();
+const isLoading = someLoading([loadingAdd$, loading$]);
 ```
 
-### withLoading
-
-Update the subject at the first emission and on complete
-
-```ts
-import { withLoading } from 'ngx-reactive-loading';
-import { of, Subject } from 'rxjs';
-
-const isLoading$ = new Subject<boolean>();
-const $ = of(1).pipe(delay(1000), withLoading(isLoading$));
-
-isLoading$.subscribe(result => {
-  // Output 1: true
-  // Output 2: false (after 1000ms)
-});
-
-$.subscribe(result => {
-  // Output 1: 1
-});
-```
-
-### untilLoading
+#### untilLoading
 
 Listen to all triggers, then wait for result and end loading upon emit.
 
 ```ts
 const reload$ = new BehaviorSubject<null>(null);
 
-const add$ = new Subject<string>();
-
 const items$ = this.reload$.pipe(
   switchMap(() =>
-    this.service.getList().pipe(
-      catchError(() => of(null)
+    this.service
+      .getList()
+      .pipe(
+        catchError(() => of(null)),
+        share()
       ),
-      share()
-    );
+  )
+);
 
-const isLoading$ = untilLoading([reload$, add$], [items$]);
+const isLoading$ = untilLoading([reload$], [items$]);
 ```
 
-### toLoadingEvent
+#### toLoadingEvent
 
-Map loading store change to LoadingEvent object
+Map each loading store change to a LoadingEvent object.
 
 ```ts
 import {
@@ -756,16 +736,38 @@ import {
 import { of, Subject } from 'rxjs';
 
 const store = createLoadingStore(['key1']);
-const $ = of(1).pipe(delay(1000), store.key1.track());
-
+const httpCall$ = of(null).pipe(delay(1000), store.key1.track());
 const events$ = toLoadingEvent(store);
-
-$.subscribe(result => {
-  // Output 1: 1
-});
 
 events$.subscribe(result => {
   // Output 1: {type: 'key1', loading: true}
-  // Output 2 (after 1000ms): {type: 'key1', loading: false}
+  // Output 2: {type: 'key1', loading: false}
 });
+```
+
+### Operators
+
+#### withLoading
+
+When attached to an observable stream, it will update the subject/behaviorSubject on the first emission and on complete.
+
+```ts
+import { withLoading } from 'ngx-reactive-loading';
+import { of, Subject } from 'rxjs';
+import { delay, switchMap } from "rxjs/operators";
+
+const isLoading$ = new Subject<boolean>();
+const refresh$ = new Subject<void>();
+const source$ = of(null).pipe(delay((1000)));
+
+const sub = refresh$
+  .pipe(switchMap(() => source$.pipe(withLoading(isLoading$))))
+  .subscribe();
+
+isLoading$.subscribe((result: boolean) => {
+  // Output after after refresh.next(): true
+  // source$ observable completion: false (after 1000ms)
+});
+
+refresh$.next();
 ```

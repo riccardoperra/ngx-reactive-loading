@@ -1,3 +1,10 @@
+# [1.4.0-beta.5](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.4.0-beta.4...v1.4.0-beta.5) (2021-09-02)
+
+
+### Bug Fixes
+
+* fix `LoadingFactoryState` type error ([2692203](https://github.com/riccardoperra/ngx-reactive-loading/commit/26922038ad643e129b33652f1fa3eb3d47f2a218))
+
 # [1.4.0-beta.4](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.4.0-beta.3...v1.4.0-beta.4) (2021-09-02)
 
 

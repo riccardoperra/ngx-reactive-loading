@@ -27,22 +27,20 @@
 - [Table of contents](#table-of-contents)
 - [Versions](#versions)
 - [Getting started](#getting-started)
-- [Basic usage](#basic-usage)
-  - [Loading store](#loading-store)
-  - [Loading registry](#loading-registry)
-    - [Api](#loading-registry-api)
-- [Loading service](#working-with-loading-service)
-  - [Api](#loading-service-api)
+- [Core concepts](#core-concepts)
+- [Loading store](#loading-store)
+  - [Loading service](#working-with-loading-service)
   - [Use with components](#use-with-components)
   - [Use with modules](#use-with-modules)
     - [Registering root loading service](#registering-root-loading-service)
     - [Registering feature loading service](#registering-feature-loading-service)
     - [Custom module configuration](#custom-module-configuration)
   - [Loading directive](#using-loading-directive)
-- [Loading registry](#working-with-loading-registry)
+  - [Tokens](#tokens)
+- [Loading registry](#loading-registry)
+  - [Api](#loading-registry-api)
   - [Use with components](#loading-registry-usage)
   - [Use with http interceptor](#use-with-http-interceptor)
-- [Tokens](#tokens)
 - [Standalone utils](#standalone-utils)
 - [Demo](projects/ngx-reactive-loading-demo)
 
@@ -50,7 +48,7 @@
 
 | ngx-reactive-loading | Angular   | RxJS    |
 | -------------------- | --------- | ------- |
-| > 1.3.0              | \>=12.0.0 | \>6.5.3 |
+| \>1.3.0              | \>=12.0.0 | \>6.5.3 |
 
 ## Getting started
 
@@ -66,9 +64,31 @@ Or with yarn
 yarn add ngx-reactive-loading
 ```
 
-## Basic usage
+## Core concepts
 
-### Loading store
+This library currently provide two ways to handle loading state:
+
+- [LoadingStore](#loading-store):
+
+  The loading store is a key value object that allows handling multiple loading states defined
+  statically through your application. It could be used as a global variable or provided via
+  injection token, or through a built-in [LoadingService](#loading-service). Providing the LoadingService
+  currently allows you to use other features like [tokens](#tokens) or using the [loading directive](#loading-directive).
+
+- [LoadingRegistry](#loading-registry):
+
+  The loading registry is an object that can holds dynamically the loading states of your application.
+  The difference is substantial, since it allows you to define the loading states dinamically,
+  removing or adding it when you need it. It can be considered as a "lazy" loading store,
+  but currently it doesn't provide the same integration. The use of a loading service is not foreseen,
+  but it should be used with angular dependency injection.
+
+Both ways to handle loading state could be mixed as needed, there is no a better way,
+each one has been created to solve a specific problem.
+
+---
+
+## Loading store
 
 The loading store is a key value object that allows handling multiple loading states defined statically through your
 application.
@@ -89,7 +109,9 @@ enum ExampleActions {
 
 @Component({
   selector: 'app-example',
-  template: `<ng-container *ngIf="isLoading$ | async">Loading...</ng-container>`,
+  template: `
+    <ng-container *ngIf="isLoading$ | async"> Loading... </ng-container>
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExampleComponent implements OnInit {
@@ -102,8 +124,7 @@ export class ExampleComponent implements OnInit {
   readonly isReloading$ = this.loadingStore[ExampleActions.Reload].$;
   readonly isLoading$: Observable<boolean> = someLoading([this.loadingStore]);
 
-  constructor(private readonly http: HttpClient) {
-  }
+  constructor(private readonly http: HttpClient) {}
 
   add() {
     this.http
@@ -121,81 +142,12 @@ export class ExampleComponent implements OnInit {
 }
 ```
 
-### Loading registry
-
-The loading registry is a key value storage that can holds dynamically the loading states of your application. Create a
-loading registry you must invoke the `createLoadingRegistry` function.
-
-#### Loading registry api
-
-Add loading state by given key
-
-```ts
-registry.add('key1');
-```
-
-Add multiple loading state by given key at once
-
-```ts
-registry.addAll(['key2', 'key3']);
-```
-
-Delete a loading state by the given key and automatically unsubscribe the active subscriptions.
-
-```ts
-registry.delete('key1');
-```
-
-Get a loading state object by the given key.
-
-```ts
-const state = registry.get('key1');
-```
-
-Observe the changes of all loading states. Value is emitted after each state or registry change;
-
-```ts
-registry.registry$.subscribe(values => console.log(values));
-```
-
-Update automatically the observable when subscribe.
-
-```ts
-of(1).pipe(registry.track('key1'));
-```
-
-Clear the registry and unsubscribe all observables.
-
-```ts
-registry.destroy();
-```
-
-Get the current keys of registry.
-
-```ts
-const keys = registry.keys();
-```
-
-Observe the changes of a loading state by the given key. Since the loading registry is dynamic, it could be called or
-subscribed even if the key doesn't already exist.
-
-```ts
-const isLoading$ = registry.isLoading('key1');
-```
-
-Observe the changes of a loading state by multiple keys and check if atleast one state of the given property key is
-loading.
-
-```ts
-const someLoading = registry.someLoading(['key1', 'key2']);
-```
-
-## Working with Loading Service
+### Working with Loading Service
 
 If you need a more sophisticated way to handle loading states, for a better integration with Angular dependency
 injection, you can use a loading service that will expose the [loading store](#loading-store) api's.
 
-### Loading service api
+#### Loading service api
 
 The LoadingService API includes convenient methods for handling loading state.
 
@@ -369,8 +321,7 @@ export class ExampleComponent implements OnInit {
   constructor(
     private readonly http: HttpClient,
     private readonly loadingStore: LoadingService<ComponentAction>
-  ) {
-  }
+  ) {}
 
   add() {
     // Using load method
@@ -405,8 +356,7 @@ type RootLoadingActions = 'globalReload';
     ReactiveLoadingModule.forRoot<RootLoadingActions>(['globalReload']),
   ],
 })
-export class AppModule {
-}
+export class AppModule {}
 ```
 
 #### Registering feature loading service
@@ -427,8 +377,7 @@ type TodoLoadingActions = 'addTodo' | 'removeTodo' | 'reloadTodo';
     ),
   ],
 })
-export class TodoModule {
-}
+export class TodoModule {}
 ```
 
 #### Custom module configuration
@@ -465,8 +414,7 @@ changes automatically in the console. Providing the `name` option, the log will 
     }),
   ],
 })
-export class FeatureModule {
-}
+export class FeatureModule {}
 ```
 
 ### Using loading directive
@@ -488,8 +436,7 @@ import { LoadingService } from 'ngx-reactive-loading';
   providers: [LoadingService.componentProvide(['add'])],
 })
 class AppComponent {
-  constructor(private readonly loadingService: LoadingService) {
-  }
+  constructor(private readonly loadingService: LoadingService) {}
 }
 ```
 
@@ -526,25 +473,92 @@ export class AppComponent {
 export class HelloComponent {
   constructor(
     @Inject(SOME_LOADING) private readonly someLoading$: Observable<boolean>
-  ) {
-  }
+  ) {}
 }
 
 @NgModule({
   declarations: [AppComponent, HelloComponent],
   imports: [ReactiveLoadingModule.forRoot(['prop1'])],
 })
-export class AppModule {
-}
+export class AppModule {}
 ```
 
-## Working with loading registry
+## Loading registry
+
+The loading registry is an object that can holds dynamically the loading states of your application. Create a
+loading registry you must invoke the `createLoadingRegistry` function.
+
+### Loading registry api
+
+Add loading state by given key
+
+```ts
+registry.add('key1');
+```
+
+Add multiple loading state by given key at once
+
+```ts
+registry.addAll(['key2', 'key3']);
+```
+
+Delete a loading state by the given key and automatically unsubscribe the active subscriptions.
+
+```ts
+registry.delete('key1');
+```
+
+Get a loading state object by the given key.
+
+```ts
+const state = registry.get('key1');
+```
+
+Observe the changes of all loading states. Value is emitted after each state or registry change;
+
+```ts
+registry.registry$.subscribe(values => console.log(values));
+```
+
+Update automatically the observable when subscribe.
+
+```ts
+of(1).pipe(registry.track('key1'));
+```
+
+Clear the registry and unsubscribe all observables.
+
+```ts
+registry.destroy();
+```
+
+Get the current keys of registry.
+
+```ts
+const keys = registry.keys();
+```
+
+Observe the changes of a loading state by the given key. Since the loading registry is dynamic, it could be called or
+subscribed even if the key doesn't already exist.
+
+```ts
+const isLoading$ = registry.isLoading('key1');
+```
+
+Observe the changes of a loading state by multiple keys and check if atleast one state of the given property key is
+loading.
+
+```ts
+const someLoading = registry.someLoading(['key1', 'key2']);
+```
+
+### Working with loading registry
 
 If you need to handle dynamic loading states, the loading registry could be the best choice. Unlike the loading service,
 the loading registry currently shuold be provided only one time in the same node injector. Providing a new token in the
 same injector will override all the properties.
 
-### Use with components
+#### Use with components
 
 First, provide the `LOADING_REGISTRY` token passing the factory function in the module or component.
 
@@ -560,8 +574,7 @@ import { createLoadingRegistry, LOADING_REGISTRY } from 'ngx-reactive-loading';
   declarations: [],
   providers: [{ provide: LOADING_REGISTRY, useFactory: createLoadingRegistry }],
 })
-export class ExampleModule {
-}
+export class ExampleModule {}
 ```
 
 Inside the component, you will have access to the `LOADING_REGISTRY` provider.
@@ -580,12 +593,11 @@ export class ExampleComponent implements OnInit {
     this.loadingRegistry.addAll(['k1', 'k2']);
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 }
 ```
 
-### Use with HTTP Interceptor
+#### Use with HTTP Interceptor
 
 If you need to track the loading state for every http request status, you can use the
 built-in `HttpLoadingRegistryInterceptor`.
@@ -610,8 +622,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {
-}
+export class AppModule {}
 ```
 
 Providing the interceptor will automatically provide the loading registry which will take care of your http calls. The
@@ -635,10 +646,10 @@ import { HttpClient, HttpContext } from '@angular/common/http';
 @Component({
   selector: 'app-root',
   template: `
-    <ng-container *ngIf="someLoading$ | async">Some loading...</ng-container>
-    <ng-container *ngIf="isActionNameLoading$ | async"
-      >Action name loading...</ng-container
-    >
+    <ng-container *ngIf="someLoading$ | async"> Some loading... </ng-container>
+    <ng-container *ngIf="isActionNameLoading$ | async">
+      Action name loading...
+    </ng-container>
   `,
 })
 export class AppComponent implements OnInit {
@@ -652,8 +663,7 @@ export class AppComponent implements OnInit {
     @Inject(HTTP_LOADING_REGISTRY)
     private readonly loadingRegistry: LoadingRegistry,
     private readonly http: HttpClient
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.http
@@ -685,7 +695,7 @@ Listen to the state changes of the given properties and return true if it find a
 
 ```ts
 import { createLoadingStore, someLoading } from 'ngx-reactive-loading';
-import { Subject } from "rxjs";
+import { Subject } from 'rxjs';
 
 /**
  * Passing the loading store or his properties
@@ -711,12 +721,10 @@ const reload$ = new BehaviorSubject<null>(null);
 
 const items$ = this.reload$.pipe(
   switchMap(() =>
-    this.service
-      .getList()
-      .pipe(
-        catchError(() => of(null)),
-        share()
-      ),
+    this.service.getList().pipe(
+      catchError(() => of(null)),
+      share()
+    )
   )
 );
 
@@ -754,11 +762,11 @@ When attached to an observable stream, it will update the subject/behaviorSubjec
 ```ts
 import { withLoading } from 'ngx-reactive-loading';
 import { of, Subject } from 'rxjs';
-import { delay, switchMap } from "rxjs/operators";
+import { delay, switchMap } from 'rxjs/operators';
 
 const isLoading$ = new Subject<boolean>();
 const refresh$ = new Subject<void>();
-const source$ = of(null).pipe(delay((1000)));
+const source$ = of(null).pipe(delay(1000));
 
 const sub = refresh$
   .pipe(switchMap(() => source$.pipe(withLoading(isLoading$))))

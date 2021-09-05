@@ -3,10 +3,10 @@ import { SidebarRoute } from '../store/ui-store';
 
 export type LabeledRoute = Route & SidebarRoute;
 
-export const ROUTES: LabeledRoute[] = [
+export const EXAMPLE_ROUTES: LabeledRoute[] = [
   {
     path: 'loading-store',
-    label: 'Basic example',
+    label: 'Loading store',
     url: '/loading-store',
     loadChildren: () =>
       import(
@@ -15,7 +15,7 @@ export const ROUTES: LabeledRoute[] = [
   },
   {
     path: 'loading-store-with-service',
-    label: 'Example with service',
+    label: 'Loading store service',
     url: '/loading-store-with-service',
     loadChildren: () =>
       import(
@@ -24,7 +24,7 @@ export const ROUTES: LabeledRoute[] = [
   },
   {
     path: 'loading-store-with-ngrx',
-    label: 'Example with ngrx',
+    label: 'Ngrx with Loading store',
     url: '/loading-store-with-ngrx',
     loadChildren: () =>
       import(
@@ -32,21 +32,21 @@ export const ROUTES: LabeledRoute[] = [
       ).then(m => m.LoadingStoreNgrxExampleModule),
   },
   {
-    path: 'loading-registry',
-    label: 'Example with loading registry',
-    url: '/loading-registry',
-    loadChildren: () =>
-      import(
-        '../pages/04-loading-registry-example/loading-registry-example.module'
-      ).then(m => m.LoadingRegistryExampleModule),
-  },
-  {
     path: 'loading-directive',
-    label: 'Example with loading directive',
+    label: 'Loading directive',
     url: '/loading-directive',
     loadChildren: () =>
       import(
-        '../pages/05-loading-directive-example/loading-directive-example.module'
+        '../pages/04-loading-directive-example/loading-directive-example.module'
       ).then(m => m.LoadingDirectiveExampleModule),
+  },
+  {
+    path: 'loading-registry-dynamic-actions',
+    label: 'Dynamic actions with loading registry',
+    url: '/loading-registry-dynamic-actions',
+    loadChildren: () =>
+      import(
+        '../pages/05-loading-registry-dynamic-actions/loading-registry-dynamic-actions-example.module'
+      ).then(m => m.LoadingRegistryDynamicActionsExampleModule),
   },
 ];

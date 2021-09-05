@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { UIStore } from './store/ui-store';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -15,12 +16,13 @@ export class AppComponent {
 
   constructor(
     private readonly uiStore: UIStore,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly location: Location
   ) {
     this.router.events
       .pipe(
         filter((e): e is NavigationEnd => e instanceof NavigationEnd),
-        map(e => e.url)
+        map(() => this.location.path())
       )
       .subscribe(url => this.uiStore.setCurrentUrl(url));
   }

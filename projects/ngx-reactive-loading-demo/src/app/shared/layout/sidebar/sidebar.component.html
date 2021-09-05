@@ -1,5 +1,11 @@
 <mat-nav-list>
-  <mat-list-item *ngFor="let route of routes$ | async; trackBy: trackBy">
-    <a matLine (click)="navigate(route)">{{ route.label }}</a>
+  <div mat-subheader>Examples</div>
+  <mat-list-item
+    class="sidebar-item"
+    *ngFor="let route of routes$ | async; trackBy: trackBy"
+    (click)="navigate(route)"
+  >
+    <a matLine>{{ route.label }}</a>
   </mat-list-item>
+  <mat-divider></mat-divider>
 </mat-nav-list>

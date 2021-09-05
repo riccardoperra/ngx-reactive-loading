@@ -1,0 +1,9 @@
+<button
+  *ngIf="action$ | async as action"
+  mat-raised-button
+  color="primary"
+  [disabled]="isLoading$ | async"
+  (click)="$event.stopPropagation(); click.emit(action)"
+>
+  {{ action.label }}
+</button>

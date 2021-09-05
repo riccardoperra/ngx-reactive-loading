@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
   TrackByFunction,
 } from '@angular/core';
 import { SidebarRoute, UIStore } from '../../../store/ui-store';
@@ -13,6 +12,7 @@ import { filter } from 'rxjs/operators';
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent {
   readonly routes$ = this.uiStore.routes$;

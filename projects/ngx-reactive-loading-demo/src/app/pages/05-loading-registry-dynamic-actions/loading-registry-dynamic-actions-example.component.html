@@ -1,0 +1,105 @@
+<mat-toolbar fxHide.xs>
+  <div fxFlex fxLayout="row wrap" fxLayoutGap="10px">
+    <span>{{ pageTitle$ | async }}</span>
+    <mat-chip-list>
+      <mat-chip color="accent" selected>v1.4.0</mat-chip>
+    </mat-chip-list>
+  </div>
+</mat-toolbar>
+
+<div [style.padding.rem]="1">
+  <div fxFill fxLayout="row wrap">
+    <div fxFlex="100">
+      <app-add-action-form (submitEvent)="add$.next($event)">
+      </app-add-action-form>
+    </div>
+
+    <div [style.marginTop.rem]="1" fxFlex="100">
+      <div
+        fxLayout="row wrap"
+        fxLayoutGap="10px grid"
+        [style.marginTop.rem]="1"
+      >
+        <div *ngFor="let action of actions$ | async; trackBy: trackByAction">
+          <app-custom-action [action]="action" (click)="callAction($event)">
+          </app-custom-action>
+        </div>
+      </div>
+    </div>
+
+    <div
+      fxFlex="100"
+      [style.marginTop.rem]="1"
+      *ngIf="(actions$ | async)?.length"
+    >
+      <table
+        mat-table
+        [style.width.%]="100"
+        class="mat-elevation-z1"
+        *ngIf="loadingRegistry.registry$ | async as registryState"
+        [dataSource]="actions$"
+        [trackBy]="trackByAction"
+      >
+        <ng-container matColumnDef="position">
+          <th mat-header-cell *matHeaderCellDef>No.</th>
+          <td mat-cell *matCellDef="let element; let index = index">
+            {{ index }}
+          </td>
+        </ng-container>
+
+        <!-- label Column -->
+        <ng-container matColumnDef="label">
+          <th mat-header-cell *matHeaderCellDef>Label</th>
+          <td mat-cell *matCellDef="let element">{{ element.label }}</td>
+        </ng-container>
+
+        <!-- key Column -->
+        <ng-container matColumnDef="key">
+          <th mat-header-cell *matHeaderCellDef>Key</th>
+          <td mat-cell *matCellDef="let element">{{ element.key }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="loading">
+          <th mat-header-cell *matHeaderCellDef>Loading</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-spinner
+              [diameter]="20"
+              *ngIf="registryState[element.key]"
+            ></mat-spinner>
+            <mat-icon *ngIf="!registryState[element.key]">close</mat-icon>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let element">
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="remove$.next(element)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+
+            <button
+              mat-icon-button
+              color="primary"
+              [disabled]="
+                element.key | mapper: loadingRegistry.isLoading | async
+              "
+              (click)="callAction(element)"
+            >
+              <mat-icon>refresh</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="tableColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: tableColumns"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">No data found</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

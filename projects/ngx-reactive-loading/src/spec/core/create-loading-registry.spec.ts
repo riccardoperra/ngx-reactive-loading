@@ -16,6 +16,7 @@ describe('loadingRegistry', () => {
   });
 
   it('should create loading registry with empty value', () => {
+    store = createLoadingRegistry();
     expect(store.keys().length).toBe(0);
     expect(store.keys()).toEqual([]);
     expect(store).toBeTruthy();

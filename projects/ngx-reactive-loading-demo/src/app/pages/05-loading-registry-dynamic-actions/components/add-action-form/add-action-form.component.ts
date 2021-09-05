@@ -14,24 +14,22 @@ import { TodoCustomAction } from '../../models/todo-state-action';
   templateUrl: './add-action-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddActionFormComponent implements OnInit {
+export class AddActionFormComponent {
   readonly form = this.fb.group({
-    label: this.fb.control('', Validators.required),
-    key: this.fb.control('', Validators.required),
+    label: this.fb.control('', control => Validators.required(control)),
+    key: this.fb.control('', control => Validators.required(control)),
   });
 
-  @Output() submitEvent = new EventEmitter<TodoCustomAction>();
+  @Output() readonly submitEvent = new EventEmitter<TodoCustomAction>();
 
   constructor(
     private readonly fb: FormBuilder,
     private readonly todoService: TodoStateService
   ) {}
 
-  ngOnInit(): void {}
-
   onSubmit(): void {
     if (this.form.valid) {
-      const value = this.form.value;
+      const value = this.form.value as { label: string; key: string };
 
       const action: TodoCustomAction = {
         label: value.label,

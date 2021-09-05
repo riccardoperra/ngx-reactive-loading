@@ -3,7 +3,7 @@
   mat-raised-button
   color="primary"
   [disabled]="isLoading$ | async"
-  (click)="$event.stopPropagation(); click.emit(action)"
+  (click)="clickEvent.emit(action)"
 >
   {{ action.label }}
 </button>

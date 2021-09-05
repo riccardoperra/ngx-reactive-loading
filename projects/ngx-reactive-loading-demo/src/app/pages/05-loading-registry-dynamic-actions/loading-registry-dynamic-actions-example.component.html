@@ -21,7 +21,10 @@
         [style.marginTop.rem]="1"
       >
         <div *ngFor="let action of actions$ | async; trackBy: trackByAction">
-          <app-custom-action [action]="action" (click)="callAction($event)">
+          <app-custom-action
+            [action]="action"
+            (clickEvent)="callAction($event)"
+          >
           </app-custom-action>
         </div>
       </div>

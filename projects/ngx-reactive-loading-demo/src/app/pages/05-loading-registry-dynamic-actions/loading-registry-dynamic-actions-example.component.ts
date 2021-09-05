@@ -22,7 +22,7 @@ enum Actions {
   templateUrl: './loading-registry-dynamic-actions-example.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoadingRegistryDynamicActionsExampleComponent implements OnInit {
+export class LoadingRegistryDynamicActionsExampleComponent {
   readonly tableColumns = ['position', 'label', 'key', 'loading', 'actions'];
   readonly pageTitle$ = this.uiStore.pageTitle$;
 
@@ -60,8 +60,6 @@ export class LoadingRegistryDynamicActionsExampleComponent implements OnInit {
     private readonly uiStore: UIStore,
     @Inject(LOADING_REGISTRY) readonly loadingRegistry: LoadingRegistry
   ) {}
-
-  ngOnInit() {}
 
   callAction(action: TodoCustomAction) {
     // Update state by key

@@ -23,20 +23,29 @@ describe('loading store type guards', () => {
     expect(result).toBeTrue();
   });
 
-  it('is not loadingStoreState', () => {
-    const obj: any = {
+  it('should not be loadingStoreState', () => {
+    let result: boolean;
+
+    result = isLoadingStoreState({
       type: 'loadingStoreState',
       $: 'true',
       track: {},
       destroy: noop,
-    };
+    });
+    expect(result).toBeFalse();
 
-    const result = isLoadingStoreState(obj);
+    result = isLoadingStoreState({
+      $: of(true),
+      track: {},
+      destroy: noop,
+    } as Partial<LoadingStoreState>);
+    expect(result).toBeFalse();
 
+    result = isLoadingStoreState(null);
     expect(result).toBeFalse();
   });
 
-  it('is loadingStore', () => {
+  it('should be loadingStore', () => {
     const obj: LoadingStore<['prop1', 'prop2']> = {
       prop1: {
         type: LOADING_STORE_STATE_SYMBOL,

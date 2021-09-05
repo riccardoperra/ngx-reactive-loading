@@ -17,7 +17,7 @@ const createLoadingRegistryFactory = <
   T extends PropertyKey,
   FactoryState extends LoadingRegistryState
 >(
-  initialKeys: PropertyTuple<T> = [],
+  initialKeys: PropertyTuple<T>,
   factory: () => FactoryState
 ) => {
   const registry = new ReactiveMap<T, FactoryState>();

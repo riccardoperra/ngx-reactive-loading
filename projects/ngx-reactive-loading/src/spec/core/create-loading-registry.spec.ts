@@ -10,8 +10,21 @@ describe('loadingRegistry', () => {
     store = createLoadingRegistry<'key0' | 'key1'>(['key0']);
   });
 
+  afterEach(() => {
+    store.destroy();
+    expect(store.keys().length).toBe(0);
+  });
+
   it('should create loading registry with empty value', () => {
-    store = createLoadingRegistry();
+    expect(store.keys().length).toBe(0);
+    expect(store.keys()).toEqual([]);
+    expect(store).toBeTruthy();
+  });
+
+  it('should create loading registry with default keys', () => {
+    store = createLoadingRegistry(['key1', 'key2', 'key3']);
+    expect(store.keys().length).toBe(3);
+    expect(store.keys()).toEqual(['key1', 'key2', 'key3']);
     expect(store).toBeTruthy();
   });
 

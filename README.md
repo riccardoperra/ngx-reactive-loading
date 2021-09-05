@@ -491,63 +491,71 @@ loading registry you must invoke the `createLoadingRegistry` function.
 
 ### Loading registry api
 
-Add loading state by given key
+- Creates a loading registry
+
+```ts
+import { createLoadingRegistry } from 'ngx-reactive-loading';
+
+const registry = createLoadingRegistry();
+```
+
+- Add loading state by given key
 
 ```ts
 registry.add('key1');
 ```
 
-Add multiple loading state by given key at once
+- Add multiple loading state by given key at once
 
 ```ts
 registry.addAll(['key2', 'key3']);
 ```
 
-Delete a loading state by the given key and automatically unsubscribe the active subscriptions.
+- Delete a loading state by the given key and automatically unsubscribe the active subscriptions.
 
 ```ts
 registry.delete('key1');
 ```
 
-Get a loading state object by the given key.
+- Get a loading state object by the given key.
 
 ```ts
 const state = registry.get('key1');
 ```
 
-Observe the changes of all loading states. Value is emitted after each state or registry change;
+- Observe the changes of all loading states. Value is emitted after each state or registry change;
 
 ```ts
 registry.registry$.subscribe(values => console.log(values));
 ```
 
-Update automatically the observable when subscribe.
+- Update automatically the observable when subscribe.
 
 ```ts
 of(1).pipe(registry.track('key1'));
 ```
 
-Clear the registry and unsubscribe all observables.
+- Clear the registry and unsubscribe all observables.
 
 ```ts
 registry.destroy();
 ```
 
-Get the current keys of registry.
+- Get the current keys of registry.
 
 ```ts
 const keys = registry.keys();
 ```
 
-Observe the changes of a loading state by the given key. Since the loading registry is dynamic, it could be called or
-subscribed even if the key doesn't already exist.
+- Observe the changes of a loading state by the given key. Since the loading registry is dynamic, it could be called or
+  subscribed even if the key doesn't already exist.
 
 ```ts
 const isLoading$ = registry.isLoading('key1');
 ```
 
-Observe the changes of a loading state by multiple keys and check if atleast one state of the given property key is
-loading.
+- Observe the changes of a loading state by multiple keys and check if atleast one state of the given property key is
+  loading.
 
 ```ts
 const someLoading = registry.someLoading(['key1', 'key2']);

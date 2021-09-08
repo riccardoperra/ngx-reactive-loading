@@ -1,0 +1,54 @@
+---
+sidebar_position: 3
+title: HTTP Interceptors
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import CodeBlock from '@theme/CodeBlock';
+import AppComponent from '!!raw-loader!./sources/http-interceptor/app.component.ts';
+import AppModule from '!!raw-loader!./sources/http-interceptor/app.module.ts';
+import AppComponentTemplate from '!!raw-loader!./sources/http-interceptor/app.component.html';
+
+# Loading registry interceptors
+
+If you need to track the loading state for every http request status, you can use the
+built-in `HttpLoadingRegistryInterceptor`.
+
+Providing the interceptor will automatically provide the loading registry which will take care of your http calls. The
+http loading registry will be available through the `HTTP_LOADING_REGISTRY` token.
+
+## Example
+
+<CodeBlock className="language-ts" title="app.module.ts">{AppModule.trim()}</CodeBlock>
+
+To make the interceptor work you must pass a context to each http call that should be tracked by the interceptor.
+
+The interceptor will dynamically create and remove the keys of the registry, allowing you to listen to all
+state changes.
+
+<Tabs>
+  <TabItem value="app.component.ts" label="src/app/app.component.ts" default>
+    <CodeBlock className="language-ts">{AppComponent.trim()}</CodeBlock>
+  </TabItem>
+  <TabItem value="app.component.html" label="src/app/app.component.html" default>
+    <CodeBlock className="language-html">{AppComponentTemplate.trim()}</CodeBlock>
+  </TabItem>
+  <TabItem value="app.module.ts" label="src/app/app.module.ts" default>
+      <CodeBlock className="language-ts">{AppModule.trim()}</CodeBlock>
+  </TabItem>
+</Tabs>
+
+## Utils
+
+### `withHttpLoadingContext()`
+
+Passing http context manually could be onerous, so using `withHttpLoadingContext` helper
+could be the best choice.
+
+```ts
+import { withHttpLoadingContext } from 'ngx-reactive-loading';
+import { HttpContext } from '@angular/common/http';
+
+const context: HttpContext = withHttpLoadingContext('api');
+```

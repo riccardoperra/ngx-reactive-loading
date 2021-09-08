@@ -1,0 +1,33 @@
+---
+sidebar_position: 3
+title: Custom tokens
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import CodeBlock from '@theme/CodeBlock';
+import AppComponent from '!!raw-loader!./sources/tokens/someLoading/app.component.ts';
+import AppModule from '!!raw-loader!./sources/tokens/someLoading/app.module.ts';
+import HelloComponent from '!!raw-loader!./sources/tokens/someLoading/hello.component.ts';
+
+# Custom injection tokens
+
+Providing the `LoadingService` in a component or in a module will allow the use of custom injection tokens that
+can access to the service instance in the NodeInjector.
+
+## SOME_LOADING
+
+When injected, it allows you to observe the changes to the state between all service loading property, like the `someLoading`
+helper function.
+
+<Tabs>
+  <TabItem value="app.module.ts" label="src/app/app.module.ts" default>
+      <CodeBlock className="language-ts">{AppModule.trim()}</CodeBlock>
+  </TabItem>
+  <TabItem value="app.component.ts" label="src/app/app.component.ts" default>
+    <CodeBlock className="language-ts">{AppComponent.trim()}</CodeBlock>
+  </TabItem>
+    <TabItem value="hello.component.ts" label="src/app/hello.component.ts" default>
+      <CodeBlock className="language-ts">{HelloComponent.trim()}</CodeBlock>
+    </TabItem>
+</Tabs>

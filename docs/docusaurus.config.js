@@ -39,7 +39,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
         navbar: {
           title: 'NGX Reactive Loading',
           logo: {
-            alt: 'My Site Logo',
+            alt: 'ngx-reactive-loading logo',
             src: 'img/logo.svg',
           },
           items: [

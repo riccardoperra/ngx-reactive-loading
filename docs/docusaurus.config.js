@@ -6,7 +6,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 (
   module.exports = {
     title: 'ngx-reactive-loading',
-    tagline: 'Better loading states for Angular applications',
+    tagline: 'Reactive loading management for Angular applications',
     url: 'https://riccardoperra.github.io',
     baseUrl: '/ngx-reactive-loading/',
     onBrokenLinks: 'throw',
@@ -57,6 +57,11 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
               to: 'demo-app',
               activeBasePath: 'demo-app',
               label: 'Demo App',
+              position: 'left',
+            },
+            {
+              href: 'https://stackblitz.com/edit/ngx-reactive-loading-playground',
+              label: 'Playground',
               position: 'left',
             },
             {

@@ -5,21 +5,26 @@ import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import styles from './index.module.css';
 import HomepageFeatures from '../components/HomepageFeatures';
-import InitialCodeBlock from '@theme/CodeBlock';
 
 function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext();
   return (
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
       <div className="container">
+        <img width={150} alt="ngx-reactive-loading" src="img/logo.svg" />
         <h1 className="hero__title">{siteConfig.title}</h1>
-        <p className="hero__subtitle">{siteConfig.tagline}</p>
+        <p className="hero__subtitle">
+          <strong>
+            <em>Reactive</em>
+          </strong>{' '}
+          loading management for Angular applications
+        </p>
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
             to="/docs/getting-started/installation"
           >
-            Getting started️
+            Get started️
           </Link>
         </div>
       </div>

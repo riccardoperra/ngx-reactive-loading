@@ -10,8 +10,6 @@ import AppComponent from '!!raw-loader!./sources/http-interceptor/app.component.
 import AppModule from '!!raw-loader!./sources/http-interceptor/app.module.ts';
 import AppComponentTemplate from '!!raw-loader!./sources/http-interceptor/app.component.html';
 
-# Loading registry interceptors
-
 If you need to track the loading state for every http request status, you can use the
 built-in `HttpLoadingRegistryInterceptor`.
 
@@ -20,7 +18,9 @@ http loading registry will be available through the `HTTP_LOADING_REGISTRY` toke
 
 ## Example
 
-<CodeBlock className="language-ts" title="app.module.ts">{AppModule.trim()}</CodeBlock>
+<CodeBlock className="language-ts" title="app.module.ts">
+  {AppModule.trim()}
+</CodeBlock>
 
 To make the interceptor work you must pass a context to each http call that should be tracked by the interceptor.
 
@@ -31,11 +31,17 @@ state changes.
   <TabItem value="app.component.ts" label="src/app/app.component.ts" default>
     <CodeBlock className="language-ts">{AppComponent.trim()}</CodeBlock>
   </TabItem>
-  <TabItem value="app.component.html" label="src/app/app.component.html" default>
-    <CodeBlock className="language-html">{AppComponentTemplate.trim()}</CodeBlock>
+  <TabItem
+    value="app.component.html"
+    label="src/app/app.component.html"
+    default
+  >
+    <CodeBlock className="language-html">
+      {AppComponentTemplate.trim()}
+    </CodeBlock>
   </TabItem>
   <TabItem value="app.module.ts" label="src/app/app.module.ts" default>
-      <CodeBlock className="language-ts">{AppModule.trim()}</CodeBlock>
+    <CodeBlock className="language-ts">{AppModule.trim()}</CodeBlock>
   </TabItem>
 </Tabs>
 

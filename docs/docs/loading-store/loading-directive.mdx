@@ -9,8 +9,6 @@ import CodeBlock from '@theme/CodeBlock';
 import AppComponent from '!!raw-loader!./sources/loading-directive/app.component.ts';
 import AppComponentTemplate from '!!raw-loader!./sources/loading-directive/app.component.html';
 
-# Loading directive
-
 Loading directive provide a simple approach to switch templates when the loading state change. To work correctly the
 loading service must be provided by a component or module.
 
@@ -19,9 +17,9 @@ loading service must be provided by a component or module.
 ### Inputs
 
 | Input            | Type                         | Default | Required | Description                                               |
-| ---------------- | ---------------------------- | ------- | -------- | --------------------------------------------------------- |
+| ---------------- | ---------------------------- | ------- | -------- | --------------------------------------------------------- | --- |
 | [ngxLoading]     | PropertyKey \| PropertyKey[] | []      | false    | Set the loading state properties that will be observed    |
-| [ngxLoadingElse] | TemplateRef \| null          | false   | false    | Render the custom loading template when `loading` is true |            |
+| [ngxLoadingElse] | TemplateRef \| null          | false   | false    | Render the custom loading template when `loading` is true |     |
 
 ## Example
 
@@ -29,8 +27,13 @@ loading service must be provided by a component or module.
   <TabItem value="app.component.ts" label="src/app/app.component.ts" default>
     <CodeBlock className="language-ts">{AppComponent.trim()}</CodeBlock>
   </TabItem>
-  <TabItem value="app.component.html" label="src/app/app.component.html" default>
-    <CodeBlock className="language-html">{AppComponentTemplate.trim()}</CodeBlock>
+  <TabItem
+    value="app.component.html"
+    label="src/app/app.component.html"
+    default
+  >
+    <CodeBlock className="language-html">
+      {AppComponentTemplate.trim()}
+    </CodeBlock>
   </TabItem>
 </Tabs>
-

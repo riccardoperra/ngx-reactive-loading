@@ -54,6 +54,12 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
             //   type: 'docsVersionDropdown',
             // },
             {
+              to: 'demo-app',
+              activeBasePath: 'demo-app',
+              label: 'Demo App',
+              position: 'left',
+            },
+            {
               href: 'https://github.com/riccardoperra/ngx-reactive-loading',
               label: 'GitHub',
               position: 'right',

@@ -3,10 +3,12 @@ name: documentation
 on:
   pull_request:
     branches: [docs, main, beta]
+    paths:
+      - 'docs/**'
   push:
     branches: [docs, main, beta]
-  paths:
-    - 'docs/**'
+    paths:
+      - 'docs/**'
 
 jobs:
   checks:

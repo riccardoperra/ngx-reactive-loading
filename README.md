@@ -15,8 +15,6 @@ loading states through your application.
 [![Supported version](https://img.shields.io/badge/Support%20RxJS-~6.6.0-%23d81b60)](https://github.com/riccardoperra/ngx-reactive-loading)
 [![Supported RxJS version](https://img.shields.io/badge/Support-RxJS%207-%23d81b60)](https://github.com/riccardoperra/ngx-reactive-loading)
 
-# ngx-reactive-loading
-
 ## Features
 
 ✅ Flexible and automatic loading state handling <br>

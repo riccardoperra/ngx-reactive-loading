@@ -22,7 +22,7 @@
     "async",
     "loader"
   ],
-  "description": "Dynamic Loading state handling in Angular applications with RxJS",
+  "description": "Reactive loading state management for Angular applications",
   "peerDependencies": {
     "@angular/common": "^12.0.0",
     "@angular/core": "^12.0.0"

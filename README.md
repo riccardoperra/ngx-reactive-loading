@@ -1,6 +1,6 @@
 ![NGX Reactive Loading](./reactive_loading_banner.png)
 
-> Better loading state in Angular applications with RxJS
+> Reactive loading state management for Angular applications
 
 [![npm version](https://badge.fury.io/js/ngx-reactive-loading.svg)](https://www.npmjs.com/package/ngx-reactive-loading)
 [![bundle size](https://img.shields.io/bundlephobia/min/ngx-reactive-loading)](https://www.npmjs.com/package/ngx-reactive-loading)

@@ -17,7 +17,7 @@ function HomepageHeader() {
           <strong>
             <em>Reactive</em>
           </strong>{' '}
-          loading management for Angular applications
+          loading state management for Angular applications
         </p>
         <div className={styles.buttons}>
           <Link

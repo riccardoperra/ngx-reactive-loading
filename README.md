@@ -17,10 +17,8 @@ loading states through your application.
 
 ## Features
 
-✅ Flexible and automatic loading state handling <br>
-✅ Static and dynamic loading state creation <br>
-✅ Angular Dependency Injection support <br>
-✅ No external dependencies outside Angular <br>
+✅ Flexible and reactive loading state management <br>
+✅ Supports Angular dependency injection <br>
 ✅ Fully tree-shakeable <br>
 ✅ 100% tested <br>
 

@@ -7,8 +7,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
   module.exports = {
     title: 'ngx-reactive-loading',
     tagline: 'Better loading states for Angular applications',
-    url: 'https://ngx-loading.vercel.app',
-    baseUrl: '/',
+    url: 'https://riccardoperra.github.io',
+    baseUrl: '/ngx-reactive-loading/',
     onBrokenLinks: 'throw',
     onBrokenMarkdownLinks: 'warn',
     favicon: 'img/favicon.ico',

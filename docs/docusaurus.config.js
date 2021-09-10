@@ -116,16 +116,11 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
           trackingID: 'G-66WD2E7JP3',
           anonymizeIP: true,
         },
+        sitemap: {
+          changefreq: 'weekly',
+          priority: 0.5,
+          trailingSlash: false,
+        },
       }),
-
-    plugins: [
-      '@docusaurus/plugin-google-analytics',
-      '@docusaurus/plugin-sitemap',
-      {
-        changefreq: 'weekly',
-        priority: 0.5,
-        trailingSlash: false,
-      },
-    ],
   }
 );

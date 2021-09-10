@@ -117,5 +117,15 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
           anonymizeIP: true,
         },
       }),
+
+    plugins: [
+      '@docusaurus/plugin-google-analytics',
+      '@docusaurus/plugin-sitemap',
+      {
+        changefreq: 'weekly',
+        priority: 0.5,
+        trailingSlash: false,
+      },
+    ],
   }
 );

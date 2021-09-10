@@ -37,8 +37,7 @@ export class ExampleComponent implements OnInit {
   constructor(
     private readonly http: HttpClient,
     private readonly loadingStore: LoadingService<ComponentAction>
-  ) {
-  }
+  ) {}
 }
 ```
 
@@ -52,7 +51,7 @@ Wrap the loading operator in the source observable. This allows to update the lo
 automatically after each emission and on complete.
 
 ```ts title=example.component.ts
-import { LoadingService } from "ngx-reactive-loading";
+import { LoadingService } from 'ngx-reactive-loading';
 
 type ComponentAction = 'add' | 'reload';
 
@@ -61,25 +60,21 @@ export class ExampleComponent {
   constructor(
     private readonly http: HttpClient,
     private readonly loadingStore: LoadingService<ComponentAction>
-  ) {
-  }
+  ) {}
 
   add() {
-    this.loadingStore
-      .load(() => this.http.post('/', {}), 'add')
-      .subscribe();
+    this.loadingStore.load(() => this.http.post('/', {}), 'add').subscribe();
   }
 }
 ```
 
 ### `track()`
 
-Like loading store `track()`, performs a side effect for every emission on the source Observable, updating the state of
-the key when the source is subscribed and when terminates on complete.
+Set the loading state of the given key to true, then change it to false when the source complete or there is an error.
 
 ```ts title=example.component.ts
-import { LoadingService } from "ngx-reactive-loading";
-import { OnInit } from "@angular/core";
+import { LoadingService } from 'ngx-reactive-loading';
+import { OnInit } from '@angular/core';
 
 type ComponentAction = 'add' | 'reload';
 
@@ -88,13 +83,10 @@ export class ExampleComponent implements OnInit {
   constructor(
     private readonly http: HttpClient,
     private readonly loadingStore: LoadingService<ComponentAction>
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
-    this.http.post('/', {})
-      .pipe(this.loadingService.track('add'))
-      .subscribe();
+    this.http.post('/', {}).pipe(this.loadingService.track('add')).subscribe();
   }
 }
 ```
@@ -104,16 +96,16 @@ export class ExampleComponent implements OnInit {
 Listen to the changes of the given loading state property.
 
 ```ts title=example.component.ts
-import { LoadingService } from "ngx-reactive-loading";
+import { LoadingService } from 'ngx-reactive-loading';
 
 type ComponentAction = 'add' | 'reload';
 
 @Component({})
 export class ExampleComponent {
-  readonly isAdding$: Observable<boolean> = this.loadingService.isLoading('add');
+  readonly isAdding$: Observable<boolean> =
+    this.loadingService.isLoading('add');
 
-  constructor(private readonly loadingStore: LoadingService<ComponentAction>) {
-  }
+  constructor(private readonly loadingStore: LoadingService<ComponentAction>) {}
 }
 ```
 
@@ -122,17 +114,16 @@ export class ExampleComponent {
 Listen to the state changes of the given properties and return true if it finds a state which is currently loading.
 
 ```ts title=example.component.ts
-import { LoadingService } from "ngx-reactive-loading";
+import { LoadingService } from 'ngx-reactive-loading';
 
 type ComponentAction = 'add' | 'reload';
 
 @Component({})
 export class ExampleComponent {
-  readonly isAddingOrDeleting$: Observable<boolean> = 
+  readonly isAddingOrDeleting$: Observable<boolean> =
     this.loadingService.someLoading(['add', 'reload']);
-  
-  constructor(private readonly loadingStore: LoadingService<ComponentAction>) {
-  }
+
+  constructor(private readonly loadingStore: LoadingService<ComponentAction>) {}
 }
 ```
 
@@ -140,7 +131,6 @@ export class ExampleComponent {
 If you need to listen to all changes of the loading store state, you can provide an empty parameter
 to the `someLoading` method.
 :::
-
 
 ## Using with modules
 
@@ -178,10 +168,9 @@ type TodoLoadingActions = 'addTodo' | 'removeTodo' | 'reloadTodo';
 
 @NgModule({
   imports: [
-    ReactiveLoadingModule.forFeature(
-      ['addTodo', 'removeTodo', 'reloadTodo'],
-      { standalone: false } // This is the default behavior
-    ),
+    ReactiveLoadingModule.forFeature(['addTodo', 'removeTodo', 'reloadTodo'], {
+      standalone: false,
+    }),
   ],
 })
 export class TodoModule {}

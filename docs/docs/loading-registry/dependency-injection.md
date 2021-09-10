@@ -9,8 +9,6 @@ If you need to handle dynamic loading states, the loading registry could be the 
 the loading registry currently should be provided only one time in the same node injector. Providing a new token in the
 same injector will override all the properties.
 
-## Use with components
-
 First, provide the `LOADING_REGISTRY` token passing the factory function in the module or component.
 
 ```ts title=example.module.ts

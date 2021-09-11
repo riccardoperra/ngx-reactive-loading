@@ -25,6 +25,7 @@ import {
 import { LoggerService } from './services/logger.service';
 import { LoadingDirective } from './components/loading.directive';
 import { LoadingStore } from './core';
+import { GetLoadingPipe } from './pipes/get-loading.pipe';
 
 /**
  * @internal
@@ -39,8 +40,8 @@ export class RootReactiveLoadingModule {
 }
 
 @NgModule({
-  declarations: [LoadingDirective],
-  exports: [LoadingDirective],
+  declarations: [LoadingDirective, GetLoadingPipe],
+  exports: [LoadingDirective, GetLoadingPipe],
 })
 export class ReactiveLoadingModule {
   static forRoot<T extends PropertyKey>(

@@ -14,6 +14,7 @@ export { LoadingService } from './lib/services';
 export { ReactiveLoadingModule } from './lib/reactive-loading.module';
 export { SOME_LOADING, LOADING_REGISTRY } from './lib/providers/token';
 export { LoadingDirective } from './lib/components/loading.directive';
+export { GetLoadingPipe } from './lib/pipes/get-loading.pipe';
 
 // Http Module
 

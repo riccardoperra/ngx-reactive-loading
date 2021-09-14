@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.4.0...v1.5.0) (2021-09-14)
+
+
+### Features
+
+* add `getLoading` pipe ([136f920](https://github.com/riccardoperra/ngx-reactive-loading/commit/136f9206093eb1f6cc01ada2b515b63f7e8cc34d))
+
 # [1.4.0](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.3.0...v1.4.0) (2021-09-05)
 
 

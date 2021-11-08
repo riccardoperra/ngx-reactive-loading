@@ -27,14 +27,15 @@ loading states through your application.
 - [Table of contents](#table-of-contents)
 - [Versions](#versions)
 - [Getting started](#getting-started)
-- [Docs](#documentation)
+- [Docs](#docs)
 - [Demo](projects/ngx-reactive-loading-demo)
 
 ## Versions
 
-| ngx-reactive-loading | Angular   | RxJS    |
-| -------------------- | --------- | ------- |
-| \>1.3.0              | \>=12.0.0 | \>6.5.3 |
+| ngx-reactive-loading | Angular              | RxJS    |
+| -------------------- | -------------------  | ------- |
+| \>=2.0.0              | \>=13.0.0            | \>7.0.0 |
+| \>=1.3.0 < 2.0.0      | \>=12.0.0 < 13.0.0   | \>6.5.3 |
 
 ## Getting started
 

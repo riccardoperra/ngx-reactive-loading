@@ -22,7 +22,7 @@ jobs:
 
       - name: NPM install, lint, build, test
         run: |
-          npm ci
+          yarn install --frozen-lockfile
           npm run lint -- ngx-reactive-loading
           npm run build:lib
           npm run test:lib:headless

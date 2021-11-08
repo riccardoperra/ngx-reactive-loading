@@ -1,5 +1,4 @@
-import { defer, Observable, Subject } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { defer, Observable, Subject, map, startWith } from 'rxjs';
 
 type ActionsType = 'add' | 'delete' | 'clear' | 'init';
 

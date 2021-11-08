@@ -5,8 +5,7 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { HttpLoadingRegistryInterceptor } from '../../lib/http/http-loading-registry.interceptor';
-import { delay, mapTo } from 'rxjs/operators';
-import { merge, Observable, of, ReplaySubject } from 'rxjs';
+import { merge, Observable, of, ReplaySubject, delay, map } from 'rxjs';
 import { marbles } from 'rxjs-marbles';
 import { ControlledLoadingRegistry } from '../../lib/model';
 import { createControlledLoadingRegistry } from '../../lib/core/create-loading-registry';
@@ -52,7 +51,7 @@ describe(`HttpLoadingRegistryInterceptor`, () => {
 
       const destination$ = interceptor
         .intercept(httpRequestStub, next)
-        .pipe(mapTo(true));
+        .pipe(map(() => true));
 
       m.expect(destination$).toBeObservable('-----a|', { a: true });
       m.equal(replaySubject$, '(abc)-(de)', {
@@ -82,7 +81,7 @@ describe(`HttpLoadingRegistryInterceptor`, () => {
 
       const destination$ = interceptor
         .intercept(httpRequestStub, next)
-        .pipe(mapTo(true));
+        .pipe(map(() => true));
 
       m.expect(destination$).toBeObservable('(a|)', { a: true });
       m.equal(replaySubject$, 'a', { a: {} });
@@ -92,13 +91,13 @@ describe(`HttpLoadingRegistryInterceptor`, () => {
   it(
     'should no recreate state if exists',
     marbles(m => {
-      const source$ = new ReplaySubject();
-      const registry$ = new ReplaySubject();
+      const source$ = new ReplaySubject(1);
+      const registry$ = new ReplaySubject(0);
       registry.isLoading('test1').subscribe(source$);
       registry.registry$.subscribe(registry$);
 
       const next: HttpHandler = {
-        handle: () => m.cold('-----(a|)', { a: true }) as Observable<any>,
+        handle: () => m.cold('----(a|)', { a: true }) as Observable<any>,
       };
 
       const httpRequestStub: HttpRequest<any> = {
@@ -107,29 +106,28 @@ describe(`HttpLoadingRegistryInterceptor`, () => {
       } as HttpRequest<any>;
 
       const destination$ = merge(
-        interceptor
-          .intercept(httpRequestStub, next)
-          .pipe(delay(0), mapTo(true)),
-        interceptor
-          .intercept(httpRequestStub, next)
-          .pipe(delay(2), mapTo(false))
+        interceptor.intercept(httpRequestStub, next).pipe(
+          delay(1),
+          map(() => true)
+        ),
+        interceptor.intercept(httpRequestStub, next).pipe(
+          delay(4),
+          map(() => false)
+        )
       );
 
-      m.expect(destination$).toBeObservable('-----a-(b|)', {
+      m.expect(destination$).toBeObservable('-----a--(b|)', {
         a: true,
         b: false,
       });
-      m.expect(source$).toBeObservable('(ab)-c', {
-        a: false,
-        b: true,
-        c: false,
+      m.expect(source$).toBeObservable('a---b', {
+        a: true,
+        b: false,
       });
-      m.expect(registry$).toBeObservable('(abc)(de)', {
-        a: {},
+      m.expect(registry$).toBeObservable('a---(bc)', {
+        a: { test1: true },
         b: { test1: false },
-        c: { test1: true },
-        d: { test1: false },
-        e: {},
+        c: {},
       });
     })
   );

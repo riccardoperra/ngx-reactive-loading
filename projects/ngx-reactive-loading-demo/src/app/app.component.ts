@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { filter, map } from 'rxjs/operators';
+import { filter, map } from 'rxjs';
 import { UIStore } from './store/ui-store';
 import { Location } from '@angular/common';
 

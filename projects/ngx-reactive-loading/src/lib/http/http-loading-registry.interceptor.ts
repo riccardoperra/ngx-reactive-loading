@@ -6,9 +6,8 @@ import {
   HttpInterceptor,
   HttpRequest,
 } from '@angular/common/http';
-import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { asapScheduler, defer, Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { Inject, Injectable } from '@angular/core';
+import { Observable, finalize } from 'rxjs';
 import { ControlledLoadingRegistry } from '../model';
 import {
   HTTP_LOADING_CONTEXT,

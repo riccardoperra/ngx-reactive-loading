@@ -7,8 +7,14 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
-import { map, switchMap, takeUntil } from 'rxjs/operators';
+import {
+  BehaviorSubject,
+  combineLatest,
+  Subject,
+  map,
+  switchMap,
+  takeUntil,
+} from 'rxjs';
 import { LoadingService } from '../services';
 import { LOADING_STORE } from '../internal/tokens';
 

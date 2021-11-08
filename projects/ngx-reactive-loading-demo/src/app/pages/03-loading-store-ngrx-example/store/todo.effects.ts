@@ -2,8 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { TodoApiService } from '../../../services/todo-api.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import todoActions, { LoadingTodoActions } from './todo.actions';
-import { catchError, exhaustMap, map, tap } from 'rxjs/operators';
-import { EMPTY } from 'rxjs';
+import { EMPTY, catchError, exhaustMap, map, tap } from 'rxjs';
 import { LoadingService } from 'ngx-reactive-loading';
 
 @Injectable()

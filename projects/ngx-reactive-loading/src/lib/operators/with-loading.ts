@@ -1,5 +1,4 @@
-import { defer, MonoTypeOperatorFunction, pipe, Subject } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { defer, MonoTypeOperatorFunction, pipe, Subject, finalize } from 'rxjs';
 
 /**
  * Like `tap` operator, perform a side effect for every emission on the source Observable,

@@ -1,12 +1,4 @@
-import { merge, Observable, of } from 'rxjs';
-import {
-  catchError,
-  endWith,
-  first,
-  mapTo,
-  startWith,
-  switchMapTo,
-} from 'rxjs/operators';
+import { merge, Observable, first, mapTo, startWith, switchMap } from 'rxjs';
 
 /**
  * Listen to all triggers, then wait for result and end loading upon emit.
@@ -36,6 +28,8 @@ export const untilLoading = (
   content$: readonly Observable<unknown>[]
 ): Observable<boolean> => {
   return merge(...trigger$).pipe(
-    switchMapTo(merge(...content$).pipe(first(), mapTo(false), startWith(true)))
+    switchMap(() =>
+      merge(...content$).pipe(first(), mapTo(false), startWith(true))
+    )
   );
 };

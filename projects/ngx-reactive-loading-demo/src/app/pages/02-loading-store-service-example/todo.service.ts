@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Todo } from '../../model/todo';
-import { BehaviorSubject } from 'rxjs';
-import { map, shareReplay, tap, withLatestFrom } from 'rxjs/operators';
+import { BehaviorSubject, map, shareReplay, tap, withLatestFrom } from 'rxjs';
 import { TodoApiService } from '../../services/todo-api.service';
 import { TodoUtils } from '../../helpers/todo-utils';
 

@@ -1,7 +1,6 @@
 import { ReactiveMap } from '../../lib/internal/reactive-map';
 import { Context, marbles } from 'rxjs-marbles';
-import { ReplaySubject } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { ReplaySubject, map, tap } from 'rxjs';
 
 describe('reactiveMap', () => {
   let reactiveMap = new ReactiveMap<PropertyKey, unknown>();

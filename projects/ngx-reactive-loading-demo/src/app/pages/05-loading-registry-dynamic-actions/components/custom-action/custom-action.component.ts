@@ -7,8 +7,7 @@ import {
   Output,
 } from '@angular/core';
 import { CustomAction } from '../../models/custom-action';
-import { ReplaySubject } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { ReplaySubject, map, switchMap } from 'rxjs';
 import { LOADING_REGISTRY, LoadingRegistry } from 'ngx-reactive-loading';
 
 @Component({

@@ -22,7 +22,7 @@ const withLoading: <T>(
 ```ts
 import { withLoading } from 'ngx-reactive-loading';
 import { of, Subject } from 'rxjs';
-import { delay, switchMap } from 'rxjs/operators';
+import { delay, switchMap } from 'rxjs';
 
 const isLoading$ = new Subject<boolean>();
 const refresh$ = new Subject<void>();

@@ -6,9 +6,8 @@ import {
   TrackByFunction,
 } from '@angular/core';
 import { LOADING_REGISTRY, LoadingRegistry } from 'ngx-reactive-loading';
-import { merge, Subject } from 'rxjs';
+import { merge, Subject, map, scan, shareReplay } from 'rxjs';
 import { UIStore } from '../../store/ui-store';
-import { map, scan, shareReplay } from 'rxjs/operators';
 import { TodoCustomAction } from './models/todo-state-action';
 
 enum Actions {

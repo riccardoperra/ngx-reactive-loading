@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { TodoStateService } from './todo.service';
 import { Subject } from 'rxjs';
-import { exhaustMap, mergeMap } from 'rxjs/operators';
+import { exhaustMap, mergeMap } from 'rxjs';
 import { LoadingService } from 'ngx-reactive-loading';
 import { UIStore } from '../../store/ui-store';
 import { LoadingLogsService } from '../../services/loading-logs.service';

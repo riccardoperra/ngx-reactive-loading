@@ -1,5 +1,10 @@
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { shareReplay, takeUntil } from 'rxjs/operators';
+import {
+  BehaviorSubject,
+  Observable,
+  Subject,
+  shareReplay,
+  takeUntil,
+} from 'rxjs';
 import { Merge, UnionToIntersection } from './merge';
 
 /**

@@ -91,12 +91,17 @@ export class ReactiveLoadingModule {
       logger: false,
     };
 
+    const featureStoreOptions = {
+      ...featureStoreDefaultOptions,
+      ...(options || {}),
+    };
+
     return {
       ngModule: ReactiveLoadingModule,
       providers: [
-        provideInitialLoadingState(keys),
+        provideLoadingStoreOptions(featureStoreOptions),
         provideParentLoadingStore(),
-        provideLoadingStoreOptions(options || featureStoreDefaultOptions),
+        provideInitialLoadingState(keys),
         {
           provide: LoadingService,
           useFactory: setupLoadingStore,

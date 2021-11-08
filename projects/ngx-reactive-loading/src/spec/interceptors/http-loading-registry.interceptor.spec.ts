@@ -98,7 +98,7 @@ describe(`HttpLoadingRegistryInterceptor`, () => {
       registry.registry$.subscribe(registry$);
 
       const next: HttpHandler = {
-        handle: () => m.cold('-----a|', { a: true }) as Observable<any>,
+        handle: () => m.cold('-----(a|)', { a: true }) as Observable<any>,
       };
 
       const httpRequestStub: HttpRequest<any> = {
@@ -115,16 +115,16 @@ describe(`HttpLoadingRegistryInterceptor`, () => {
           .pipe(delay(2), mapTo(false))
       );
 
-      m.expect(destination$).toBeObservable('-----a-b|', {
+      m.expect(destination$).toBeObservable('-----a-(b|)', {
         a: true,
         b: false,
       });
-      m.expect(source$).toBeObservable('(ab)--c', {
+      m.expect(source$).toBeObservable('(ab)-c', {
         a: false,
         b: true,
         c: false,
       });
-      m.expect(registry$).toBeObservable('(abc)-(de)', {
+      m.expect(registry$).toBeObservable('(abc)(de)', {
         a: {},
         b: { test1: false },
         c: { test1: true },

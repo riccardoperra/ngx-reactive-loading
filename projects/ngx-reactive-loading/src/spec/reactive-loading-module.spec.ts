@@ -13,7 +13,10 @@ import { defer, of } from 'rxjs';
 import { marbles } from 'rxjs-marbles';
 import { delay } from 'rxjs/operators';
 import { LoggerService } from '../lib/services/logger.service';
-import { LOADING_STORE_OPTIONS } from '../lib/internal/tokens';
+import {
+  INITIAL_LOADING_STORE,
+  LOADING_STORE_OPTIONS,
+} from '../lib/internal/tokens';
 
 type RootModuleActions = 'add' | 'delete';
 type FeatureModuleActions = 'addFeature' | 'deleteFeature';
@@ -38,15 +41,26 @@ describe('Reactive loading module', () => {
       imports: [
         ReactiveLoadingModule.forFeature<FeatureModuleActions>(
           ['addFeature', 'deleteFeature'],
-          { standalone: true }
+          { standalone: true, name: 'testFeature' }
         ),
       ],
     });
 
     const module = TestBed.inject(ReactiveLoadingModule);
-    expect(module).toBeTruthy();
+
+    expect(module).toBeInstanceOf(ReactiveLoadingModule);
+    expect(TestBed.inject(INITIAL_LOADING_STORE)).toEqual([
+      'addFeature',
+      'deleteFeature',
+    ]);
+    expect(TestBed.inject(LOADING_STORE_OPTIONS)).toEqual({
+      standalone: true,
+      logger: false,
+      name: 'testFeature',
+    } as LoadingStoreModuleOptions);
 
     const loadingStore = TestBed.inject(LoadingService);
+
     assertLoadingStoreState(
       ['addFeature', 'deleteFeature'],
       loadingStore.state
@@ -98,9 +112,7 @@ describe('Reactive loading module', () => {
 
     defer(() => {
       return router.navigate(['featureModule']);
-    }).subscribe({
-      error: err => expect(err).toBeInstanceOf(TypeError),
-    });
+    }).subscribe({ error: err => expect(err).toBeInstanceOf(Error) });
   });
 
   it(

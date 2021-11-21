@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/riccardoperra/ngx-reactive-loading/compare/v2.0.0...v2.0.1) (2021-11-21)
+
+
+### Bug Fixes
+
+* update package min angular version to 13.0.0 ([2839c3c](https://github.com/riccardoperra/ngx-reactive-loading/commit/2839c3c2d2aae8b97cbbbf34ca0ad5d43deb9325))
+
 # [2.0.0](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.5.0...v2.0.0) (2021-11-08)
 
 

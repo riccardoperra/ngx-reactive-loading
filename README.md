@@ -20,7 +20,9 @@ loading states through your application.
 ✅ Flexible and reactive loading state management <br>
 ✅ Supports Angular dependency injection <br>
 ✅ Fully tree-shakeable <br>
+✅ Integrable with any state manager solution<br>
 ✅ 100% tested <br>
+
 
 ## Table of contents
 

@@ -1,3 +1,21 @@
+# [2.0.0](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.5.0...v2.0.0) (2021-11-08)
+
+
+### Features
+
+* update dependencies for Angular 13 ([0a3786f](https://github.com/riccardoperra/ngx-reactive-loading/commit/0a3786f425c65bc580bdbae1dbb18763ef33ed66))
+
+
+### BREAKING CHANGES
+
+* Angular v13 is now supported
+
+chore: update .gitignore
+
+chore: removed .angular/cache
+
+chore: fix test for angular v13 update
+
 # [1.5.0](https://github.com/riccardoperra/ngx-reactive-loading/compare/v1.4.0...v1.5.0) (2021-09-14)
 
 

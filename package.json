@@ -37,9 +37,9 @@
     "@angular/router": "~13.0.0",
     "@ngneat/hot-toast": "3.4.2",
     "@ngneat/overview": "2.1.0",
-    "@ngrx/component-store": "12.5.1",
-    "@ngrx/effects": "12.5.1",
-    "@ngrx/store": "12.5.1",
+    "@ngrx/component-store": "13.0.1",
+    "@ngrx/effects": "13.0.1",
+    "@ngrx/store": "13.0.1",
     "rxjs": "7.4.0",
     "tslib": "2.3.1",
     "zone.js": "~0.11.4"

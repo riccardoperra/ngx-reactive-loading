@@ -1,22 +1,25 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  Inject,
   OnInit,
   TrackByFunction,
 } from '@angular/core';
 import { createLoadingStore, someLoading } from 'ngx-reactive-loading';
 import { TodoApiService } from '../../services/todo-api.service';
 import { TodoStateService } from '../02-loading-store-service-example/todo.service';
-import { Subject } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { exhaustMap, mergeMap } from 'rxjs';
 import { Todo } from '../../model/todo';
 import { FormControl, Validators } from '@angular/forms';
 import { UIStore } from '../../store/ui-store';
+import { DestroyService } from '../../services/destroy.service';
 
 @Component({
   selector: 'app-loading-store-example',
   templateUrl: './loading-store-example.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [DestroyService],
 })
 export class LoadingStoreExampleComponent implements OnInit {
   readonly pageTitle$ = this.uiStore.pageTitle$;
@@ -50,6 +53,7 @@ export class LoadingStoreExampleComponent implements OnInit {
   readonly trackByTodo: TrackByFunction<Todo> = (_, todo) => todo.id;
 
   constructor(
+    @Inject(DestroyService) private readonly destroy$: Observable<void>,
     private readonly todoState: TodoStateService,
     private readonly uiStore: UIStore
   ) {}
@@ -61,7 +65,8 @@ export class LoadingStoreExampleComponent implements OnInit {
           this.todoState
             .reloadTodos()
             .pipe(this.loadingStore.reloadTodo.track())
-        )
+        ),
+        takeUntil(this.destroy$)
       )
       .subscribe();
 
@@ -69,7 +74,8 @@ export class LoadingStoreExampleComponent implements OnInit {
       .pipe(
         mergeMap(title =>
           this.todoState.addTodo(title).pipe(this.loadingStore.addTodo.track())
-        )
+        ),
+        takeUntil(this.destroy$)
       )
       .subscribe();
 
@@ -79,7 +85,8 @@ export class LoadingStoreExampleComponent implements OnInit {
           this.todoState
             .removeTodo(id)
             .pipe(this.loadingStore.removeTodo.track())
-        )
+        ),
+        takeUntil(this.destroy$)
       )
       .subscribe();
   }

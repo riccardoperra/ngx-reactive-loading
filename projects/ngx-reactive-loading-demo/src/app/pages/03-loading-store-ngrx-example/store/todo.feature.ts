@@ -1,6 +1,6 @@
-import { createReducer, on } from '@ngrx/store';
 import { Todo } from '../../../model/todo';
-import todoActions from './todo.actions';
+import { createFeature, createReducer, on } from '@ngrx/store';
+import { todoActions } from './todo.actions';
 import { TodoUtils } from '../../../helpers/todo-utils';
 
 export interface TodoState {
@@ -23,3 +23,17 @@ export const todoReducer = createReducer(
     TodoUtils.removeTodo(state, id)
   )
 );
+
+export const todoFeature = createFeature({
+  name: 'todo',
+  reducer: createReducer(
+    initialState,
+    on(todoActions.todoSet, (state, { todos }) => TodoUtils.setTodos(todos)),
+    on(todoActions.todoAddSuccess, (state, { todo }) =>
+      TodoUtils.addTodo(state, todo)
+    ),
+    on(todoActions.todoRemoveSuccess, (state, { id }) =>
+      TodoUtils.removeTodo(state, id)
+    )
+  ),
+});

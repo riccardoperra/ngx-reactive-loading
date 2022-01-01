@@ -1,9 +1,15 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  OnInit,
+} from '@angular/core';
 import { LoadingService } from 'ngx-reactive-loading';
 import { TodoStateService } from '../02-loading-store-service-example/todo.service';
-import { Subject, exhaustMap, mergeMap } from 'rxjs';
+import { exhaustMap, mergeMap, Observable, Subject, takeUntil } from 'rxjs';
 import { FormControl, Validators } from '@angular/forms';
 import { UIStore } from '../../store/ui-store';
+import { DestroyService } from '../../services/destroy.service';
 
 enum Actions {
   addTodo = 'add',
@@ -21,7 +27,10 @@ const defaultLoadingActions = [
   selector: 'app-loading-directive-example',
   templateUrl: './loading-directive-example.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [LoadingService.componentProvider(defaultLoadingActions)],
+  providers: [
+    LoadingService.componentProvider(defaultLoadingActions),
+    DestroyService,
+  ],
 })
 export class LoadingDirectiveExampleComponent implements OnInit {
   readonly pageTitle$ = this.uiStore.pageTitle$;
@@ -38,6 +47,7 @@ export class LoadingDirectiveExampleComponent implements OnInit {
   readonly isLoading$ = this.loadingService.someLoading();
 
   constructor(
+    @Inject(DestroyService) private readonly destroy$: Observable<void>,
     private readonly todoState: TodoStateService,
     private readonly uiStore: UIStore,
     private readonly loadingService: LoadingService
@@ -50,7 +60,8 @@ export class LoadingDirectiveExampleComponent implements OnInit {
           this.todoState
             .reloadTodos()
             .pipe(this.loadingService.track(Actions.reloadTodo))
-        )
+        ),
+        takeUntil(this.destroy$)
       )
       .subscribe();
 
@@ -60,7 +71,8 @@ export class LoadingDirectiveExampleComponent implements OnInit {
           this.todoState
             .addTodo(title)
             .pipe(this.loadingService.track(Actions.addTodo))
-        )
+        ),
+        takeUntil(this.destroy$)
       )
       .subscribe();
 
@@ -70,7 +82,8 @@ export class LoadingDirectiveExampleComponent implements OnInit {
           this.todoState
             .removeTodo(id)
             .pipe(this.loadingService.track(Actions.removeTodo))
-        )
+        ),
+        takeUntil(this.destroy$)
       )
       .subscribe();
   }

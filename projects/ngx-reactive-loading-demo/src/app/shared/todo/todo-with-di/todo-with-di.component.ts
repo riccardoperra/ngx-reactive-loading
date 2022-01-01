@@ -2,14 +2,18 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  Inject,
   Input,
-  OnInit,
   Optional,
   Output,
 } from '@angular/core';
 import { Todo } from '../../../model/todo';
-import { LoadingService } from 'ngx-reactive-loading';
-import todoActions from '../../../pages/03-loading-store-ngrx-example/store/todo.actions';
+import { LoadingService, SOME_LOADING } from 'ngx-reactive-loading';
+import {
+  TODO_ACTIONS,
+  TodoActions,
+} from '../../../pages/03-loading-store-ngrx-example/store/todo.actions';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-todo-with-di',
@@ -19,9 +23,10 @@ import todoActions from '../../../pages/03-loading-store-ngrx-example/store/todo
 export class TodoWithDiComponent {
   @Input() todo?: Todo;
   @Output() readonly removeEvent = new EventEmitter<string>();
-  readonly isLoading$ = this.loadingService.someLoading([
-    todoActions.todoRemove.type,
-  ]);
 
-  constructor(@Optional() private readonly loadingService: LoadingService) {}
+  constructor(
+    @Inject(TODO_ACTIONS) private readonly todoActions: TodoActions,
+    @Optional() private readonly loadingService: LoadingService,
+    @Inject(SOME_LOADING) readonly isLoading$: Observable<boolean>
+  ) {}
 }

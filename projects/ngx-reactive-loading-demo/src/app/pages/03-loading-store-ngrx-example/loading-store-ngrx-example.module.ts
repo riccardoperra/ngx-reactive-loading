@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { StoreModule } from '@ngrx/store';
-import { todoReducer } from './store/todo.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { TodoEffects } from './store/todo.effects';
 import { RouterModule } from '@angular/router';
@@ -15,29 +14,27 @@ import { FlexModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { AppState } from './store';
-import todoActions from './store/todo.actions';
+import { todoFeature } from './store';
 import { ReactiveLoadingModule } from 'ngx-reactive-loading';
 import { environment } from '../../../environments/environment';
+import { TODO_ACTION_LOADING_KEYS } from './store/todo.actions';
+import { TodoState } from './store/todo.feature';
+
+export interface AppState {
+  todo: TodoState;
+}
 
 @NgModule({
   imports: [
     CommonModule,
     StoreModule.forRoot<AppState>({
-      todo: todoReducer,
+      todo: todoFeature.reducer,
     }),
-    ReactiveLoadingModule.forFeature(
-      [
-        todoActions.todoAdd.type,
-        todoActions.todoRemove.type,
-        todoActions.todoReload.type,
-      ],
-      {
-        logger: !environment.production,
-        name: 'LoadingStoreNgrxExampleLoader',
-        standalone: false,
-      }
-    ),
+    ReactiveLoadingModule.forFeature(TODO_ACTION_LOADING_KEYS, {
+      logger: !environment.production,
+      name: 'LoadingStoreNgrxExampleLoader',
+      standalone: false,
+    }),
     EffectsModule.forRoot([TodoEffects]),
     RouterModule.forChild([
       {

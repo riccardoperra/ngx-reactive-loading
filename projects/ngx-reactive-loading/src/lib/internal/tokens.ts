@@ -1,6 +1,6 @@
 import { InjectionToken } from '@angular/core';
 import { LoadingStoreService } from '../model/loading-store';
-import { LoadingStoreOptions } from '../model/loading-store-options';
+import { LoadingStoreOptions } from '../model';
 
 /**
  * @internal

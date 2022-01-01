@@ -257,12 +257,12 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/flex-layout@^12.0.0-beta.35":
-  version "12.0.0-beta.35"
-  resolved "https://registry.yarnpkg.com/@angular/flex-layout/-/flex-layout-12.0.0-beta.35.tgz#b52c3c82608cbb92a119f8dcde2a5b98186fe558"
-  integrity sha512-nPi2MGDFuCacwWHqxF/G7lUJd2X99HbLjjUvKXnyLwyCIVgH1sfS52su2wYbVYWJRqAVAB2/VMlrtW8Khr8hDA==
+"@angular/flex-layout@^13.0.0-beta.36":
+  version "13.0.0-beta.36"
+  resolved "https://registry.yarnpkg.com/@angular/flex-layout/-/flex-layout-13.0.0-beta.36.tgz#0e91e6837b767841b579f8a5be66667255e30484"
+  integrity sha512-JLC3C1oEKVu9lLyottvHbfyCf/pOPzjXfFO3qOPBbWyVqxuQkfkd2NILZZh4DHsKYbBxIZ01vnfQHCV8NdaZ3w==
   dependencies:
-    tslib "^2.1.0"
+    tslib "^2.3.0"
 
 "@angular/forms@~13.0.0":
   version "13.0.0"
@@ -1493,38 +1493,38 @@
   resolved "https://registry.yarnpkg.com/@jridgewell/resolve-uri/-/resolve-uri-1.0.0.tgz#3fdf5798f0b49e90155896f6291df186eac06c83"
   integrity sha512-9oLAnygRMi8Q5QkYEU4XWK04B+nuoXoxjRvRxgjuChkLZFBja0YPSgdZ7dZtwhncLBcQe/I/E+fLuk5qxcYVJA==
 
-"@ngneat/hot-toast@3.4.2":
-  version "3.4.2"
-  resolved "https://registry.yarnpkg.com/@ngneat/hot-toast/-/hot-toast-3.4.2.tgz#d2ddee386ebc38489ffa458d9cc702f247722a1b"
-  integrity sha512-ZnriM6bzqflVpNivnsknQIMxOCcx4WR2Y1Ypt7G0Eok1IoLR4z02+bn1p5kJGd1vGGYY0MGAX5pdbtR6LXZ+Xg==
+"@ngneat/hot-toast@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@ngneat/hot-toast/-/hot-toast-4.1.0.tgz#8c0cf5be445254678b782e612f4e8840bf2c8974"
+  integrity sha512-5QgxYXAGNmg0J10QjHOBu8Go5SZ9WIg5TDFm60ecMK/BUcuaHB7QeVfY/YFUPsw1iXaO3IVb81w9LdqXz2GNsg==
+  dependencies:
+    tslib "^2.3.0"
+
+"@ngneat/overview@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@ngneat/overview/-/overview-3.0.2.tgz#517cd74fc76078dda039e4fe66ee4568b22c8c73"
+  integrity sha512-2CpRlxqThQ2TWDYSHc77aM3MwH6DhrRWUZZMOtoKTVLWBv2f1qjCYrSuCpZQLG1bUvOoqMH9CK4xoIIOzx2eYw==
   dependencies:
     tslib "^2.0.0"
 
-"@ngneat/overview@2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@ngneat/overview/-/overview-2.1.0.tgz#db256e2f0f77ad6d4a774df583f5698af0ab9f64"
-  integrity sha512-v05lg7P/7PrVHjelZCEJUZ08idaC51a8rjlvUk5BrSnxlw97DijLViOaMgqosMFDI1Qpfbp/7sjP0rpA+CBKLQ==
+"@ngrx/component-store@^13.0.2":
+  version "13.0.2"
+  resolved "https://registry.yarnpkg.com/@ngrx/component-store/-/component-store-13.0.2.tgz#fd254a2000851a213ee3c0ba76164055c370939e"
+  integrity sha512-zAqXuO2FT3gBJp9TWc0O8Lo4h62xbXmUxBYYTT2/BNczK+XNf/pzDWrYEtsgwP4Php0AgoY38Ht0ZS6sJkgpMQ==
   dependencies:
     tslib "^2.0.0"
 
-"@ngrx/component-store@13.0.1":
-  version "13.0.1"
-  resolved "https://registry.yarnpkg.com/@ngrx/component-store/-/component-store-13.0.1.tgz#5edbeeba94938db1979fd794cf9d15b1ade1234e"
-  integrity sha512-rlyXhyWtTbbJDb9se57C9CEMVLDA6zU/aauMz0vvNwcKMGX884D+DPXb1XeGmjS5/2Wgs63KgMsVYfd2lEyHVg==
+"@ngrx/effects@^13.0.2":
+  version "13.0.2"
+  resolved "https://registry.yarnpkg.com/@ngrx/effects/-/effects-13.0.2.tgz#785e54459efaef70ed3754a33d9f4ddd0ff9f033"
+  integrity sha512-7yW/KCxlRatDkdEriSnORlOYX8+1QAWEjPulNmHSPwehkzTQ3fIPfRBQy8xP8bnjwvGxnEZNwQlU4q1KVYOfhg==
   dependencies:
     tslib "^2.0.0"
 
-"@ngrx/effects@13.0.1":
-  version "13.0.1"
-  resolved "https://registry.yarnpkg.com/@ngrx/effects/-/effects-13.0.1.tgz#93f78c54959f747fa344744d365a59dfce978285"
-  integrity sha512-MsQuR+ufK9xTBKmzpt9P32BEuXVtu6bxIBw7LmrR73MyMsmpXcrdvdax9CIPCugOEITXcfcoJfj8iT+WPoAHmQ==
-  dependencies:
-    tslib "^2.0.0"
-
-"@ngrx/store@13.0.1":
-  version "13.0.1"
-  resolved "https://registry.yarnpkg.com/@ngrx/store/-/store-13.0.1.tgz#85ad5335292d37f2554f9a16cdc80646e8eebee9"
-  integrity sha512-YCArklbrZNeFN9I2Ibvl+M8sgepwY36n1aGzyEL6R4iK6VWaqpJAwOIlQ+41qyztelallyzz5waQmCLa+OQ38w==
+"@ngrx/store@^13.0.2":
+  version "13.0.2"
+  resolved "https://registry.yarnpkg.com/@ngrx/store/-/store-13.0.2.tgz#43f187956e07f33baed3e6215cd2fc59a06e9789"
+  integrity sha512-F7tsc3oCvKh+62MKiXTrvSeaxR41u4p8bch3BLjz12F37376rMuBnXf+V1thsPTZ6RB6aycAi821EQYVXFCXZg==
   dependencies:
     tslib "^2.0.0"
 
@@ -9965,7 +9965,7 @@ ts-node@^9:
     source-map-support "^0.5.17"
     yn "3.1.1"
 
-tslib@2.3.1, tslib@^2, tslib@^2.0.0, tslib@^2.1.0, tslib@^2.3.0:
+tslib@2.3.1, tslib@^2, tslib@^2.0.0, tslib@^2.3.0:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
   integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
